@@ -1,5 +1,6 @@
 import { useState } from "react"
 import {supabaseAuthenticatedConnection } from "../../service/SupabaseService"
+import { setR2Client } from "../../service/R2Service"
 import { Button, Field, Heading, Input, Stack, VStack, Text, HStack } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom'
 
@@ -21,6 +22,7 @@ export default function Login() {
             setErr("Email ou mot de passe invalide");
 
         } else {
+            await setR2Client();
             navigate('/videos-du-moment')       
             setErr("");
         }
