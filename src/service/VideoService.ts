@@ -1,4 +1,4 @@
-import { supabase, BUCKET_URL, TABLE_VIDEO } from './SupabaseService';
+import { supabase, TABLE_VIDEO } from './SupabaseService';
 import {
     uploadVideo, 
     deleteVideo, 
@@ -21,16 +21,6 @@ export type VideoCreateType = {
 }
 
 const ARTICLE_DE_LA_SAISON_CODE = "ArticleDeLaSaison";
-
-export async function getVideoTest() : Promise<string | null>{
-    const {data, error} = await supabase.from(TABLE_VIDEO).select();
-    if (error) {
-        return null;
-    }
-    console.log(data);
-    const {data: urlData}  = await supabase.storage.from(BUCKET_URL).getPublicUrl("Fal.mp4");
-    return urlData.publicUrl;
-}
 
 export async function getArticleDeLaSaison() : Promise<VideoSelectType | null>{
     const {data, error} = await supabase.from(TABLE_VIDEO).select().eq('code', ARTICLE_DE_LA_SAISON_CODE);
