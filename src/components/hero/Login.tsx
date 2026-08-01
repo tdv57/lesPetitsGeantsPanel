@@ -1,8 +1,9 @@
 import { useState } from "react"
 import {supabaseAuthenticatedConnection } from "../../service/SupabaseService"
 import { setR2Client } from "../../service/R2Service"
-import { Button, Field, Heading, Input, Stack, VStack, Text, HStack } from "@chakra-ui/react";
+import { Button, Field, Heading, Input, Stack, VStack, Text, HStack, InputGroup, IconButton } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom'
+import { LuEye, LuEyeOff } from "react-icons/lu";
 
 
 export default function Login() {
@@ -10,6 +11,7 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [err, setErr] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate(); 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -51,11 +53,28 @@ export default function Login() {
 
                             <Field.Root>
                                 <Field.Label fontSize={{ base: "xs", sm: "sm", md: "lg" }}>Mot de passe</Field.Label>
-                                <Input 
-                                    type="password"
-                                    name="password"
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
+                                <InputGroup endElement={
+                                    <IconButton
+                                        type="button"
+                                        aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                                        variant="ghost"
+                                        color="white"
+                                        colorPalette="whiteAlpha"
+                                        _hover={{ color: "black"}}
+                                        size="sm"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <LuEyeOff /> : <LuEye />}
+                                    </IconButton>
+                                }>
+                                    
+                                    <Input 
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                </InputGroup>
+
                             </Field.Root>
                             
                             <Button type="submit" colorPalette="blue">
