@@ -10,6 +10,8 @@ export type FormPropsType = {
     setDescription: React.Dispatch<React.SetStateAction<string>>,
     age : string,
     setAge: React.Dispatch<React.SetStateAction<string>>,
+    typeAge : "" | "ANS" | "MOIS",
+    setTypeAge: React.Dispatch<React.SetStateAction<"" | "ANS" | "MOIS">>,
     video: File | null,
     setVideo : React.Dispatch<React.SetStateAction<File | null>>
     chargementStatut: ChargementStatutEnum,
@@ -27,6 +29,7 @@ export default function BoutonCreation({submitMessage, resetMessage, supabaseAct
     const [isOpen, setIsOpen] = useState(false);
     const [description, setDescription] = useState("");
     const [age, setAge] = useState("");
+    const [typeAge, setTypeAge] = useState<"" | "ANS" | "MOIS">("");
     const [video, setVideo] = useState<File | null>(null);
     const [chargementStatut, setChargementStatut] = useState<ChargementStatutEnum>(ChargementStatut.Inactif)
 
@@ -43,6 +46,8 @@ export default function BoutonCreation({submitMessage, resetMessage, supabaseAct
         setDescription,
         age,
         setAge,
+        typeAge,
+        setTypeAge,
         video,
         setVideo,
         chargementStatut,

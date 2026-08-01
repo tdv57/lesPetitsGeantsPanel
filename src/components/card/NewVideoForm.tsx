@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import type { VideoCreateType, VideoSelectType } from "../../service/VideoService";
-import { Button, Field, Input, Stack, Textarea, Text } from "@chakra-ui/react";
+import { Button, Field, Input, Stack, Textarea, Text, createListCollection, NumberInput, Select } from "@chakra-ui/react";
 import type { FormPropsType } from "../modal/BoutonCreation";
 import { ChargementStatut } from "../../enum/ChargementStatut";
-
+import { newVideoFormValidationSchema, type newVideoFormValidationType } from "../validation/NewVideoFormValidation";
 type NewVideoFormPropType = {
     supabaseAction: (video: VideoCreateType) => Promise<VideoSelectType | null> ;
     submitMessage: string;
@@ -13,16 +13,27 @@ type NewVideoFormPropType = {
     formProps : FormPropsType;
 }
 
+
 export default function NewVideoForm({supabaseAction, submitMessage, resetMessage, onSuccess, onReset, formProps} : NewVideoFormPropType) {
 
     const [submitMessageState, setSubmitMessageState] = useState(submitMessage);
-    const [isLocked, setIsLocked] = useState(true)
-    const {description, setDescription, age, setAge, video, setVideo, chargementStatut, setChargementStatut} = formProps;
+    const [isLocked, setIsLocked] = useState(true);
+    const [error, setError] = useState<Record<string,string>>({})
+    
+    const {description, setDescription, age, setAge,typeAge, setTypeAge, video, setVideo, chargementStatut, setChargementStatut} = formProps;
+    
     function handleVideo(e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) {
         if (e.target.files) {
             setVideo(e.target.files[0]);
         }
     }
+
+    const typeAgeCollection = createListCollection({
+        items: [
+            {label: "Ans", value: "ANS"},
+            {label: "Mois", value: "MOIS"},
+        ]
+    });
 
     useEffect(() => {
         console.log(chargementStatut);
@@ -40,19 +51,43 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>){
         e.preventDefault();
-        if (!video) return;
-        if (chargementStatut === ChargementStatut.EnAttente || chargementStatut === ChargementStatut.Terminee) return;
-        const videoDescription = description;
-        const videoAge = age;
-        const videoBlob = video;
+        if (
+            chargementStatut === ChargementStatut.EnAttente 
+            || chargementStatut === ChargementStatut.Terminee
+        ) return;
+        console.log("Soumission du formulaire avec les données:", {description, age, typeAge, video});
+        const result = newVideoFormValidationSchema.safeParse({
+            description,
+            age,
+            typeAge,
+            video
+        });
+
+        if (!result.success) {
+            const fieldErrors: Record<string, string> = {};
+            console.log("Erreurs de validation:", result.error.issues);
+            result.error.issues.forEach((error) => {
+                const key = error.path[0] as string;
+                fieldErrors[key] = error.message;
+            });
+            setError(fieldErrors);
+            return;
+        }
+        
+        setError({});
+
+        const videoDescription = result.data.description;
+        const videoAge = result.data.age === "" ? null : Number(result.data.age);
+        const videoTypeAge : "ANS" | "MOIS" | null = result.data.typeAge === "" ? null : result.data.typeAge as "ANS" | "MOIS";
+        const videoBlob = result.data.video;
+        console.log("Données validées:", {videoDescription, videoAge, videoTypeAge, videoBlob});
         setChargementStatut(ChargementStatut.EnAttente)
         try {
-            const result = await supabaseAction({description: videoDescription, age: videoAge, video : videoBlob})
+            const result = await supabaseAction({description: videoDescription, age: videoAge, typeAge: videoTypeAge, video : videoBlob})
             onSuccess(result);
             setChargementStatut(ChargementStatut.Terminee)
         } catch (error) {
         console.error("Erreur pendant la création :", error);
-        // Ici tu peux aussi afficher un message d'erreur à l'utilisateur
     }
         
     }
@@ -75,7 +110,7 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
         <>
             <form onSubmit={(e) => handleSubmit(e)}>
                 <Stack gap={4}>
-                    <Field.Root>
+                    <Field.Root invalid={!!error.description}>
                         <Field.Label>description</Field.Label>
                         <Textarea 
                             id="description" 
@@ -84,20 +119,53 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
                             value={description}
                             disabled={isLocked}
                         />
+                        <Field.ErrorText>{error.description}</Field.ErrorText>
                     </Field.Root>
 
-                    <Field.Root>
+                    <Field.Root invalid={!!error.age}>
                         <Field.Label>age</Field.Label>
-                        <Textarea
+                        <NumberInput.Root
+                            onValueChange={(e) => setAge(e.value)}         
+                            value={age}     
+                            disabled={isLocked}   
+                            min={1}          
+                        >
+                        <NumberInput.Control/>
+                        <NumberInput.Input 
                             id="age" 
                             name="age"
-                            onChange={(e) => setAge(e.target.value)}         
-                            value={age}     
-                            disabled={isLocked}              
                         />
+                        </NumberInput.Root>
+                        <Field.ErrorText>{error.age}</Field.ErrorText>
                     </Field.Root>
 
-                    <Field.Root>
+                    <Field.Root invalid={!!error.typeAge}>
+                        <Field.Label>type d'âge</Field.Label>
+                        <Select.Root
+                            collection={typeAgeCollection}
+                            value={typeAge ? [typeAge] : []}
+                            onValueChange={(e) => setTypeAge(e.value[0] as "" | "ANS" | "MOIS" ?? "" )}
+                            disabled={isLocked}
+                        >
+                            <Select.Control>
+                                <Select.Trigger>
+                                    <Select.ValueText placeholder="--" />
+                                </Select.Trigger>
+                            </Select.Control>
+
+                            <Select.Positioner>
+                                <Select.Content>
+                                    {typeAgeCollection.items.map((item) => (
+                                        <Select.Item key={item.value} item={item}>
+                                            {item.label}
+                                        </Select.Item>
+                                    ))}
+                                </Select.Content>
+                            </Select.Positioner>
+                        </Select.Root>
+                        <Field.ErrorText>{error.typeAge}</Field.ErrorText>
+                    </Field.Root>
+                    <Field.Root invalid={!!error.video}>
                         <Field.Label>vidéo</Field.Label>
                         
                         <Input
@@ -108,14 +176,10 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
                             value=""
                             disabled={isLocked}
                         />
-                        
-                       
                         <Text fontSize="sm" color="gray.600" mt={1}>
                             {video ?    `Fichier sélectionné : ${video.name} (${(video.size / 1_000_000).toFixed(1)} Mo)`  : `Aucun fichier sélectionné`}
                         </Text>
-                    
-                            
-                    
+                        <Field.ErrorText>{error.video}</Field.ErrorText>
                     </Field.Root>
 
                     

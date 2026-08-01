@@ -15,8 +15,8 @@ export type VideoSelectType = {
 
 export type VideoCreateType = {
     description: string,
-    age: number,
-    type_age: "ANS" | "MOIS",
+    age: number | null,
+    typeAge: "ANS" | "MOIS" | null,
     video: File
 }
 
@@ -33,7 +33,7 @@ export async function getArticleDeLaSaison() : Promise<VideoSelectType | null>{
         return {
             url: articleDeLaSaison.url,
             description: articleDeLaSaison.description,
-            age: getAge(parseInt(articleDeLaSaison.age), articleDeLaSaison.type_age),
+            age: getAge(parseInt(articleDeLaSaison.age), articleDeLaSaison.typeAge),
             id: articleDeLaSaison.id,
             created_at: articleDeLaSaison.created_at
         }
@@ -51,17 +51,17 @@ export async function getVideosDuMoment() : Promise<VideoSelectType[] | null>{
         return {
             url: d.url,
             description: d.description,
-            age: getAge(parseInt(d.age), d.type_age),
+            age: getAge(parseInt(d.age), d.typeAge),
             id: d.id,
             created_at: d.created_at
         };
     })
 }
 
-export async function addVideosDuMoment({description, age, type_age, video}: VideoCreateType): Promise<VideoSelectType | null>{
+export async function addVideosDuMoment({description, age, typeAge, video}: VideoCreateType): Promise<VideoSelectType | null>{
     const code = crypto.randomUUID(); 
     const url = R2_VIDEO_PUBLIC_URL + "/" + code;
-    const {data, error} = await supabase.from(TABLE_VIDEO).insert({url, description, age, type_age, code}).select();
+    const {data, error} = await supabase.from(TABLE_VIDEO).insert({url, description, age, type_age: typeAge, code}).select();
     if (error) return null;
      const newVideo = data[0];
     const res = await uploadVideo(video, code);
@@ -78,7 +78,7 @@ export async function addVideosDuMoment({description, age, type_age, video}: Vid
     return {
         url: newVideo.url,
         description: newVideo.description,
-        age: getAge(newVideo.age, newVideo.type_age),
+        age: getAge(newVideo.age, newVideo.typeAge),
         id: newVideo.id,
         created_at: newVideo.created_at
     };
@@ -111,7 +111,7 @@ export async function deleteArticleDeLaSaison() {
 }
 
 
-export async function replaceArticleDeLaSaison({description, age, type_age, video}: VideoCreateType) : Promise<VideoSelectType | null>{
+export async function replaceArticleDeLaSaison({description, age, typeAge, video}: VideoCreateType) : Promise<VideoSelectType | null>{
     const { data: { session } } = await supabase.auth.getSession();
     console.log("Session au moment du replace:", session);
     const {data, error} =  await supabase.from(TABLE_VIDEO).select().eq('code', ARTICLE_DE_LA_SAISON_CODE);
@@ -131,7 +131,7 @@ export async function replaceArticleDeLaSaison({description, age, type_age, vide
 
     const code = ARTICLE_DE_LA_SAISON_CODE;
     const url = R2_VIDEO_PUBLIC_URL + "/" + code;
-    const {data: dataInsert, error: errorInsert} = await supabase.from(TABLE_VIDEO).insert({url, description, age, type_age, code}).select();
+    const {data: dataInsert, error: errorInsert} = await supabase.from(TABLE_VIDEO).insert({url, description, age, type_age: typeAge, code}).select();
     if (errorInsert) return null;
      const newVideo = dataInsert[0];
     const res = await uploadVideo(video, code);
@@ -148,18 +148,18 @@ export async function replaceArticleDeLaSaison({description, age, type_age, vide
     };
 }
 
-function getAge(age: number, type_age: "ANS" | "MOIS") : string {
-    if( !age || age < 0 || !type_age || (type_age !== "ANS" && type_age !== "MOIS")) {
+function getAge(age: number, typeAge: "ANS" | "MOIS") : string {
+    if( !age || age < 0 || !typeAge || (typeAge !== "ANS" && typeAge !== "MOIS")) {
         return "";
     }
-    if (type_age === "ANS") {
+    if (typeAge === "ANS") {
         if (age === 1 || age === 0) {
             return "Dès " + age + " an";
         } else {
             return "Dès " + age + " ans";
         }
     }
-    else if (type_age === "MOIS") {
+    else if (typeAge === "MOIS") {
         return "Dès " + age + " mois";
     }
     return ""; 
