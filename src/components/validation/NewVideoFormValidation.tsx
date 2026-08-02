@@ -16,7 +16,7 @@ export const newVideoFormValidationSchema = z.object({
             .refine((file) => file.size > 0, {
                     message: "Le fichier vidéo ne peut pas être vide",
                 })
-            .refine((file) => file.size < 50 * 1_000_000, { message: "La vidéo doit faire moins de 50 Mo" })       
+            .refine((file) => file.size < 300 * 1_000_000, { message: "La vidéo doit faire moins de 300 Mo" })       
     }).refine(
         (data) => (!!data.age.trim()) === (!!data.typeAge.trim()),
         {

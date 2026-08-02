@@ -29,3 +29,4 @@ Thumbs.db
 
 .env
 supabase.script
+public/ffmpeg

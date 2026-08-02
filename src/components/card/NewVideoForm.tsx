@@ -4,6 +4,9 @@ import { Button, Field, Input, Stack, Textarea, Text, createListCollection, Numb
 import type { FormPropsType } from "../modal/BoutonCreation";
 import { ChargementStatut } from "../../enum/ChargementStatut";
 import { newVideoFormValidationSchema, type newVideoFormValidationType } from "../validation/NewVideoFormValidation";
+import { useCompressionProgress } from "../../hook/useCompressionProgress";
+import {compressVideo} from "../../service/FFmpegService";
+
 type NewVideoFormPropType = {
     supabaseAction: (video: VideoCreateType) => Promise<VideoSelectType | null> ;
     submitMessage: string;
@@ -19,7 +22,7 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
     const [submitMessageState, setSubmitMessageState] = useState(submitMessage);
     const [isLocked, setIsLocked] = useState(true);
     const [error, setError] = useState<Record<string,string>>({})
-    
+    const compressionProgress = useCompressionProgress();
     const {description, setDescription, age, setAge,typeAge, setTypeAge, video, setVideo, chargementStatut, setChargementStatut} = formProps;
     
     function handleVideo(e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) {
@@ -42,12 +45,16 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
             setIsLocked(false);
         } else if (chargementStatut === ChargementStatut.EnAttente) {
             setIsLocked(true);
-            setSubmitMessageState("Chargement en cours, patientez.");
+            if (compressionProgress < 1) {
+                setSubmitMessageState("Compression en cours: " + (compressionProgress * 100).toFixed(2) + "%");
+            } else {
+                setSubmitMessageState("Compression terminée, envoi en cours...");
+            }
         } else if (chargementStatut === ChargementStatut.Terminee) {
             setIsLocked(true);
             setSubmitMessageState("Chargement terminée: " + resetMessage )
         }
-    }, [chargementStatut])
+    }, [chargementStatut, compressionProgress])
 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>){
         e.preventDefault();
@@ -56,6 +63,8 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
             || chargementStatut === ChargementStatut.Terminee
         ) return;
         console.log("Soumission du formulaire avec les données:", {description, age, typeAge, video});
+        
+        
         const result = newVideoFormValidationSchema.safeParse({
             description,
             age,
@@ -79,10 +88,12 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
         const videoDescription = result.data.description;
         const videoAge = result.data.age === "" ? null : Number(result.data.age);
         const videoTypeAge : "ANS" | "MOIS" | null = result.data.typeAge === "" ? null : result.data.typeAge as "ANS" | "MOIS";
-        const videoBlob = result.data.video;
+        let videoBlob = result.data.video;
         console.log("Données validées:", {videoDescription, videoAge, videoTypeAge, videoBlob});
         setChargementStatut(ChargementStatut.EnAttente)
         try {
+            videoBlob = await compressVideo(videoBlob);
+            console.log("Vidéo compressée avec succès:", videoBlob.size, "octets");
             const result = await supabaseAction({description: videoDescription, age: videoAge, typeAge: videoTypeAge, video : videoBlob})
             onSuccess(result);
             setChargementStatut(ChargementStatut.Terminee)
