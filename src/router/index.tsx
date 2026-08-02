@@ -23,11 +23,11 @@ export const router = createBrowserRouter([
             
             {
                 path: "videos-du-moment", 
-                element:<VideosDuMoment/>
+                element:null
             },
             {
                 path:"article-de-la-saison",
-                element: <ArticleDeLaSaison/>
+                element:null
             }
         ]
     },
