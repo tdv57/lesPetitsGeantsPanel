@@ -1,8 +1,8 @@
 import {VStack } from "@chakra-ui/react";
-import BoutonCreation from "../modal/BoutonCreation";
 import { deleteArticleDeLaSaison, replaceArticleDeLaSaison, type VideoSelectType } from "../../service/VideoService";
 import VideoCard from "../card/VideoCard";
 import { useArticleDeLaSaison } from "../../hook/useArticleDeLaSaison";
+import BoutonCreationVideo from "../modal/BoutonCreationVideo";
 
 export default function ArticleDeLaSaison() {
 
@@ -18,7 +18,7 @@ export default function ArticleDeLaSaison() {
     return (
 
             <VStack align="center" >
-                <BoutonCreation submitMessage="Remplacer l'article de la saison" resetMessage="Remplacer l'article de la saison" setVideos={setVideo} supabaseAction={replaceArticleDeLaSaison} onSuccess={onSuccess}/>
+                <BoutonCreationVideo submitMessage="Remplacer l'article de la saison" resetMessage="Remplacer l'article de la saison" setVideos={setVideo} supabaseAction={replaceArticleDeLaSaison} onSuccess={onSuccess}/>
                 {/* <NewVideoForm submitMessage="Ajouter un vidéo" supabaseAction={addVideosDuMoment}/> */}
                 <VStack gap={10} align="center">
                     {video.length > 0 ? <VideoCard v={video[0]} index={1} setVideos={setVideo} supabaseDeleteAction={deleteArticleDeLaSaison}/> : <></>}

@@ -25,7 +25,7 @@ type BoutonCreationPropsType = {
     supabaseAction: (video : VideoCreateType) => Promise<VideoSelectType | null>;
     onSuccess: (result: VideoSelectType | null) => void;
 }
-export default function BoutonCreation({submitMessage, resetMessage, supabaseAction, onSuccess}: BoutonCreationPropsType) {
+export default function BoutonCreationVideo({submitMessage, resetMessage, supabaseAction, onSuccess}: BoutonCreationPropsType) {
     const [isOpen, setIsOpen] = useState(false);
     const [description, setDescription] = useState("");
     const [age, setAge] = useState("");

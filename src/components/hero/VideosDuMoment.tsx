@@ -2,7 +2,7 @@ import { addVideosDuMoment, deleteVideosDuMoment } from "../../service/VideoServ
 import type { VideoSelectType } from "../../service/VideoService";
 import { VStack } from "@chakra-ui/react";
 import VideoCard from "../card/VideoCard";
-import BoutonCreation from "../modal/BoutonCreation";
+import BoutonCreationVideo from "../modal/BoutonCreationVideo";
 import { useVideosDuMoment } from "../../hook/useVideosDuMoment";
 export default function VideosDuMoment() {
 
@@ -17,7 +17,7 @@ export default function VideosDuMoment() {
         <>
 
             <VStack align="center" >
-                <BoutonCreation submitMessage="Ajouter une vidéo" resetMessage="Ajouter une nouvelle vidéo" setVideos={setVideos} supabaseAction={addVideosDuMoment} onSuccess={onSuccess}/>
+                <BoutonCreationVideo submitMessage="Ajouter une vidéo" resetMessage="Ajouter une nouvelle vidéo" setVideos={setVideos} supabaseAction={addVideosDuMoment} onSuccess={onSuccess}/>
                 {/* <NewVideoForm submitMessage="Ajouter un vidéo" supabaseAction={addVideosDuMoment}/> */}
                 <VStack gap={10} align="center">
                     { videos.map((v, index) => {

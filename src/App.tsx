@@ -23,7 +23,7 @@ function App() {
     <>
       { 
         isAuthenticated ? 
-        <Box bg="bg.canvas" color="fg.default" minW="100vw" minH="100vh" >
+        <Box >
           <Nav/>       
           <main>
             <Layout/>

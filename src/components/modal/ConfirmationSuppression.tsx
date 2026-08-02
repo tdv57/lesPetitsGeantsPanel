@@ -37,11 +37,11 @@ export default function ConfirmationSuppression({id, setVideos, supabaseDeleteAc
 
                 <Portal>
                     
-                    <Dialog.Backdrop/>
+                    <Dialog.Backdrop />
                     
                     <Dialog.Positioner>
-                        <Dialog.Content maxW={{ base: "70vw", sm:"50vw", md: "50vw" }} minH={{ base: "30vh", sm:"50vh", md: "50vh" }}>
-                            <Dialog.Body display="flex" justifyContent="center" alignItems="center">
+                        <Dialog.Content bg="gray.800" maxW={{ base: "70vw", sm:"50vw", md: "50vw" }} minH={{ base: "30vh", sm:"50vh", md: "50vh" }}>
+                            <Dialog.Body  display="flex" justifyContent="center" alignItems="center">
                                 <Button colorPalette="red" onClick={() => handleDelete()}>Confirmer la suppression</Button>
                             </Dialog.Body>
                         </Dialog.Content>

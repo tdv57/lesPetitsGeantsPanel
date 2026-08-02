@@ -31,7 +31,7 @@ export default function Login() {
     }
     return(
         <>
-        <HStack justify="center" align="center" minW="100vw" minH="100vh" bg="bg.canvas" color="fg.default">
+        <HStack justify="center" align="center" minW="100vw" minH="100vh" bg="black" color="white">
             <VStack align="center" justify="center"  w="90vw" h="90vh">
 
                     <Stack gap={2}>

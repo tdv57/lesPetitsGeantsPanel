@@ -12,14 +12,10 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
       <VideosDuMomentProvider>
         <ArticleDeLaSaisonProvider>
-    <ChakraProvider value={system}>
-
-          <RouterProvider router={router} />
-    </ChakraProvider>
+          <ChakraProvider value={system}>
+                <RouterProvider router={router} />
+          </ChakraProvider>
         </ArticleDeLaSaisonProvider>
-          
       </VideosDuMomentProvider>
-
-
   </StrictMode>,
 )

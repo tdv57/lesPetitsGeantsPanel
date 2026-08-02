@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { VideoCreateType, VideoSelectType } from "../../service/VideoService";
 import { Button, Field, Input, Stack, Textarea, Text, createListCollection, NumberInput, Select } from "@chakra-ui/react";
-import type { FormPropsType } from "../modal/BoutonCreation";
+import type { FormPropsType } from "../modal/BoutonCreationVideo";
 import { ChargementStatut } from "../../enum/ChargementStatut";
 import { newVideoFormValidationSchema, type newVideoFormValidationType } from "../validation/NewVideoFormValidation";
 import { useCompressionProgress } from "../../hook/useCompressionProgress";
@@ -24,6 +24,7 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
     const [error, setError] = useState<Record<string,string>>({})
     const compressionProgress = useCompressionProgress();
     const {description, setDescription, age, setAge,typeAge, setTypeAge, video, setVideo, chargementStatut, setChargementStatut} = formProps;
+    const fileInputRef = useRef<HTMLInputElement>(null);
     
     function handleVideo(e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>) {
         if (e.target.files) {
@@ -121,7 +122,8 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
         <>
             <form onSubmit={(e) => handleSubmit(e)}>
                 <Stack gap={4}>
-                    <Field.Root invalid={!!error.description}>
+                    <Field.Root 
+                    invalid={!!error.description}>
                         <Field.Label>description</Field.Label>
                         <Textarea 
                             id="description" 
@@ -129,6 +131,7 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
                             onChange={(e) => setDescription(e.target.value)}
                             value={description}
                             disabled={isLocked}
+                            color="black"
                         />
                         <Field.ErrorText>{error.description}</Field.ErrorText>
                     </Field.Root>
@@ -139,7 +142,8 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
                             onValueChange={(e) => setAge(e.value)}         
                             value={age}     
                             disabled={isLocked}   
-                            min={1}          
+                            min={1}       
+                            color="black"   
                         >
                         <NumberInput.Control/>
                         <NumberInput.Input 
@@ -157,13 +161,17 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
                             value={typeAge ? [typeAge] : []}
                             onValueChange={(e) => setTypeAge(e.value[0] as "" | "ANS" | "MOIS" ?? "" )}
                             disabled={isLocked}
+                            color="black"
                         >
                             <Select.Control>
                                 <Select.Trigger>
                                     <Select.ValueText placeholder="--" />
                                 </Select.Trigger>
-                            </Select.Control>
-
+                                <Select.IndicatorGroup>
+                                    <Select.Indicator/>
+                                </Select.IndicatorGroup>
+                            </Select.Control>                    
+  
                             <Select.Positioner>
                                 <Select.Content>
                                     {typeAgeCollection.items.map((item) => (
@@ -180,13 +188,21 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
                         <Field.Label>vidéo</Field.Label>
                         
                         <Input
-                            type="file" 
+                            type="file"
+                            ref={fileInputRef} 
                             id="video"
                             accept="video/mp4,video/*"
                             onChange={handleVideo}
                             value=""
                             disabled={isLocked}
+                            color="black"
+                            style={{ display: "none" }}
                         />
+
+                        <Button onClick={() => fileInputRef.current?.click()} disabled={isLocked}>
+                            Choisir une vidéo
+                        </Button>
+                        
                         <Text fontSize="sm" color="gray.600" mt={1}>
                             {video ?    `Fichier sélectionné : ${video.name} (${(video.size / 1_000_000).toFixed(1)} Mo)`  : `Aucun fichier sélectionné`}
                         </Text>

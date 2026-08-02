@@ -1,7 +1,14 @@
-import {  Button, Heading, HStack} from "@chakra-ui/react";
-import { NavLink } from 'react-router-dom'
+import {  Button, Heading, HStack, Text} from "@chakra-ui/react";
+import { NavLink, useNavigate } from 'react-router-dom'
 import { logout } from "../../service/SupabaseService";
+import { LuLogOut } from "react-icons/lu";
 export default function Nav() {
+    const navigate = useNavigate();
+
+    async function handleLogout() {
+        await logout();
+        navigate("/login");
+    }
     return (
         <HStack justify="center" padding="20px" gap={8}>
             <Button asChild colorPalette="purple" size="lg">
@@ -19,12 +26,18 @@ export default function Nav() {
                     <Heading size="xl" color="whiteAlpha.900"> Article de la saison </Heading>
                 </NavLink>
             </Button>
-            <Button onClick={() => logout()} asChild colorPalette="red" size="lg">
+            <Button asChild colorPalette="purple" size="lg">
                 <NavLink
-                    to="/login"
+                    to="/images"
                 >
-                    <Heading size="xl" color="whiteAlpha.900">Déconnection </Heading>
+                    <Heading size="xl" color="whiteAlpha.900"> Gérer les images </Heading>
                 </NavLink>
+            </Button>
+            <Button onClick={() => logout()} colorPalette="red" size="lg">
+                <HStack gap={2}>
+                    <LuLogOut size={40} />
+                    <Heading size="xl" color="whiteAlpha.900">Déconnexion</Heading>
+                </HStack>
             </Button>
             
 

@@ -1,10 +1,9 @@
 import App from "../App";
 import Erreur404 from "../components/hero/404";
-import ArticleDeLaSaison from "../components/hero/ArticleDeLaSaison";
 import Login from "../components/hero/Login";
-import VideosDuMoment from "../components/hero/VideosDuMoment";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { useAuth } from '../hook/useAuth'
+import Images from "../components/hero/Images";
 
 function HomeIndex() {
     const {isAuthenticated} = useAuth();
@@ -28,6 +27,10 @@ export const router = createBrowserRouter([
             {
                 path:"article-de-la-saison",
                 element:null
+            },
+            {
+                path:"images",
+                element:<Images/>
             }
         ]
     },
