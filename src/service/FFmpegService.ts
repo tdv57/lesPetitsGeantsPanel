@@ -50,7 +50,7 @@ export async function compressVideo(inputFile: File) {
                 '-i', 'input.mp4',
                 '-c:v', 'libx264',
                 '-crf', '22',          
-                '-preset', 'ultrafast',
+                '-preset', 'veryfast',
                 '-c:a', 'aac',
                 '-b:a', '128k',
                 'output.mp4',
