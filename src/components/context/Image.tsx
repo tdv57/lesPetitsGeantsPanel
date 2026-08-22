@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import type { JeuDeSocieteSelect, JouetSelect, MarqueSelect, PelucheSelect } from "../../types/ImageType";
-import { getImage } from "../../service/ImageService";
+import type { ImageSelect, JeuDeSocieteSelect, JouetSelect, MarqueSelect, PelucheSelect } from "../../types/ImageType";
+import {getImageByType } from "../../service/ImageService";
+import { mapToJeuDeSocieteSelect, mapToJouetSelect, mapToMarqueSelect, mapToPelucheSelect } from "../../mapper/ImageMapper";
 
 type ImageContextType = {
     images : {
@@ -36,19 +37,19 @@ export function ImageProvider({children}: { children: ReactNode }){
     async function loadAll() {
 
       const results = await Promise.allSettled([
-        getImage("MARQUE"),
-        getImage("JOUET"),
-        getImage("JEU DE SOCIETE"),
-        getImage("PELUCHE")
+        getImageByType("MARQUE"),
+        getImageByType("JOUET"),
+        getImageByType("JEU DE SOCIETE"),
+        getImageByType("PELUCHE")
       ]);
 
       const [marquesRes, jouetsRes, jeuDeSocietesRes, pelucheRes] = results;
 
       setImages({
-        "MARQUE": marquesRes.status === "fulfilled" ? marquesRes.value : [],
-        "JOUET": jouetsRes.status === "fulfilled" ? jouetsRes.value : [],
-        "JEU DE SOCIETE": jeuDeSocietesRes.status === "fulfilled" ? jeuDeSocietesRes.value : [],
-        "PELUCHE": pelucheRes.status === "fulfilled" ? pelucheRes.value : [],
+        "MARQUE": marquesRes.status === "fulfilled" ? marquesRes.value.map((value) => mapToMarqueSelect(value)) : [],
+        "JOUET": jouetsRes.status === "fulfilled" ? jouetsRes.value.map((value) => mapToJouetSelect(value)) : [],
+        "JEU DE SOCIETE": jeuDeSocietesRes.status === "fulfilled" ? jeuDeSocietesRes.value.map((value) => mapToJeuDeSocieteSelect(value)) : [],
+        "PELUCHE": pelucheRes.status === "fulfilled" ? pelucheRes.value.map((value) => mapToPelucheSelect(value)) : [],
       });
     }
     loadAll();

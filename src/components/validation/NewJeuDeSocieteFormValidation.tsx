@@ -1,6 +1,8 @@
 import {z} from "zod"
 
 export const NewJeuDeSocieteFormValidationSchema = z.object({
+    typeImage:
+        z.literal("JEU DE SOCIETE"),
     description:
         z.string().trim().min(1, "La description ne peut pas être vide"),
     typeAge:

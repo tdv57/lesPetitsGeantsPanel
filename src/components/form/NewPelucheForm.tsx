@@ -3,9 +3,10 @@ import { useState } from "react";
 import { LuUpload } from "react-icons/lu";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {useForm, Controller} from "react-hook-form";
-import { type PelucheSelect, type PelucheCreate } from "../../types/ImageType";
+import { type PelucheSelect, type PelucheCreate, type ImageCreate } from "../../types/ImageType";
 import { NewPelucheFormValidationSchema, type NewPelucheFormValidationType } from "../validation/NewPelucheFormValidation";
-import { addImagePeluche } from "../../service/ImageService";
+import { addImage } from "../../service/ImageService";
+import { mapToPelucheSelect } from "../../mapper/ImageMapper";
 
 type NewPelucheFormPropType = {
     onSuccess: (result : PelucheSelect | null) => void;
@@ -21,7 +22,8 @@ export function NewPelucheForm({onSuccess} : NewPelucheFormPropType) {
     } = useForm<NewPelucheFormValidationType>({
         resolver: zodResolver(NewPelucheFormValidationSchema),
         defaultValues: {
-            marque : ""
+            marque : "",
+            typeImage: "PELUCHE"
         }
     });
 
@@ -29,8 +31,11 @@ export function NewPelucheForm({onSuccess} : NewPelucheFormPropType) {
         console.log("clique effectué");
         console.log(data.image.name);
         console.log(data.image);
-        addImagePeluche(data as PelucheCreate).then(res => {
-            if(res) onSuccess(res);
+        addImage(data as ImageCreate).then(res => {            
+            if(res) {
+                const resPeluche = mapToPelucheSelect(res);
+                onSuccess(resPeluche);
+            }
         });
         reset();
     }

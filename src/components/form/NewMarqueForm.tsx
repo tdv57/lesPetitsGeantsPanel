@@ -3,9 +3,10 @@ import { useState } from "react";
 import { LuUpload } from "react-icons/lu";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {useForm, Controller} from "react-hook-form";
-import { type MarqueCreate, type MarqueSelect } from "../../types/ImageType";
+import { type ImageCreate, type ImageSelect, type MarqueCreate, type MarqueSelect } from "../../types/ImageType";
 import { newMarqueFormValidationSchema, type newMarqueFormValidationType } from "../validation/NewMarqueFormValidation";
-import { addImageMarque } from "../../service/ImageService";
+import { addImage } from "../../service/ImageService";
+import { mapToMarqueSelect } from "../../mapper/ImageMapper";
 
 type NewMarqueFormPropType = {
     onSuccess: (result : MarqueSelect | null) => void;
@@ -21,7 +22,8 @@ export function NewMarqueForm({onSuccess} : NewMarqueFormPropType) {
     } = useForm<newMarqueFormValidationType>({
         resolver: zodResolver(newMarqueFormValidationSchema),
         defaultValues: {
-            marque : ""
+            marque : "",
+            typeImage: "MARQUE"
         }
     });
 
@@ -29,8 +31,11 @@ export function NewMarqueForm({onSuccess} : NewMarqueFormPropType) {
         console.log("clique effectué");
         console.log(data.image.name);
         console.log(data.image);
-        addImageMarque(data as MarqueCreate).then(res => {
-            if(res) onSuccess(res);
+        addImage(data as ImageCreate).then(res => {
+            if(res) {
+                const resMarque = mapToMarqueSelect(res);
+                onSuccess(resMarque);
+            }
         });
         reset();
     }

@@ -1,12 +1,13 @@
 import { Controller, useForm } from "react-hook-form";
-import type { JouetSelect, JouetCreate } from "../../types/ImageType";
+import type { JouetSelect, JouetCreate, ImageCreate } from "../../types/ImageType";
 import { NewJouetFormValidationSchema, type NewJouetFormValidationType } from "../validation/NewJouetFormValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addImageJouet } from "../../service/ImageService";
+import { addImage } from "../../service/ImageService";
 import {mapAge} from "../../mapper/UtilsMapper";
 import { Box, Button, Field, FileUpload, Icon, NumberInput, Select, Textarea, VStack } from "@chakra-ui/react";
 import { LuUpload } from "react-icons/lu";
 import { typeAgeCollection } from "../../mapper/UtilsMapper";
+import { mapToJouetSelect } from "../../mapper/ImageMapper";
 
 type NewJouetFormPropType = {
     onSuccess: (result : JouetSelect | null) => void;
@@ -23,7 +24,8 @@ export function NewJouetForm({onSuccess} : NewJouetFormPropType) {
         defaultValues: {
             age: "",
             typeAge: "",
-            description: ""
+            description: "",
+            typeImage: "JOUET"
         }
     });
 
@@ -31,10 +33,13 @@ export function NewJouetForm({onSuccess} : NewJouetFormPropType) {
         console.log("clique effectué");
         console.log(data);
         
-        addImageJouet(data).then(res => {
+        addImage(data as ImageCreate).then(res => {
             console.log("resultat jouet: ")
             console.log(res)
-            if(res) onSuccess({...res});
+            if(res) {
+                const resJouet = mapToJouetSelect(res);
+                onSuccess({...resJouet});
+            }
         });
         reset();
     }

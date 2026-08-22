@@ -88,5 +88,24 @@ export type PelucheCreate = {
     image: File
 }
 
+export type ImageCreate = {
+    typeImage: TYPE_IMAGE_TYPE,
+    marque?:string, 
+    typeAge?: string,
+    age?: string,
+    description?: string,
+    image: File
+}
+
+export type ImageSelect = {
+    url: string,
+    id: number,
+    typeImage : TYPE_IMAGE_TYPE,
+    marque?:string, 
+    age?: string,
+    description?: string,
+    createdAt: Date   
+}
+
 export type IMAGE_SELECT_TYPE =  MarqueSelect | JeuDeSocieteSelect | JouetSelect | PelucheSelect;
 export type IMAGE_CREATE_TYPE = MarqueCreate | JeuDeSocieteCreate | JouetCreate | PelucheCreate;

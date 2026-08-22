@@ -1,6 +1,8 @@
 import {z} from "zod";
 
 export const NewJouetFormValidationSchema = z.object({
+    typeImage:
+        z.literal("JOUET"),
     typeAge: 
         z.string().trim(),
     age:

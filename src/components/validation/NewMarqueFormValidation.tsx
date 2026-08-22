@@ -1,6 +1,8 @@
 import {z} from "zod";
 
 export const newMarqueFormValidationSchema = z.object({
+    typeImage:
+        z.literal("MARQUE"),
     marque: 
         z.string().trim().min(1, "Le nom de la marque ne peut pas être vide"),
     image: 
