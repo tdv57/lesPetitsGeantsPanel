@@ -1,5 +1,5 @@
 import { Button, Dialog, Portal } from "@chakra-ui/react";
-import NewVideoForm from "../card/NewVideoForm";
+import NewVideoForm from "../form/NewVideoForm";
 import { type VideoCreateType, type VideoSelectType } from "../../service/VideoService";
 import { useState } from "react";
 import type { ChargementStatutEnum } from "../../enum/ChargementStatut";

@@ -1,9 +1,16 @@
 import { Box, Button, Dialog, Portal } from "@chakra-ui/react";
-import type { TYPE_IMAGE } from "../../service/ImageService";
+import type { JeuDeSocieteSelect, JouetSelect, PelucheSelect, TYPE_IMAGE_TYPE } from "../../types/ImageType";
 import { useState, type JSX } from "react";
+import { NewMarqueForm } from "../form/NewMarqueForm";
+import { useImages } from "../../hook/useImages";
+import type { MarqueSelect } from "../../types/ImageType";
+import { NewJouetForm } from "../form/NewJouetForm";
+import { mapAge } from "../../mapper/UtilsMapper";
+import { NewJouetDeSocieteForm } from "../form/NewJeuDeSocieteForm";
+import { NewPelucheForm } from "../form/NewPelucheForm";
 
 type BoutonCreationImagePropsType = {
-    typeImageLabel : TYPE_IMAGE,
+    typeImageLabel : TYPE_IMAGE_TYPE,
     typeImageValue : "Marque" | "Jouet" | "Jeu de société" | "Peluche"
 }
 
@@ -11,19 +18,64 @@ type BoutonCreationImagePropsType = {
 
 export function BoutonCreationImage({typeImageLabel, typeImageValue} : BoutonCreationImagePropsType) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const {setImages} = useImages();
 
-    function getForm(t: TYPE_IMAGE) :  JSX.Element {
-        switch(t) {
-            case "MARQUE":
-                return <Box>Marque</Box>;
-            case "JOUET":
-                return <Box>Jouet</Box>;
-            case "JEU DE SOCIETE":
-                return <Box>Jeu de société</Box>;
-            case "PELUCHE":
-                return <Box>Peluche</Box>;
+    function onSuccessMarque(result : MarqueSelect | null) {
+        if(result) {
+            setImages((m) => ({
+            ...m,
+            MARQUE: [...m.MARQUE, result],
+            }))
         }
     }
+
+    function onSuccessJouet(result : JouetSelect | null) {
+        console.log("OnSuccessJouet: " + result);
+        console.log(result);
+        if(result) {
+            setImages((m) => ({
+            ...m,
+            JOUET: [...m.JOUET, result],
+            }))
+        }
+    }
+
+    function onSuccessJeuDeSociete(result : JeuDeSocieteSelect | null) {
+        console.log("onSuccessJeuDeSociete: " + result);
+        console.log(result);
+        if(result) {
+            setImages((m) => ({
+            ...m,
+            "JEU DE SOCIETE": [...m["JEU DE SOCIETE"], result],
+            }))
+        }
+    }
+
+    function onSuccessPeluche(result : PelucheSelect | null) {
+        console.log("onSuccessPeluche: " + result);
+        console.log(result);
+        if(result) {
+            setImages((m) => ({
+            ...m,
+            "PELUCHE": [...m["PELUCHE"], result],
+            }))
+        }
+    }
+
+    function getForm(t: TYPE_IMAGE_TYPE) :  JSX.Element {
+        switch(t) {
+            case "MARQUE":
+                return <NewMarqueForm onSuccess={onSuccessMarque}/>
+            case "JOUET":
+                return <NewJouetForm onSuccess={onSuccessJouet}/>
+            case "JEU DE SOCIETE":
+                return <NewJouetDeSocieteForm onSuccess={onSuccessJeuDeSociete}/>;
+            case "PELUCHE":
+                return <NewPelucheForm onSuccess={onSuccessPeluche}/>
+        }
+        return <></>;
+    }
+
     return(
         <>
             <Dialog.Root

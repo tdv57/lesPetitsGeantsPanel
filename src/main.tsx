@@ -7,15 +7,18 @@ import { router } from './router/index.tsx'
 import { system } from './theme/theme.ts'
 import { VideosDuMomentProvider } from './components/context/VideosDuMoment.tsx'
 import { ArticleDeLaSaisonProvider } from './components/context/ArticleDeLaSaison.tsx'
+import { ImageProvider } from './components/context/Image.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
       <VideosDuMomentProvider>
-        <ArticleDeLaSaisonProvider>
-          <ChakraProvider value={system}>
-                <RouterProvider router={router} />
-          </ChakraProvider>
-        </ArticleDeLaSaisonProvider>
+        <ImageProvider>
+          <ArticleDeLaSaisonProvider>
+            <ChakraProvider value={system}>
+                  <RouterProvider router={router} />
+            </ChakraProvider>
+          </ArticleDeLaSaisonProvider>
+        </ImageProvider>
       </VideosDuMomentProvider>
   </StrictMode>,
 )

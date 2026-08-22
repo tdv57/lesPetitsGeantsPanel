@@ -1,6 +1,6 @@
 import { Box, Heading, VStack } from "@chakra-ui/react";
 import {type VideoSelectType } from "../../service/VideoService";
-import ConfirmationSuppression from "../modal/ConfirmationSuppression";
+import ConfirmationSuppression from "../modal/ConfirmationSuppressionVideo";
 
 type VideoCardPropType = {
     index: number, 

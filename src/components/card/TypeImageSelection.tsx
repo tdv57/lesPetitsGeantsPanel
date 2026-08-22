@@ -1,9 +1,9 @@
 import { Portal, Select } from "@chakra-ui/react";
-import { type TYPE_IMAGE, typeImageCollection } from "../../service/ImageService"
+import { type TYPE_IMAGE_TYPE, typeImageCollection } from "../../types/ImageType"
 
 type TypeImageSelectionPropsType = {
-    setTypeImage: React.Dispatch<React.SetStateAction<TYPE_IMAGE[]>>;
-    typeImage: TYPE_IMAGE[];
+    setTypeImage: React.Dispatch<React.SetStateAction<TYPE_IMAGE_TYPE[]>>;
+    typeImage: TYPE_IMAGE_TYPE[];
 }
 export default function TypeImageSelection({typeImage, setTypeImage} : TypeImageSelectionPropsType) {
     return (
@@ -12,7 +12,7 @@ export default function TypeImageSelection({typeImage, setTypeImage} : TypeImage
                 gap={{ base: "3", sm: "5" }}
                 collection={typeImageCollection}
                 value={typeImage}
-                onValueChange={(e) => setTypeImage(e.value as TYPE_IMAGE[])}
+                onValueChange={(e) => setTypeImage(e.value as TYPE_IMAGE_TYPE[])}
                 size="md"              
                 variant="outline"    
                 colorPalette="teal"   

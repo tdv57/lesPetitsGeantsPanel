@@ -124,7 +124,7 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
                 <Stack gap={4}>
                     <Field.Root 
                     invalid={!!error.description}>
-                        <Field.Label>description</Field.Label>
+                        <Field.Label color="black">description</Field.Label>
                         <Textarea 
                             id="description" 
                             name="description"
@@ -137,7 +137,7 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
                     </Field.Root>
 
                     <Field.Root invalid={!!error.age}>
-                        <Field.Label>age</Field.Label>
+                        <Field.Label color="black">age</Field.Label>
                         <NumberInput.Root
                             onValueChange={(e) => setAge(e.value)}         
                             value={age}     
@@ -155,7 +155,7 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
                     </Field.Root>
 
                     <Field.Root invalid={!!error.typeAge}>
-                        <Field.Label>type d'âge</Field.Label>
+                        <Field.Label color="black">type d'âge</Field.Label>
                         <Select.Root
                             collection={typeAgeCollection}
                             value={typeAge ? [typeAge] : []}
@@ -185,7 +185,6 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
                         <Field.ErrorText>{error.typeAge}</Field.ErrorText>
                     </Field.Root>
                     <Field.Root invalid={!!error.video}>
-                        <Field.Label>vidéo</Field.Label>
                         
                         <Input
                             type="file"
