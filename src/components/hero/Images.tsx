@@ -1,13 +1,31 @@
 import { useState } from "react";
-import { type TYPE_IMAGE_TYPE } from "../../types/ImageType";
+import { type IMAGE_SELECT_TYPE, type TYPE_IMAGE_TYPE } from "../../types/ImageType";
 import TypeImageSelection from "../card/TypeImageSelection";
 import { Box, SimpleGrid, VStack } from "@chakra-ui/react";
 import { BoutonCreationImage } from "../modal/BoutonCreationImage";
 import { useImages } from "../../hook/useImages";
 import ImageCard from "../card/ImageCard";
+import { deleteImage } from "../../service/ImageService";
 
 export default function Images() {
     const [typeImage, setTypeImage] = useState<TYPE_IMAGE_TYPE[]>([]);
+    const {setImages} = useImages();
+
+    function handleDelete(id: number, type : TYPE_IMAGE_TYPE) {
+        deleteImage(id).then((b) => {
+            if (b) {
+            console.log(`should delete id:${id} type:${type}`)
+
+            setImages((m) => ({
+                        ...m,
+                        [type]: m[type].filter((image) => {console.log(`filter for image : `, image);return image.id != id})
+                        })
+                    )
+            } else {
+                console.log( "delete is false");
+            }
+        })
+    }
     const typeImageMapping = {
         "JOUET" : "Jouet",
         "PELUCHE" : "Peluche",
@@ -27,7 +45,7 @@ export default function Images() {
                 return (
                 <Box key={index}  hidden={!(type === typeImage[0])} display="flex" justifyContent="center">
                     <SimpleGrid columns={{base: 1, sm:2, md:3}} gap={8} justifyItems="center" margin={8}>
-                        {images[type].map(image =>{  console.log("image à afficher:", image); return<ImageCard key={image.id} imageSelect={image}/>; } ) }
+                        {images[type].map(image =>{  console.log("image à afficher:", image); return<ImageCard key={image.id} imageSelect={image} handleDelete={handleDelete}/>; } ) }
                     </SimpleGrid>
                     
                 </Box>

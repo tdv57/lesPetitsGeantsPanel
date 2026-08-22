@@ -15,13 +15,24 @@ export default function ArticleDeLaSaison() {
         } else console.log("Erreur BoutonCreation OnSuccess result null");
     }
 
+    function handleDelete(id: number) {
+        deleteArticleDeLaSaison().then((b) => {
+            if (b) {
+                setVideo((videos: VideoSelectType[]) => {
+                    const newVideos = videos.filter((video) => video.id != id);
+                    return newVideos;
+                })
+            }
+        })
+    }
+
     return (
 
             <VStack align="center" >
                 <BoutonCreationVideo submitMessage="Remplacer l'article de la saison" resetMessage="Remplacer l'article de la saison" setVideos={setVideo} supabaseAction={replaceArticleDeLaSaison} onSuccess={onSuccess}/>
                 {/* <NewVideoForm submitMessage="Ajouter un vidéo" supabaseAction={addVideosDuMoment}/> */}
                 <VStack gap={10} align="center">
-                    {video.length > 0 ? <VideoCard v={video[0]} index={1} setVideos={setVideo} supabaseDeleteAction={deleteArticleDeLaSaison}/> : <></>}
+                    {video.length > 0 ? <VideoCard v={video[0]} index={1} handleDelete={handleDelete}/> : <></>}
                 </VStack>
             </VStack>
     )

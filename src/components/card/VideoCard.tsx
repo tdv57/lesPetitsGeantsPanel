@@ -1,15 +1,14 @@
 import { Box, Heading, VStack } from "@chakra-ui/react";
 import {type VideoSelectType } from "../../service/VideoService";
-import ConfirmationSuppression from "../modal/ConfirmationSuppressionVideo";
+import ConfirmationSuppression from "../modal/ConfirmationSuppression";
 
 type VideoCardPropType = {
     index: number, 
     v: VideoSelectType
-    setVideos: React.Dispatch<React.SetStateAction<VideoSelectType[]>>
-    supabaseDeleteAction: (id: number) => Promise<boolean>
+    handleDelete: (id :number) => void
 }
-export default function VideoCard({v, index, setVideos, supabaseDeleteAction} : VideoCardPropType) {
-    
+export default function VideoCard({v, index, handleDelete} : VideoCardPropType) {
+
     return (
         <>
         <Box     
@@ -46,7 +45,7 @@ export default function VideoCard({v, index, setVideos, supabaseDeleteAction} : 
 
                         />
                 </Box>
-                    <ConfirmationSuppression id={v.id} setVideos={setVideos} supabaseDeleteAction={supabaseDeleteAction}/>
+                    <ConfirmationSuppression id={v.id} handleDelete={handleDelete}/>
             </VStack>
 
         </Box>

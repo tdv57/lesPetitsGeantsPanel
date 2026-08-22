@@ -1,12 +1,26 @@
 import { Box, Heading, Image } from "@chakra-ui/react";
 import type { IMAGE_SELECT_TYPE, TYPE_IMAGE_TYPE } from "../../types/ImageType";
 import { isJeuDeSocieteSelect, isJouetSelect, isMarqueSelect, isPelucheSelect } from "../../mapper/ImageMapper";
+import ConfirmationSuppression from "../modal/ConfirmationSuppression";
 
 type ImageCardPropType = {
     imageSelect: IMAGE_SELECT_TYPE;
+    handleDelete: (id: number, type : TYPE_IMAGE_TYPE) => void
 }
 
-export default function ImageCard({imageSelect} : ImageCardPropType) {
+export default function ImageCard({imageSelect, handleDelete} : ImageCardPropType) {
+    function handleDeleteMarque(id: number) {
+        return handleDelete(id, "MARQUE");
+    }
+    function handleDeleteJeuDeSociete(id: number) {
+        return handleDelete(id, "JEU DE SOCIETE");
+    }
+    function handleDeletePeluche(id: number) {
+        return handleDelete(id, "PELUCHE");
+    }
+    function handleDeleteJouet(id: number) {
+        handleDelete(id, "JOUET");
+    }
     console.log(isMarqueSelect(imageSelect))
     return(
         <>
@@ -43,6 +57,7 @@ export default function ImageCard({imageSelect} : ImageCardPropType) {
                             padding={{base: 12, sm:1}}
                         />
                     </Box>
+                    <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeleteMarque}/>
                 </Box>
             }
             { isPelucheSelect(imageSelect) && 
@@ -65,6 +80,7 @@ export default function ImageCard({imageSelect} : ImageCardPropType) {
                             padding={{base: 12, sm:1}}
                         />
                     </Box>
+                    <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeletePeluche}/>
                 </Box>
             }
             { isJouetSelect(imageSelect) && 
@@ -94,6 +110,7 @@ export default function ImageCard({imageSelect} : ImageCardPropType) {
                             padding={{base: 12, sm:1}}
                         />
                     </Box>
+                    <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeleteJouet}/>
                 </Box>
             }
             { isJeuDeSocieteSelect(imageSelect) && 
@@ -123,6 +140,7 @@ export default function ImageCard({imageSelect} : ImageCardPropType) {
                             padding={{base: 12, sm:1}}
                         />
                     </Box>
+                    <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeleteJeuDeSociete}/>
                 </Box>
             }
 

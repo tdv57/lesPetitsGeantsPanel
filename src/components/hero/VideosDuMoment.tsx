@@ -13,6 +13,17 @@ export default function VideosDuMoment() {
         } else console.log("Erreur BoutonCreation OnSuccess result null");
     }
 
+    function handleDelete(id: number) {
+        deleteVideosDuMoment(id).then((b) => {
+            if (b) {
+                setVideos((videos: VideoSelectType[]) => {
+                    const newVideos = videos.filter((video) => video.id != id);
+                    return newVideos;
+                })
+            }
+        })
+    }
+
     return(
         <>
 
@@ -23,7 +34,7 @@ export default function VideosDuMoment() {
                     { videos.map((v, index) => {
                         return(
                             <>
-                                <VideoCard v={v} index={index} setVideos={setVideos} supabaseDeleteAction={deleteVideosDuMoment}/>
+                                <VideoCard v={v} index={index} handleDelete={handleDelete}/>
                             </>
 
                         )

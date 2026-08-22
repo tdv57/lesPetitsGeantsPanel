@@ -1,5 +1,5 @@
 import { supabase, TABLE_IMAGE } from './SupabaseService';
-import { R2_IMAGE_PUBLIC_URL, uploadImage } from "./R2Service";
+import { R2_IMAGE_PUBLIC_URL, uploadImage, deleteImage as deleteR2Image } from "./R2Service";
 import { TYPE_IMAGE_VALUE, type IMAGE_SELECT_TYPE, type JeuDeSocieteCreate, type JeuDeSocieteSelect, type JouetCreate, type JouetSelect, type MarqueCreate, type MarqueSelect, type PelucheCreate, type PelucheSelect, type TYPE_IMAGE_TYPE } from '../types/ImageType';
 import { mapJeuDeSocieteFromSupabase, mapJouetFromSupabase, mapMarqueFromSupabase, mapPelucheFromSupabase } from '../mapper/ImageMapper';
 import {mapAge } from '../mapper/UtilsMapper';
@@ -163,4 +163,17 @@ export async function getImageById(id: number): Promise<IMAGE_SELECT_TYPE | null
     } else {
         return data[0] as IMAGE_SELECT_TYPE;
     }
+}
+
+export async function deleteImage(id: number) {
+    const {data, error} = await supabase.from(TABLE_IMAGE).select().eq('id', id);
+    if (error) return false;
+    const res = await deleteR2Image(data[0].code);
+    if (!res.success) {
+        console.log("deleteVideosDuMoment R2 error: ", res.error);
+        return false;
+    }
+    const {error: dbError} = await supabase.from(TABLE_IMAGE).delete().eq('id', id);
+    if (dbError) return false;
+    return true;
 }
