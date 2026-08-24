@@ -4,6 +4,7 @@ import {
     deleteVideo, 
     R2_VIDEO_PUBLIC_URL
 } from './R2Service';
+import { mapAge } from '../mapper/UtilsMapper';
 
 export type VideoSelectType = {
     id: number,
@@ -33,7 +34,7 @@ export async function getArticleDeLaSaison() : Promise<VideoSelectType | null>{
         return {
             url: articleDeLaSaison.url,
             description: articleDeLaSaison.description,
-            age: getAge(parseInt(articleDeLaSaison.age), articleDeLaSaison.typeAge),
+            age: mapAge((articleDeLaSaison.age), articleDeLaSaison.type_age),
             id: articleDeLaSaison.id,
             created_at: articleDeLaSaison.created_at
         }
@@ -51,7 +52,7 @@ export async function getVideosDuMoment() : Promise<VideoSelectType[] | null>{
         return {
             url: d.url,
             description: d.description,
-            age: getAge(parseInt(d.age), d.typeAge),
+            age: mapAge(d.age, d.type_age),
             id: d.id,
             created_at: d.created_at
         };
@@ -78,7 +79,7 @@ export async function addVideosDuMoment({description, age, typeAge, video}: Vide
     return {
         url: newVideo.url,
         description: newVideo.description,
-        age: getAge(newVideo.age, newVideo.typeAge),
+        age: mapAge(newVideo.age, newVideo.type_age),
         id: newVideo.id,
         created_at: newVideo.created_at
     };
@@ -142,25 +143,8 @@ export async function replaceArticleDeLaSaison({description, age, typeAge, video
     return {
         url: newVideo.url,
         description: newVideo.description,
-        age: newVideo.age,
+        age: mapAge(newVideo.age, newVideo.type_age),
         id: newVideo.id,
         created_at: newVideo.created_at
     };
-}
-
-function getAge(age: number, typeAge: "ANS" | "MOIS") : string {
-    if( !age || age < 0 || !typeAge || (typeAge !== "ANS" && typeAge !== "MOIS")) {
-        return "";
-    }
-    if (typeAge === "ANS") {
-        if (age === 1 || age === 0) {
-            return "Dès " + age + " an";
-        } else {
-            return "Dès " + age + " ans";
-        }
-    }
-    else if (typeAge === "MOIS") {
-        return "Dès " + age + " mois";
-    }
-    return ""; 
 }

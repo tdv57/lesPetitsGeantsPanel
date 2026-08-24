@@ -35,112 +35,155 @@ export default function ImageCard({imageSelect, handleDelete} : ImageCardPropTyp
         >
             { isMarqueSelect(imageSelect) && 
                 <Box  
-                    width={{ base: "100%", sm: "100%", md: "70%"}}
-                    height={{base: "100%"}}
+                    width={{ base: "250px", sm: "80%", md: "80%"}}
+                    height="100%"
                     display="flex"
                     flexDir="column"
                     alignItems="center"
                     mx="auto"
-                    gap={{base: 8}}
+                    gap={{base: 2}}
                 >
-                    <Heading mt="20px" size={{base: "2xl"}} color="whiteAlpha.900" >
-                        {imageSelect.marque}
-                    </Heading> 
+                    <Box textAlign="center"flexShrink="0" mb={2} fontSize={{base: "sm"}} overflow="hidden">
+                        <Heading size={{base: "md", md:"2xl"}} color="whiteAlpha.900" lineClamp={2}>
+                            {imageSelect.marque}
+                        </Heading> 
+                    </Box>
 
-                    <Box flex="1" display="flex" alignItems="center" justifyContent="center" width="100%">
+                    <Box           
+                        flex="1" 
+                        minHeight="0"   
+                        display="flex" 
+                        alignItems="center" 
+                        justifyContent="center" 
+                        width="100%"
+                    >
                         <Image
                             src={imageSelect.url}
                             alt={imageSelect.marque}
-                            width="100%"
-                            objectFit="cover"
+                            maxWidth="100%"
+                            maxHeight="100%"
+                            objectFit="contain"
                             borderRadius="md"
-                            padding={{base: 12, sm:1}}
                         />
                     </Box>
-                    <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeleteMarque}/>
+                    <Box flexShrink="0" mt={2}>
+                        <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeleteMarque}/>
+                    </Box>
                 </Box>
             }
             { isPelucheSelect(imageSelect) && 
                 <Box  
-                    width={{ base: "100%", sm: "100%", md: "70%"}}
-                    height={{base: "100%"}}
+                    width={{ base: "250px", sm: "80%", md: "80%"}}
+                    height="100%"
                     display="flex"
                     flexDir="column"
                     alignItems="center"
                     mx="auto"
-                    gap={{base: 8}}
+                    gap={{base: 2}}
                 >
-                    <Box flex="1" display="flex" alignItems="center" justifyContent="center" width="100%">
+                    <Box           
+                        flex="1" 
+                        minHeight="0"   
+                        display="flex" 
+                        alignItems="center" 
+                        justifyContent="center" 
+                        width="100%"
+                    >
                         <Image
                             src={imageSelect.url}
                             alt={imageSelect.marque}
-                            width="100%"
-                            objectFit="cover"
+                            maxWidth="100%"
+                            maxHeight="100%"
+                            objectFit="contain"
                             borderRadius="md"
-                            padding={{base: 12, sm:1}}
                         />
                     </Box>
-                    <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeletePeluche}/>
+                    <Box flexShrink="0" mt={2}>
+                        <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeletePeluche}/>
+                    </Box>
                 </Box>
             }
             { isJouetSelect(imageSelect) && 
                 <Box  
-                    width={{ base: "100%", sm: "100%", md: "70%"}}
-                    height={{base: "100%"}}
+                    width={{ base: "250px", sm: "80%", md: "80%"}}
+                    height="100%"
                     display="flex"
                     flexDir="column"
                     alignItems="center"
                     mx="auto"
-                    gap={{base: 8}}
+                    gap={{base: 2}}
                 >
-                    <Heading mt="20px" size={{base: "2xl"}} color="whiteAlpha.900" >
-                        {imageSelect.description}
-                    </Heading>
-                    <Heading mt="20px" size={{base: "2xl"}} color="whiteAlpha.900" >
-                        {imageSelect.age}
-                    </Heading> 
+                    <Box textAlign="center"flexShrink="0" mb={2} fontSize={{base: "sm"}} overflow="hidden">
+                        <Heading size={{base: "sm", md:"2xl"}} color="whiteAlpha.900" lineClamp={2}>
+                            {imageSelect.description}
+                        </Heading> 
+                        <Heading size="sm"  color="whiteAlpha.600" lineClamp={1}>
+                            {imageSelect.age}
+                        </Heading>  
+                    </Box>
 
-                    <Box flex="1" display="flex" alignItems="center" justifyContent="center" width="100%">
+                    <Box           
+                        flex="1" 
+                        minHeight="0"   
+                        display="flex" 
+                        alignItems="center" 
+                        justifyContent="center" 
+                        width="100%"
+                    >
                         <Image
                             src={imageSelect.url}
                             alt={imageSelect.description + imageSelect.age}
-                            width="100%"
-                            objectFit="cover"
+                            maxWidth="100%"
+                            maxHeight="100%"
+                            objectFit="contain"
                             borderRadius="md"
-                            padding={{base: 12, sm:1}}
                         />
                     </Box>
-                    <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeleteJouet}/>
+                    
+                    <Box flexShrink="0" mt={2}>
+                        <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeleteJouet}/>
+                    </Box>
                 </Box>
             }
             { isJeuDeSocieteSelect(imageSelect) && 
                 <Box  
-                    width={{ base: "100%", sm: "100%", md: "70%"}}
-                    height={{base: "100%"}}
+                    width={{ base: "250px", sm: "80%", md: "80%"}}
+                    height="100%"
                     display="flex"
                     flexDir="column"
                     alignItems="center"
                     mx="auto"
-                    gap={{base: 8}}
+                    gap={{base: 2}}
                 >
-                    <Heading mt="20px" size={{base: "2xl"}} color="whiteAlpha.900" >
-                        {imageSelect.description}
-                    </Heading>
-                    <Heading mt="20px" size={{base: "2xl"}} color="whiteAlpha.900" >
-                        {imageSelect.age}
-                    </Heading> 
+                    <Box textAlign="center"flexShrink="0" mb={2} fontSize={{base: "sm"}} overflow="hidden">
+                        <Heading size={{base: "sm", md:"2xl"}} color="whiteAlpha.900" lineClamp={2}>
+                            {imageSelect.description}
+                        </Heading> 
+                        <Heading size="sm"  color="whiteAlpha.600" lineClamp={1}>
+                            {imageSelect.age}
+                        </Heading>  
+                    </Box>
 
-                    <Box flex="1" display="flex" alignItems="center" justifyContent="center" width="100%">
+                    <Box           
+                        flex="1" 
+                        minHeight="0"   
+                        display="flex" 
+                        alignItems="center" 
+                        justifyContent="center" 
+                        width="100%"
+                    >
                         <Image
                             src={imageSelect.url}
                             alt={imageSelect.description + imageSelect.age}
-                            width="100%"
-                            objectFit="cover"
+                            maxWidth="100%"
+                            maxHeight="100%"
+                            objectFit="contain"
                             borderRadius="md"
-                            padding={{base: 12, sm:1}}
                         />
                     </Box>
-                    <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeleteJeuDeSociete}/>
+                    <Box flexShrink="0" mt={2}>
+                        <ConfirmationSuppression id={imageSelect.id} handleDelete={handleDeleteJeuDeSociete}/>
+                    </Box>
                 </Box>
             }
 

@@ -44,7 +44,7 @@ export default function Images() {
                 console.log("type courant:", type, "| hidden ?", !(type === typeImage[0]), "| images[type]:", images[type]);
                 return (
                 <Box key={index}  hidden={!(type === typeImage[0])} display="flex" justifyContent="center">
-                    <SimpleGrid columns={{base: 1, sm:2, md:3}} gap={8} justifyItems="center" margin={8}>
+                    <SimpleGrid columns={{base: 1, sm:2, md:3}} gap={8} justifyItems="center"  alignItems="stretch" margin={8}>
                         {images[type].map(image =>{  console.log("image à afficher:", image); return<ImageCard key={image.id} imageSelect={image} handleDelete={handleDelete}/>; } ) }
                     </SimpleGrid>
                     

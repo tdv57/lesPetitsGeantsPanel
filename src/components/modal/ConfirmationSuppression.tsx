@@ -16,7 +16,7 @@ export default function ConfirmationSuppression({id, handleDelete} : Confirmatio
     return (
         <>
 
-        <VStack align="center">
+        <VStack align="center" margin="8px">
             <Dialog.Root
                 open={isOpen}
                 onOpenChange={(details) => setIsOpen(details.open)}
