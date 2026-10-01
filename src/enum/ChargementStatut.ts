@@ -1,7 +1,7 @@
 export const ChargementStatut = {
-    Inactif: "INACTIF",
-    EnAttente: "EN_ATTENTE",
-    Terminee: "TERMINEE"
+    Inactif: 'INACTIF',
+    EnAttente: 'EN_ATTENTE',
+    Terminee: 'TERMINEE',
 } as const;
 
-export type ChargementStatutEnum = typeof ChargementStatut[keyof typeof ChargementStatut];
+export type ChargementStatutEnum = (typeof ChargementStatut)[keyof typeof ChargementStatut];

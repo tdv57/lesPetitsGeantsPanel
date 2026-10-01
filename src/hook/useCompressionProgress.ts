@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore } from 'react';
 
 type ProgressListener = (progress: number) => void;
 
@@ -7,7 +7,7 @@ let listeners = new Set<ProgressListener>();
 
 export function setProgress(progress: number) {
     currentProgress = progress;
-    listeners.forEach(listener => listener(progress));
+    listeners.forEach((listener) => listener(progress));
 }
 
 export function subscribeProgress(listener: ProgressListener) {

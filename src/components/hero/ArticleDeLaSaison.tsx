@@ -1,15 +1,18 @@
-import {VStack } from "@chakra-ui/react";
-import VideoCard from "../card/VideoCard";
-import BoutonCreationVideo from "../modal/BoutonCreationVideo";
-import type { VideoCreateType, VideoSelectType } from "../../types/VideoType";
-import { useDeleteArticleDeLaSaisonMutation, useGetArticleDeLaSaisonQuery, useReplaceArticleDeLaSaisonMutation } from "../../redux/features/article_de_la_saison/ArticleDeLaSaisonApi";
+import { VStack } from '@chakra-ui/react';
+import VideoCard from '../card/VideoCard';
+import BoutonCreationVideo from '../modal/BoutonCreationVideo';
+import type { VideoCreateType, VideoSelectType } from '../../types/VideoType';
+import {
+    useDeleteArticleDeLaSaisonMutation,
+    useGetArticleDeLaSaisonQuery,
+    useReplaceArticleDeLaSaisonMutation,
+} from '../../redux/features/article_de_la_saison/ArticleDeLaSaisonApi';
 
 export default function ArticleDeLaSaison() {
-
     const [deleteArticleDeLaSaison] = useDeleteArticleDeLaSaisonMutation();
     const [replaceArticleDeLaSaison] = useReplaceArticleDeLaSaisonMutation();
     const { data: video } = useGetArticleDeLaSaisonQuery();
-    async function supabaseAction(newVideo: VideoCreateType) : Promise<VideoSelectType | null> {
+    async function supabaseAction(newVideo: VideoCreateType): Promise<VideoSelectType | null> {
         try {
             const result = await replaceArticleDeLaSaison(newVideo).unwrap();
             return result;
@@ -24,12 +27,16 @@ export default function ArticleDeLaSaison() {
     }
 
     return (
-        <VStack align="center" >
-            <BoutonCreationVideo submitMessage="Remplacer l'article de la saison" resetMessage="Remplacer l'article de la saison" supabaseAction={supabaseAction}/>
+        <VStack align="center">
+            <BoutonCreationVideo
+                submitMessage="Remplacer l'article de la saison"
+                resetMessage="Remplacer l'article de la saison"
+                supabaseAction={supabaseAction}
+            />
             {/* <NewVideoForm submitMessage="Ajouter un vidéo" supabaseAction={addVideosDuMoment}/> */}
             <VStack gap={10} align="center">
-                {video ? <VideoCard v={video} index={1} handleDelete={handleDelete}/> : <></>}
+                {video ? <VideoCard v={video} index={1} handleDelete={handleDelete} /> : <></>}
             </VStack>
         </VStack>
-    )
+    );
 }
