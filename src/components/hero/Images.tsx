@@ -50,40 +50,30 @@ export default function Images() {
                 ) : (
                     <></>
                 )}
-                {typeImage.map((type, index) => {
-                    console.log(
-                        'type courant:',
-                        type,
-                        '| hidden ?',
-                        !(type === typeImage[0]),
-                        '| images[type]:',
-                        images[type],
-                    );
-                    return (
-                        <Box
-                            key={index}
-                            hidden={!(type === typeImage[0])}
-                            display="flex"
-                            justifyContent="center"
+                {typeImage.map((type, _index) => (
+                    <Box
+                        key={type}
+                        hidden={!(type === typeImage[0])}
+                        display="flex"
+                        justifyContent="center"
+                    >
+                        <SimpleGrid
+                            columns={{ base: 1, sm: 2, md: 3 }}
+                            gap={8}
+                            justifyItems="center"
+                            alignItems="stretch"
+                            margin={8}
                         >
-                            <SimpleGrid
-                                columns={{ base: 1, sm: 2, md: 3 }}
-                                gap={8}
-                                justifyItems="center"
-                                alignItems="stretch"
-                                margin={8}
-                            >
-                                {images[type].map((image) => (
-                                    <ImageCard
-                                        key={image.id}
-                                        imageSelect={image}
-                                        handleDelete={handleDelete}
-                                    />
-                                ))}
-                            </SimpleGrid>
-                        </Box>
-                    );
-                })}
+                            {images[type].map((image) => (
+                                <ImageCard
+                                    key={image.id}
+                                    imageSelect={image}
+                                    handleDelete={handleDelete}
+                                />
+                            ))}
+                        </SimpleGrid>
+                    </Box>
+                ))}
             </VStack>
         </>
     );

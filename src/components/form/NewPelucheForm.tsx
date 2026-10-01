@@ -26,9 +26,6 @@ export function NewPelucheForm() {
     });
 
     function onSubmit(data: NewPelucheFormValidationType) {
-        console.log('clique effectué');
-        console.log(data.image.name);
-        console.log(data.image);
         addPeluche(data);
         reset();
     }

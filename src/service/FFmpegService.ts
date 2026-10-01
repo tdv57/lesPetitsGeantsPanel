@@ -28,7 +28,6 @@ async function getFFmpegInstance(): Promise<FFmpeg> {
         }
 
         ffmpeg = instance; // ← seulement assigné APRÈS succès du chargement
-        console.log('FFmpeg chargé avec succès');
         return instance;
     })();
 

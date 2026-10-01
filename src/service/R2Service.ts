@@ -23,12 +23,10 @@ export async function setR2Client() {
                 },
                 requestChecksumCalculation: 'WHEN_REQUIRED',
             });
-            console.log('Client R2 initialisé');
             return;
         }
         return;
     } else {
-        console.log('Client R2 déjà initialisé');
         return;
     }
 }

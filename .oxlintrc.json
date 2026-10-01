@@ -1,8 +1,42 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
+  "plugins": ["react", "typescript", "oxc", "import", "jsx-a11y", "promise"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
   "rules": {
     "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
+    "react/exhaustive-deps": "warn",
+    "react/jsx-key": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }],
+    "react/react-in-jsx-scope": "off",
+
+    "eslint/eqeqeq": ["error", "always"],
+    "eslint/no-console": ["warn", { "allow": ["warn", "error"] }],
+    "eslint/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+
+    "typescript/consistent-type-imports": "warn",
+    "typescript/no-explicit-any": "warn",
+
+    "import/no-cycle": "warn",
+    "import/no-duplicates": "warn",
+    "import/no-unassigned-import": ["warn", { "allow": ["**/*.css"] }],
+
+    "promise/catch-or-return": "off",
+    "promise/always-return": "off",
+
+    "jsx-a11y/media-has-caption": "off"
+  },
+  "overrides": [
+    {
+      "files": ["src/router/**"],
+      "rules": { "react/only-export-components": "off" }
+    }
+  ],
+  "ignorePatterns": ["dist", "public/ffmpeg", "node_modules"]
 }

@@ -1,12 +1,12 @@
 import {
     useAddVideosDuMomentMutation,
     useDeleteVideosDuMomentMutation,
+    useGetVideosDuMomentQuery,
 } from '../../redux/features/videos_du_moment/VideosDuMomentApi';
 import type { VideoCreateType, VideoSelectType } from '../../types/VideoType';
 import { VStack } from '@chakra-ui/react';
 import VideoCard from '../card/VideoCard';
 import BoutonCreationVideo from '../modal/BoutonCreationVideo';
-import { useGetVideosDuMomentQuery } from '../../redux/features/videos_du_moment/VideosDuMomentApi';
 export default function VideosDuMoment() {
     const { data: videos = [] } = useGetVideosDuMomentQuery();
     const [deleteVideo] = useDeleteVideosDuMomentMutation();
@@ -21,7 +21,7 @@ export default function VideosDuMoment() {
             const result = await addVideosDuMoment(newVideo).unwrap();
             return result;
         } catch (error) {
-            console.log("Erreur lors de l'ajout d'une vidéo du moment: ", error);
+            console.error("Erreur lors de l'ajout d'une vidéo du moment: ", error);
             return null;
         }
     }

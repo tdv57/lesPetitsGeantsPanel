@@ -17,7 +17,7 @@ export default function ArticleDeLaSaison() {
             const result = await replaceArticleDeLaSaison(newVideo).unwrap();
             return result;
         } catch (error) {
-            console.log("Erreur lors de l'ajout d'une vidéo du moment: ", error);
+            console.error("Erreur lors de l'ajout d'une vidéo du moment: ", error);
             return null;
         }
     }

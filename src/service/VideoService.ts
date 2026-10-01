@@ -15,7 +15,6 @@ export async function getArticleDeLaSaison(): Promise<VideoSelectType | null> {
     }
     if (data.length > 0) {
         const articleDeLaSaison = data[0];
-        console.log('getArticleDeLaSaison : ', articleDeLaSaison);
         return {
             url: articleDeLaSaison.url,
             description: articleDeLaSaison.description,
@@ -33,7 +32,7 @@ export async function getVideosDuMoment(): Promise<VideoSelectType[] | null> {
         return null;
     }
     return data
-        .filter((d) => d.code != ARTICLE_DE_LA_SAISON_CODE)
+        .filter((d) => d.code !== ARTICLE_DE_LA_SAISON_CODE)
         .map((d) => {
             return {
                 url: d.url,
@@ -61,17 +60,11 @@ export async function addVideosDuMoment({
     const newVideo = data[0];
     const res = await uploadVideo(video, code);
     if (!res.success) {
-        console.log('addVideosDuMoment R2 error: ', res.error);
+        console.error('addVideosDuMoment R2 error: ', res.error);
         await supabase.from(TABLE_VIDEO).delete().eq('id', newVideo.id);
         return null;
     }
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-    console.log('Résultat upload -> data:', data, 'error:', res.error);
-    console.log('code généré :', code);
-    console.log('user = ', user);
-    console.log('newVideo: ', newVideo);
+    await supabase.auth.getUser();
     return {
         url: newVideo.url,
         description: newVideo.description,
@@ -86,7 +79,7 @@ export async function deleteVideosDuMoment(id: number) {
     if (error) return false;
     const res = await deleteVideo(data[0].code);
     if (!res.success) {
-        console.log('deleteVideosDuMoment R2 error: ', res.error);
+        console.error('deleteVideosDuMoment R2 error: ', res.error);
         return false;
     }
     const { error: dbError } = await supabase.from(TABLE_VIDEO).delete().eq('id', id);
@@ -102,7 +95,7 @@ export async function deleteArticleDeLaSaison() {
     if (error) return false;
     const res = await deleteVideo(data[0].code);
     if (!res.success) {
-        console.log('deleteArticleDeLaSaison R2 error: ', res.error);
+        console.error('deleteArticleDeLaSaison R2 error: ', res.error);
         return false;
     }
     const { error: dbError } = await supabase
@@ -119,16 +112,13 @@ export async function replaceArticleDeLaSaison({
     typeAge,
     video,
 }: VideoCreateType): Promise<VideoSelectType | null> {
-    const {
-        data: { session },
-    } = await supabase.auth.getSession();
-    console.log('Session au moment du replace:', session);
+    await supabase.auth.getSession();
     const { data, error } = await supabase
         .from(TABLE_VIDEO)
         .select()
         .eq('code', ARTICLE_DE_LA_SAISON_CODE);
     if (error) {
-        console.log('ReplaceArticleDeLaSaison, erreur: ', error);
+        console.error('ReplaceArticleDeLaSaison, erreur: ', error);
         return null;
     }
     if (data.length > 0) {
@@ -138,8 +128,8 @@ export async function replaceArticleDeLaSaison({
             .eq('code', ARTICLE_DE_LA_SAISON_CODE);
         const res = await deleteVideo(data[0].code);
         if (res.error || dbError) {
-            console.log('ReplaceArticleDeLaSaison, erreur storage: ', res.error);
-            console.log('ReplaceArticleDeLaSaison, erreur db: ', dbError);
+            console.warn('ReplaceArticleDeLaSaison, erreur storage: ', res.error);
+            console.warn('ReplaceArticleDeLaSaison, erreur db: ', dbError);
             return null;
         }
     }

@@ -64,7 +64,6 @@ export default function NewVideoForm({
     });
 
     useEffect(() => {
-        console.log(chargementStatut);
         if (chargementStatut === ChargementStatut.Inactif) {
             setSubmitMessageState(submitMessage);
             setIsLocked(false);
@@ -83,19 +82,13 @@ export default function NewVideoForm({
         }
     }, [chargementStatut, compressionProgress, submitMessage, resetMessage]);
 
-    async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-        e.preventDefault();
+    async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+        event.preventDefault();
         if (
             chargementStatut === ChargementStatut.EnAttente ||
             chargementStatut === ChargementStatut.Terminee
         )
             return;
-        console.log('Soumission du formulaire avec les données:', {
-            description,
-            age,
-            typeAge,
-            video,
-        });
 
         const result = newVideoFormValidationSchema.safeParse({
             description,
@@ -106,10 +99,9 @@ export default function NewVideoForm({
 
         if (!result.success) {
             const fieldErrors: Record<string, string> = {};
-            console.log('Erreurs de validation:', result.error.issues);
-            result.error.issues.forEach((error) => {
-                const key = error.path[0] as string;
-                fieldErrors[key] = error.message;
+            result.error.issues.forEach((e) => {
+                const key = e.path[0] as string;
+                fieldErrors[key] = e.message;
             });
             setError(fieldErrors);
             return;
@@ -122,11 +114,9 @@ export default function NewVideoForm({
         const videoTypeAge: 'ANS' | 'MOIS' | null =
             result.data.typeAge === '' ? null : (result.data.typeAge as 'ANS' | 'MOIS');
         let videoBlob = result.data.video;
-        console.log('Données validées:', { videoDescription, videoAge, videoTypeAge, videoBlob });
         setChargementStatut(ChargementStatut.EnAttente);
         try {
             videoBlob = await compressVideo(videoBlob);
-            console.log('Vidéo compressée avec succès:', videoBlob.size, 'octets');
             await supabaseAction({
                 description: videoDescription,
                 age: videoAge,
@@ -134,8 +124,8 @@ export default function NewVideoForm({
                 video: videoBlob,
             });
             setChargementStatut(ChargementStatut.Terminee);
-        } catch (error) {
-            console.error('Erreur pendant la création :', error);
+        } catch (e) {
+            console.error('Erreur pendant la création :', e);
         }
     }
 

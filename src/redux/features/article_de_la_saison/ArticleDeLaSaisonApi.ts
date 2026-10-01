@@ -14,7 +14,7 @@ export const ArticleDeLaSaisonApi = createApi({
         getArticleDeLaSaison: builder.query<VideoSelectType | null, void>({
             queryFn: async () => {
                 const result = await getArticleDeLaSaison();
-                if (result == null) {
+                if (result === null) {
                     return {
                         error: {
                             message: "Erreur lors de la récupération de l'article de la saison",
@@ -29,7 +29,7 @@ export const ArticleDeLaSaisonApi = createApi({
         replaceArticleDeLaSaison: builder.mutation<VideoSelectType, VideoCreateType>({
             queryFn: async (newVideo: VideoCreateType) => {
                 const result = await replaceArticleDeLaSaison(newVideo);
-                if (result == null) {
+                if (result === null) {
                     return {
                         error: { message: "Erreur lors du remplacement de l'article de la saison" },
                     };

@@ -40,13 +40,13 @@ export default function TypeImageSelection({
                 <Portal>
                     <Select.Positioner>
                         <Select.Content>
-                            {typeImageCollection.items.map((t, index) => (
+                            {typeImageCollection.items.map((t) => (
                                 <Select.Item
                                     color="black"
                                     borderColor="black"
                                     fontSize={{ base: 'md', sm: 'md', md: 'lg' }}
                                     item={t}
-                                    key={index}
+                                    key={t.label}
                                 >
                                     {t.label}
                                     <Select.ItemIndicator />

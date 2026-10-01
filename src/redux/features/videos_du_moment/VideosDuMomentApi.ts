@@ -14,7 +14,7 @@ export const VideosDuMomentApi = createApi({
         getVideosDuMoment: builder.query<VideoSelectType[], void>({
             queryFn: async () => {
                 const result = await getVideosDuMoment();
-                if (result == null) {
+                if (result === null) {
                     return { error: { message: 'Erreur lors de la récupération des vidéos' } };
                 }
                 return { data: result };
@@ -48,7 +48,7 @@ export const VideosDuMomentApi = createApi({
         addVideosDuMoment: builder.mutation<VideoSelectType, VideoCreateType>({
             queryFn: async (newVideo: VideoCreateType) => {
                 const result = await addVideosDuMoment(newVideo);
-                if (result == null) {
+                if (result === null) {
                     return { error: { message: 'Erreur lors de la création de la vidéo' } };
                 }
                 return { data: result };

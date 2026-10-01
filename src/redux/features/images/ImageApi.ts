@@ -11,7 +11,7 @@ export const ImageApi = createApi({
         getImageByType: builder.query<ImageSelect[], TYPE_IMAGE_TYPE>({
             queryFn: async (type: TYPE_IMAGE_TYPE) => {
                 const result = await getImageByType(type);
-                if (result == null) {
+                if (result === null) {
                     return {
                         error: { message: 'Erreur de la recherche des images de type ' + type },
                     };
@@ -24,7 +24,7 @@ export const ImageApi = createApi({
         addImage: builder.mutation<ImageSelect, ImageCreate>({
             queryFn: async (newImage: ImageCreate) => {
                 const result = await addImage(newImage);
-                if (result == null) {
+                if (result === null) {
                     return { error: { message: "Erreur lors de la création d'une image " } };
                 }
                 return { data: result };

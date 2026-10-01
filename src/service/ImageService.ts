@@ -28,13 +28,10 @@ export async function addImage(image: ImageCreate): Promise<ImageSelect | null> 
     const newImage = data[0];
     const res = await uploadImage(image.image, code);
     if (!res.success) {
-        console.log('addImage R2 error: ', res.error);
+        console.warn('addImage R2 error: ', res.error);
         await supabase.from(TABLE_IMAGE).delete().eq('id', newImage.id);
         return null;
     }
-    console.log('Résultat upload -> data:', data, 'error:', res.error);
-    console.log('code généré :', code);
-    console.log('newImage: ', newImage);
     return {
         url: newImage.url,
         id: newImage.id,
@@ -54,7 +51,7 @@ export async function getImageByType(typeImage: TYPE_IMAGE_TYPE): Promise<ImageS
                 .select()
                 .eq('type_image', 'MARQUE');
             if (error) {
-                console.log('getImageError : ', error);
+                console.warn('getImageError : ', error);
                 return [];
             } else {
                 return data.map((d) => mapMarqueFromSupabase(d)) as ImageSelect[];
@@ -66,7 +63,7 @@ export async function getImageByType(typeImage: TYPE_IMAGE_TYPE): Promise<ImageS
                 .select()
                 .eq('type_image', 'JOUET');
             if (error) {
-                console.log('getImageError : ', error);
+                console.warn('getImageError : ', error);
                 return [];
             } else {
                 return data.map((d) => mapJouetFromSupabase(d)) as ImageSelect[];
@@ -78,7 +75,7 @@ export async function getImageByType(typeImage: TYPE_IMAGE_TYPE): Promise<ImageS
                 .select()
                 .eq('type_image', 'PELUCHE');
             if (error) {
-                console.log('getImageError : ', error);
+                console.warn('getImageError : ', error);
                 return [];
             } else {
                 return data.map((d) => mapPelucheFromSupabase(d)) as ImageSelect[];
@@ -90,14 +87,14 @@ export async function getImageByType(typeImage: TYPE_IMAGE_TYPE): Promise<ImageS
                 .select()
                 .eq('type_image', 'JEU DE SOCIETE');
             if (error) {
-                console.log('getImageError : ', error);
+                console.warn('getImageError : ', error);
                 return [];
             } else {
                 return data.map((d) => mapJeuDeSocieteFromSupabase(d)) as ImageSelect[];
             }
         }
         default:
-            console.log('getImageError type inconnu: ', typeImage);
+            console.warn('getImageError type inconnu: ', typeImage);
             return [];
     }
 }
@@ -105,7 +102,7 @@ export async function getImageByType(typeImage: TYPE_IMAGE_TYPE): Promise<ImageS
 export async function getImageById(id: number): Promise<ImageSelect | null> {
     const { data, error } = await supabase.from(TABLE_IMAGE).select().eq('id', `${id}`);
     if (error) {
-        console.log('getImageByIdError : ', error);
+        console.warn('getImageByIdError : ', error);
         return null;
     } else {
         return data[0] as ImageSelect;
@@ -117,7 +114,7 @@ export async function deleteImage(id: number) {
     if (error) return false;
     const res = await deleteR2Image(data[0].code);
     if (!res.success) {
-        console.log('deleteImage R2 error: ', res.error);
+        console.warn('deleteImage R2 error: ', res.error);
         return false;
     }
     const { error: dbError } = await supabase.from(TABLE_IMAGE).delete().eq('id', id);
