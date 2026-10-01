@@ -44,7 +44,7 @@ export const ImageApi = createApi({
         }),
 
         deleteImage: builder.mutation<void, {id: number, type: TYPE_IMAGE_TYPE}>({
-            queryFn: async ({ id, type }: { id: number, type: TYPE_IMAGE_TYPE }) => {
+            queryFn: async ({ id, type: _type }: { id: number, type: TYPE_IMAGE_TYPE }) => {
                 if (! await deleteImage(id)) {
                     return { error: {message: ("Erreur lors de la suppression de l'image avec l'id " + id) } };
                 }

@@ -1,4 +1,4 @@
-import {  Box, Button, Heading, HStack, IconButton, Text, VStack} from "@chakra-ui/react";
+import {  Box, Button, Heading, HStack, IconButton, VStack} from "@chakra-ui/react";
 import { NavLink, useNavigate } from 'react-router-dom'
 import { logout } from "../../service/SupabaseService";
 import { LuLogOut } from "react-icons/lu";

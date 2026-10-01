@@ -1,6 +1,6 @@
 import { supabase, TABLE_IMAGE } from './SupabaseService';
 import { R2_IMAGE_PUBLIC_URL, uploadImage, deleteImage as deleteR2Image } from "./R2Service";
-import { TYPE_IMAGE_VALUE, type IMAGE_SELECT_TYPE, type ImageCreate, type ImageSelect, type JeuDeSocieteCreate, type JeuDeSocieteSelect, type JouetCreate, type JouetSelect, type MarqueCreate, type MarqueSelect, type PelucheCreate, type PelucheSelect, type TYPE_IMAGE_TYPE } from '../types/ImageType';
+import type { ImageCreate, ImageSelect, TYPE_IMAGE_TYPE } from '../types/ImageType';
 import { mapJeuDeSocieteFromSupabase, mapJouetFromSupabase, mapMarqueFromSupabase, mapPelucheFromSupabase } from '../mapper/ImageMapper';
 import {mapAge } from '../mapper/UtilsMapper';
 
@@ -39,7 +39,7 @@ export async function getImageByType(typeImage: TYPE_IMAGE_TYPE) : Promise<Image
                 console.log("getImageError : ", error);
                 return [];
             } else {
-                return data.map(d => mapMarqueFromSupabase(d)) as IMAGE_SELECT_TYPE[];
+                return data.map(d => mapMarqueFromSupabase(d)) as ImageSelect[];
             }
         }
         case "JOUET" : {
@@ -48,7 +48,7 @@ export async function getImageByType(typeImage: TYPE_IMAGE_TYPE) : Promise<Image
                 console.log("getImageError : ", error);
                 return [];
             } else {
-                return data.map(d => mapJouetFromSupabase(d)) as IMAGE_SELECT_TYPE[];
+                return data.map(d => mapJouetFromSupabase(d)) as ImageSelect[];
             }
         }
         case "PELUCHE" : {
@@ -57,7 +57,7 @@ export async function getImageByType(typeImage: TYPE_IMAGE_TYPE) : Promise<Image
                 console.log("getImageError : ", error);
                 return [];
             } else {
-                return data.map(d => mapPelucheFromSupabase(d)) as IMAGE_SELECT_TYPE[];
+                return data.map(d => mapPelucheFromSupabase(d)) as ImageSelect[];
             }
         }
         case "JEU DE SOCIETE" : {
@@ -66,7 +66,7 @@ export async function getImageByType(typeImage: TYPE_IMAGE_TYPE) : Promise<Image
                 console.log("getImageError : ", error);
                 return [];
             } else {
-                return data.map(d => mapJeuDeSocieteFromSupabase(d)) as IMAGE_SELECT_TYPE[];
+                return data.map(d => mapJeuDeSocieteFromSupabase(d)) as ImageSelect[];
             }
         }
         default: 
@@ -81,7 +81,7 @@ export async function getImageById(id: number): Promise<ImageSelect | null > {
         console.log("getImageByIdError : ", error);
         return null;
     } else {
-        return data[0] as IMAGE_SELECT_TYPE;
+        return data[0] as ImageSelect;
     }
 }
 

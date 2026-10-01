@@ -2,17 +2,13 @@ import App from "../App";
 import Erreur404 from "../components/hero/404";
 import Login from "../components/hero/Login";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { useAuth } from '../hook/useAuth'
 import Images from "../components/hero/Images";
+import { HomeIndex } from "./HomeIndex";
 
-function HomeIndex() {
-    const {isAuthenticated} = useAuth();
-    return <Navigate to={isAuthenticated ? "/videos-du-moment" : "/login"} replace/>
-}
 export const router = createBrowserRouter([
     {
-    index: true,                              // "/" exactement
-    element: <HomeIndex />, // redirige toujours vers /login
+    index: true,                        
+    element: <HomeIndex />,
     },
     {
         path:"/",

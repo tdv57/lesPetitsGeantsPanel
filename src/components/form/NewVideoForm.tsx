@@ -54,7 +54,7 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
             setIsLocked(true);
             setSubmitMessageState("Chargement terminée: " + resetMessage )
         }
-    }, [chargementStatut, compressionProgress])
+    }, [chargementStatut, compressionProgress, submitMessage, resetMessage])
 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>){
         e.preventDefault();
@@ -94,7 +94,7 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
         try {
             videoBlob = await compressVideo(videoBlob);
             console.log("Vidéo compressée avec succès:", videoBlob.size, "octets");
-            const result = await supabaseAction({description: videoDescription, age: videoAge, typeAge: videoTypeAge, video : videoBlob})
+            await supabaseAction({description: videoDescription, age: videoAge, typeAge: videoTypeAge, video : videoBlob})
             setChargementStatut(ChargementStatut.Terminee)
         } catch (error) {
         console.error("Erreur pendant la création :", error);

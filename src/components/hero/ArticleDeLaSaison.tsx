@@ -19,7 +19,7 @@ export default function ArticleDeLaSaison() {
         }
     }
 
-    function handleDelete(id: number) {
+    function handleDelete(_id: number) {
         deleteArticleDeLaSaison();
     }
 

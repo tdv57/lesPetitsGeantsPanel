@@ -26,7 +26,7 @@ export const ArticleDeLaSaisonApi = createApi({
                 }
                 return { data: result };
             },
-            async onQueryStarted(newVideo, {dispatch, queryFulfilled}) {
+            async onQueryStarted(_newVideo, {dispatch, queryFulfilled}) {
                 const patchResult = dispatch(
                     ArticleDeLaSaisonApi.util.updateQueryData('getArticleDeLaSaison', undefined, () => null)
                 )
@@ -49,7 +49,7 @@ export const ArticleDeLaSaisonApi = createApi({
                 }
                 return { data: undefined };
             },
-            async onQueryStarted(undefined, {dispatch, queryFulfilled}) {
+            async onQueryStarted( _a , {dispatch, queryFulfilled: _queryFulfilled}) {
 
                 const resultDispatch = dispatch (
                     ArticleDeLaSaisonApi.util.updateQueryData('getArticleDeLaSaison', undefined, () => null)
