@@ -18,14 +18,6 @@ export const typeImageCollection = createListCollection<{label: string, value:TY
     ]
 }));
 
-export type MarqueSelect = {
-        url: string,
-        id: number,
-        typeImage : TYPE_IMAGE_TYPE,
-        marque: string,
-        createdAt: Date
-    }
-
 export type RawMarque = {
     id: number;
     created_at: string;
@@ -43,15 +35,6 @@ export type MarqueCreate = {
     image: File
 };
 
-export type JouetSelect = {
-    url: string,
-    id: number,
-    typeImage : TYPE_IMAGE_TYPE,
-    age?: string,
-    description: string,
-    createdAt: Date
-}
-
 export type JouetCreate = {
     typeAge?: string,
     age?: string,
@@ -59,28 +42,11 @@ export type JouetCreate = {
     image: File
 }
 
-export type JeuDeSocieteSelect = {
-    url: string,
-    id: number,
-    typeImage : TYPE_IMAGE_TYPE,
-    age?: string,
-    description: string,
-    createdAt: Date    
-}
-
 export type JeuDeSocieteCreate = {
     typeAge?: string,
     age?: string,
     description: string,
     image: File
-}
-
-export type PelucheSelect = {
-    url: string,
-    id: number,
-    typeImage : TYPE_IMAGE_TYPE,
-    marque:string, 
-    createdAt: Date    
 }
 
 export type PelucheCreate = {
@@ -106,6 +72,3 @@ export type ImageSelect = {
     description?: string,
     createdAt: Date   
 }
-
-export type IMAGE_SELECT_TYPE =  MarqueSelect | JeuDeSocieteSelect | JouetSelect | PelucheSelect;
-export type IMAGE_CREATE_TYPE = MarqueCreate | JeuDeSocieteCreate | JouetCreate | PelucheCreate;

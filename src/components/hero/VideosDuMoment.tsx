@@ -1,34 +1,34 @@
-import { addVideosDuMoment, deleteVideosDuMoment } from "../../service/VideoService";
-import type { VideoSelectType } from "../../service/VideoService";
+import { useAddVideosDuMomentMutation, useDeleteVideosDuMomentMutation } from "../../redux/features/videos_du_moment/VideosDuMomentApi";
+import type { VideoCreateType, VideoSelectType } from "../../types/VideoType";
 import { VStack } from "@chakra-ui/react";
 import VideoCard from "../card/VideoCard";
 import BoutonCreationVideo from "../modal/BoutonCreationVideo";
-import { useVideosDuMoment } from "../../hook/useVideosDuMoment";
+import { useGetVideosDuMomentQuery } from "../../redux/features/videos_du_moment/VideosDuMomentApi";
 export default function VideosDuMoment() {
 
-    const {videos, setVideos} = useVideosDuMoment();
-    function onSuccess(result : VideoSelectType | null) {
-        if (result) {
-            setVideos((results) => [result, ...results])
-        } else console.log("Erreur BoutonCreation OnSuccess result null");
-    }
+    const {data: videos = []} = useGetVideosDuMomentQuery();
+    const [deleteVideo] = useDeleteVideosDuMomentMutation(); 
+    const [addVideosDuMoment] = useAddVideosDuMomentMutation(); 
 
     function handleDelete(id: number) {
-        deleteVideosDuMoment(id).then((b) => {
-            if (b) {
-                setVideos((videos: VideoSelectType[]) => {
-                    const newVideos = videos.filter((video) => video.id != id);
-                    return newVideos;
-                })
-            }
-        })
+        deleteVideo(id);
+    }
+
+    async function supabaseAction(newVideo: VideoCreateType) : Promise<VideoSelectType | null> {
+        try {
+            const result = await addVideosDuMoment(newVideo).unwrap();
+            return result;
+        } catch (error) {
+            console.log("Erreur lors de l'ajout d'une vidéo du moment: ", error);
+            return null;
+        }
     }
 
     return(
         <>
 
             <VStack align="center" >
-                <BoutonCreationVideo submitMessage="Ajouter une vidéo" resetMessage="Ajouter une nouvelle vidéo" setVideos={setVideos} supabaseAction={addVideosDuMoment} onSuccess={onSuccess}/>
+                <BoutonCreationVideo submitMessage="Ajouter une vidéo" resetMessage="Ajouter une nouvelle vidéo" supabaseAction={supabaseAction}/>
                 {/* <NewVideoForm submitMessage="Ajouter un vidéo" supabaseAction={addVideosDuMoment}/> */}
                 <VStack gap={10} align="center">
                     { videos.map((v, index) => {

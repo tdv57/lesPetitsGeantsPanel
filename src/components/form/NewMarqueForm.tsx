@@ -1,18 +1,13 @@
-import { Box, Button, Field, FileUpload, HStack, Icon, Input, Stack, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Button, Field, FileUpload, Icon, Input, VStack } from "@chakra-ui/react";
 import { LuUpload } from "react-icons/lu";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {useForm, Controller} from "react-hook-form";
-import { type ImageCreate, type ImageSelect, type MarqueCreate, type MarqueSelect } from "../../types/ImageType";
 import { newMarqueFormValidationSchema, type newMarqueFormValidationType } from "../validation/NewMarqueFormValidation";
-import { addImage } from "../../service/ImageService";
-import { mapToMarqueSelect } from "../../mapper/ImageMapper";
+import { useAddImageMutation } from "../../redux/features/images/ImageApi";
 
-type NewMarqueFormPropType = {
-    onSuccess: (result : MarqueSelect | null) => void;
-}
-export function NewMarqueForm({onSuccess} : NewMarqueFormPropType) {
+export function NewMarqueForm() {
 
+    const [addMarque] = useAddImageMutation();
     const {
         control,
         handleSubmit, 
@@ -28,15 +23,7 @@ export function NewMarqueForm({onSuccess} : NewMarqueFormPropType) {
     });
 
     function onSubmit(data: newMarqueFormValidationType) {
-        console.log("clique effectué");
-        console.log(data.image.name);
-        console.log(data.image);
-        addImage(data as ImageCreate).then(res => {
-            if(res) {
-                const resMarque = mapToMarqueSelect(res);
-                onSuccess(resMarque);
-            }
-        });
+        addMarque(data);
         reset();
     }
 

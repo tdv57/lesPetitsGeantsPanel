@@ -5,21 +5,7 @@ import {
     R2_VIDEO_PUBLIC_URL
 } from './R2Service';
 import { mapAge } from '../mapper/UtilsMapper';
-
-export type VideoSelectType = {
-    id: number,
-    description: string,
-    age: string, 
-    url: string
-    created_at : string,
-}
-
-export type VideoCreateType = {
-    description: string,
-    age: number | null,
-    typeAge: "ANS" | "MOIS" | null,
-    video: File
-}
+import type { VideoSelectType, VideoCreateType } from '../types/VideoType';
 
 const ARTICLE_DE_LA_SAISON_CODE = "ArticleDeLaSaison";
 

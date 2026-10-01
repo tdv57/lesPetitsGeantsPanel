@@ -1,6 +1,6 @@
 import { Button, Dialog, Portal } from "@chakra-ui/react";
 import NewVideoForm from "../form/NewVideoForm";
-import { type VideoCreateType, type VideoSelectType } from "../../service/VideoService";
+import type { VideoCreateType, VideoSelectType } from "../../types/VideoType";
 import { useState } from "react";
 import type { ChargementStatutEnum } from "../../enum/ChargementStatut";
 import { ChargementStatut } from "../../enum/ChargementStatut";
@@ -21,11 +21,9 @@ export type FormPropsType = {
 type BoutonCreationPropsType = {
     submitMessage : string;
     resetMessage : string;
-    setVideos: React.Dispatch<React.SetStateAction<VideoSelectType[]>>;
     supabaseAction: (video : VideoCreateType) => Promise<VideoSelectType | null>;
-    onSuccess: (result: VideoSelectType | null) => void;
 }
-export default function BoutonCreationVideo({submitMessage, resetMessage, supabaseAction, onSuccess}: BoutonCreationPropsType) {
+export default function BoutonCreationVideo({submitMessage, resetMessage, supabaseAction}: BoutonCreationPropsType) {
     const [isOpen, setIsOpen] = useState(false);
     const [description, setDescription] = useState("");
     const [age, setAge] = useState("");
@@ -75,7 +73,7 @@ export default function BoutonCreationVideo({submitMessage, resetMessage, supaba
                     <Dialog.Positioner>
                         <Dialog.Content maxW={{ base: "70vw", sm:"50vw", md: "50vw" }}>
                             <Dialog.Body>
-                                <NewVideoForm onReset={onReset} supabaseAction={supabaseAction} submitMessage={submitMessage} resetMessage={resetMessage} onSuccess={onSuccess} formProps={formProps}/>
+                                <NewVideoForm onReset={onReset} supabaseAction={supabaseAction} submitMessage={submitMessage} resetMessage={resetMessage} formProps={formProps}/>
                             </Dialog.Body>
                         </Dialog.Content>
                     </Dialog.Positioner>

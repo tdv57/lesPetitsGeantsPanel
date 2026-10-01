@@ -1,39 +1,35 @@
 import {VStack } from "@chakra-ui/react";
-import { deleteArticleDeLaSaison, replaceArticleDeLaSaison, type VideoSelectType } from "../../service/VideoService";
 import VideoCard from "../card/VideoCard";
-import { useArticleDeLaSaison } from "../../hook/useArticleDeLaSaison";
 import BoutonCreationVideo from "../modal/BoutonCreationVideo";
+import type { VideoCreateType, VideoSelectType } from "../../types/VideoType";
+import { useDeleteArticleDeLaSaisonMutation, useGetArticleDeLaSaisonQuery, useReplaceArticleDeLaSaisonMutation } from "../../redux/features/article_de_la_saison/ArticleDeLaSaisonApi";
 
 export default function ArticleDeLaSaison() {
 
-    const {video, setVideo} = useArticleDeLaSaison();
-
-
-    function onSuccess(result : VideoSelectType | null) {
-        if (result) {
-            setVideo((_) => [result])
-        } else console.log("Erreur BoutonCreation OnSuccess result null");
+    const [deleteArticleDeLaSaison] = useDeleteArticleDeLaSaisonMutation();
+    const [replaceArticleDeLaSaison] = useReplaceArticleDeLaSaisonMutation();
+    const { data: video } = useGetArticleDeLaSaisonQuery();
+    async function supabaseAction(newVideo: VideoCreateType) : Promise<VideoSelectType | null> {
+        try {
+            const result = await replaceArticleDeLaSaison(newVideo).unwrap();
+            return result;
+        } catch (error) {
+            console.log("Erreur lors de l'ajout d'une vidéo du moment: ", error);
+            return null;
+        }
     }
 
     function handleDelete(id: number) {
-        deleteArticleDeLaSaison().then((b) => {
-            if (b) {
-                setVideo((videos: VideoSelectType[]) => {
-                    const newVideos = videos.filter((video) => video.id != id);
-                    return newVideos;
-                })
-            }
-        })
+        deleteArticleDeLaSaison();
     }
 
     return (
-
-            <VStack align="center" >
-                <BoutonCreationVideo submitMessage="Remplacer l'article de la saison" resetMessage="Remplacer l'article de la saison" setVideos={setVideo} supabaseAction={replaceArticleDeLaSaison} onSuccess={onSuccess}/>
-                {/* <NewVideoForm submitMessage="Ajouter un vidéo" supabaseAction={addVideosDuMoment}/> */}
-                <VStack gap={10} align="center">
-                    {video.length > 0 ? <VideoCard v={video[0]} index={1} handleDelete={handleDelete}/> : <></>}
-                </VStack>
+        <VStack align="center" >
+            <BoutonCreationVideo submitMessage="Remplacer l'article de la saison" resetMessage="Remplacer l'article de la saison" supabaseAction={supabaseAction}/>
+            {/* <NewVideoForm submitMessage="Ajouter un vidéo" supabaseAction={addVideosDuMoment}/> */}
+            <VStack gap={10} align="center">
+                {video ? <VideoCard v={video} index={1} handleDelete={handleDelete}/> : <></>}
             </VStack>
+        </VStack>
     )
 }

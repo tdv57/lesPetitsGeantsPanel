@@ -1,18 +1,15 @@
 import { Controller, useForm } from "react-hook-form";
-import type { ImageCreate, ImageSelect, JeuDeSocieteSelect } from "../../types/ImageType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NewJeuDeSocieteFormValidationSchema, type NewJeuDeSocieteFormValidationType } from "../validation/NewJeuDeSocieteFormValidation";
 import { Box, Button, Field, FileUpload, Icon, NumberInput, Select, Textarea, VStack } from "@chakra-ui/react";
 import { typeAgeCollection } from "../../mapper/UtilsMapper";
 import { LuUpload } from "react-icons/lu";
-import { addImage } from "../../service/ImageService";
-import { mapToJeuDeSocieteSelect } from "../../mapper/ImageMapper";
+import { useAddImageMutation } from "../../redux/features/images/ImageApi";
 
-type NewJeuDeSocieteFormPropType = {
-    onSuccess: (result : JeuDeSocieteSelect | null) => void;
-}
-export function NewJouetDeSocieteForm({onSuccess} : NewJeuDeSocieteFormPropType) {
+export function NewJeuDeSocieteForm() {
     
+    const [addJeuDeSociete] = useAddImageMutation();
+
     const {
         control,
         handleSubmit, 
@@ -30,15 +27,7 @@ export function NewJouetDeSocieteForm({onSuccess} : NewJeuDeSocieteFormPropType)
     });
 
     function onSubmit(data: NewJeuDeSocieteFormValidationType) {
-        console.log("clique effectué");
-        console.log(data);
-        addImage(data as ImageCreate).then(res => {
-            console.log("resultat jeu de société: ")
-            console.log(res)
-            if(res) {
-                const resJeuDeSociete = mapToJeuDeSocieteSelect(res);
-                onSuccess({...resJeuDeSociete});}
-        });
+        addJeuDeSociete(data);
         reset();
     }
     

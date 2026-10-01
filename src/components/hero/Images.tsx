@@ -1,40 +1,37 @@
 import { useState } from "react";
-import { type IMAGE_SELECT_TYPE, type TYPE_IMAGE_TYPE } from "../../types/ImageType";
+import { TYPE_IMAGE_VALUE, type TYPE_IMAGE_TYPE } from "../../types/ImageType";
 import TypeImageSelection from "../card/TypeImageSelection";
 import { Box, SimpleGrid, VStack } from "@chakra-ui/react";
 import { BoutonCreationImage } from "../modal/BoutonCreationImage";
-import { useImages } from "../../hook/useImages";
 import ImageCard from "../card/ImageCard";
-import { deleteImage } from "../../service/ImageService";
+import { useDeleteImageMutation, useGetImageByTypeQuery } from "../../redux/features/images/ImageApi";
 
 export default function Images() {
     const [typeImage, setTypeImage] = useState<TYPE_IMAGE_TYPE[]>([]);
-    const {setImages} = useImages();
-
+    const [ deleteImage ] = useDeleteImageMutation();
+    const { data: marques = [] } = useGetImageByTypeQuery(TYPE_IMAGE_VALUE.MARQUE);
+    const { data: jouets = [] } = useGetImageByTypeQuery(TYPE_IMAGE_VALUE.JOUET);
+    const { data: jeuxDeSociete = [] } = useGetImageByTypeQuery(TYPE_IMAGE_VALUE.JEU_DE_SOCIETE);
+    const { data: peluches = [] } = useGetImageByTypeQuery(TYPE_IMAGE_VALUE.PELUCHE);
+    
     function handleDelete(id: number, type : TYPE_IMAGE_TYPE) {
-        deleteImage(id).then((b) => {
-            if (b) {
-            console.log(`should delete id:${id} type:${type}`)
-
-            setImages((m) => ({
-                        ...m,
-                        [type]: m[type].filter((image) => {console.log(`filter for image : `, image);return image.id != id})
-                        })
-                    )
-            } else {
-                console.log( "delete is false");
-            }
-        })
+        deleteImage({id: id, type: type});
     }
+
     const typeImageMapping = {
         "JOUET" : "Jouet",
         "PELUCHE" : "Peluche",
         "MARQUE" : "Marque",
         "JEU DE SOCIETE" : "Jeu de société"
-    }
-    const {images} = useImages();
-    console.log("typeImage:", typeImage);
-    console.log("images:", images);
+    };
+
+    const images = {
+        [TYPE_IMAGE_VALUE.MARQUE] : marques ,
+        [TYPE_IMAGE_VALUE.PELUCHE] : peluches,
+        [TYPE_IMAGE_VALUE.JOUET] : jouets,
+        [TYPE_IMAGE_VALUE.JEU_DE_SOCIETE] : jeuxDeSociete
+    };
+
     return (
         <>
         <VStack alignContent="center" justifyContent="center" >
@@ -45,9 +42,8 @@ export default function Images() {
                 return (
                 <Box key={index}  hidden={!(type === typeImage[0])} display="flex" justifyContent="center">
                     <SimpleGrid columns={{base: 1, sm:2, md:3}} gap={8} justifyItems="center"  alignItems="stretch" margin={8}>
-                        {images[type].map(image =>{  console.log("image à afficher:", image); return<ImageCard key={image.id} imageSelect={image} handleDelete={handleDelete}/>; } ) }
+                        {images[type].map(image => <ImageCard key={image.id} imageSelect={image} handleDelete={handleDelete}/> ) }
                     </SimpleGrid>
-                    
                 </Box>
                 );
             })}

@@ -5,20 +5,15 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router/index.tsx'
 import { system } from './theme/theme.ts'
-import { VideosDuMomentProvider } from './components/context/VideosDuMoment.tsx'
-import { ArticleDeLaSaisonProvider } from './components/context/ArticleDeLaSaison.tsx'
-import { ImageProvider } from './components/context/Image.tsx'
+import { Provider } from 'react-redux'
+import { store } from "./redux/store.ts"
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <VideosDuMomentProvider>
-        <ImageProvider>
-          <ArticleDeLaSaisonProvider>
+      <Provider store={store}>
             <ChakraProvider value={system}>
                   <RouterProvider router={router} />
             </ChakraProvider>
-          </ArticleDeLaSaisonProvider>
-        </ImageProvider>
-      </VideosDuMomentProvider>
+      </Provider>
   </StrictMode>,
 )

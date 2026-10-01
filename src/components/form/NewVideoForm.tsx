@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react"
-import type { VideoCreateType, VideoSelectType } from "../../service/VideoService";
+import type { VideoCreateType, VideoSelectType } from "../../types/VideoType";
 import { Button, Field, Input, Stack, Textarea, Text, createListCollection, NumberInput, Select } from "@chakra-ui/react";
 import type { FormPropsType } from "../modal/BoutonCreationVideo";
 import { ChargementStatut } from "../../enum/ChargementStatut";
-import { newVideoFormValidationSchema, type newVideoFormValidationType } from "../validation/NewVideoFormValidation";
+import { newVideoFormValidationSchema } from "../validation/NewVideoFormValidation";
 import { useCompressionProgress } from "../../hook/useCompressionProgress";
 import {compressVideo} from "../../service/FFmpegService";
 
@@ -11,13 +11,12 @@ type NewVideoFormPropType = {
     supabaseAction: (video: VideoCreateType) => Promise<VideoSelectType | null> ;
     submitMessage: string;
     resetMessage: string,
-    onSuccess: (result : VideoSelectType | null) => void;  
     onReset: () => void;
     formProps : FormPropsType;
 }
 
 
-export default function NewVideoForm({supabaseAction, submitMessage, resetMessage, onSuccess, onReset, formProps} : NewVideoFormPropType) {
+export default function NewVideoForm({supabaseAction, submitMessage, resetMessage, onReset, formProps} : NewVideoFormPropType) {
 
     const [submitMessageState, setSubmitMessageState] = useState(submitMessage);
     const [isLocked, setIsLocked] = useState(true);
@@ -96,7 +95,6 @@ export default function NewVideoForm({supabaseAction, submitMessage, resetMessag
             videoBlob = await compressVideo(videoBlob);
             console.log("Vidéo compressée avec succès:", videoBlob.size, "octets");
             const result = await supabaseAction({description: videoDescription, age: videoAge, typeAge: videoTypeAge, video : videoBlob})
-            onSuccess(result);
             setChargementStatut(ChargementStatut.Terminee)
         } catch (error) {
         console.error("Erreur pendant la création :", error);

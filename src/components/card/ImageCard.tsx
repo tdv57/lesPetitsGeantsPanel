@@ -1,27 +1,25 @@
 import { Box, Heading, Image } from "@chakra-ui/react";
-import type { IMAGE_SELECT_TYPE, TYPE_IMAGE_TYPE } from "../../types/ImageType";
-import { isJeuDeSocieteSelect, isJouetSelect, isMarqueSelect, isPelucheSelect } from "../../mapper/ImageMapper";
+import { TYPE_IMAGE_VALUE, type ImageSelect, type TYPE_IMAGE_TYPE } from "../../types/ImageType";
 import ConfirmationSuppression from "../modal/ConfirmationSuppression";
 
 type ImageCardPropType = {
-    imageSelect: IMAGE_SELECT_TYPE;
+    imageSelect: ImageSelect;
     handleDelete: (id: number, type : TYPE_IMAGE_TYPE) => void
 }
 
 export default function ImageCard({imageSelect, handleDelete} : ImageCardPropType) {
     function handleDeleteMarque(id: number) {
-        return handleDelete(id, "MARQUE");
+        return handleDelete(id, TYPE_IMAGE_VALUE.MARQUE);
     }
     function handleDeleteJeuDeSociete(id: number) {
-        return handleDelete(id, "JEU DE SOCIETE");
+        return handleDelete(id, TYPE_IMAGE_VALUE.JEU_DE_SOCIETE);
     }
     function handleDeletePeluche(id: number) {
-        return handleDelete(id, "PELUCHE");
+        return handleDelete(id, TYPE_IMAGE_VALUE.PELUCHE);
     }
     function handleDeleteJouet(id: number) {
-        handleDelete(id, "JOUET");
+        handleDelete(id, TYPE_IMAGE_VALUE.JOUET);
     }
-    console.log(isMarqueSelect(imageSelect))
     return(
         <>
         <Box
@@ -33,7 +31,7 @@ export default function ImageCard({imageSelect, handleDelete} : ImageCardPropTyp
             width={{ base: "250px", sm: "80%", md: "80%"}}
             height={{base: "400px", sm:"90%", md:"100%"}}
         >
-            { isMarqueSelect(imageSelect) && 
+            { imageSelect.typeImage === TYPE_IMAGE_VALUE.MARQUE && 
                 <Box  
                     width={{ base: "250px", sm: "80%", md: "80%"}}
                     height="100%"
@@ -71,7 +69,7 @@ export default function ImageCard({imageSelect, handleDelete} : ImageCardPropTyp
                     </Box>
                 </Box>
             }
-            { isPelucheSelect(imageSelect) && 
+            { imageSelect.typeImage === TYPE_IMAGE_VALUE.PELUCHE && 
                 <Box  
                     width={{ base: "250px", sm: "80%", md: "80%"}}
                     height="100%"
@@ -103,7 +101,7 @@ export default function ImageCard({imageSelect, handleDelete} : ImageCardPropTyp
                     </Box>
                 </Box>
             }
-            { isJouetSelect(imageSelect) && 
+            { imageSelect.typeImage === TYPE_IMAGE_VALUE.JOUET && 
                 <Box  
                     width={{ base: "250px", sm: "80%", md: "80%"}}
                     height="100%"
@@ -132,7 +130,7 @@ export default function ImageCard({imageSelect, handleDelete} : ImageCardPropTyp
                     >
                         <Image
                             src={imageSelect.url}
-                            alt={imageSelect.description + imageSelect.age}
+                            alt={`${imageSelect.description ?? ""} ${imageSelect.age ?? ""}`}
                             maxWidth="100%"
                             maxHeight="100%"
                             objectFit="contain"
@@ -145,7 +143,7 @@ export default function ImageCard({imageSelect, handleDelete} : ImageCardPropTyp
                     </Box>
                 </Box>
             }
-            { isJeuDeSocieteSelect(imageSelect) && 
+            { imageSelect.typeImage === TYPE_IMAGE_VALUE.JEU_DE_SOCIETE && 
                 <Box  
                     width={{ base: "250px", sm: "80%", md: "80%"}}
                     height="100%"
@@ -174,7 +172,7 @@ export default function ImageCard({imageSelect, handleDelete} : ImageCardPropTyp
                     >
                         <Image
                             src={imageSelect.url}
-                            alt={imageSelect.description + imageSelect.age}
+                            alt={`${imageSelect.description ?? ""} ${imageSelect.age ?? ""}`}
                             maxWidth="100%"
                             maxHeight="100%"
                             objectFit="contain"

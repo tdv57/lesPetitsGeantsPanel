@@ -1,18 +1,15 @@
 import { Controller, useForm } from "react-hook-form";
-import type { JouetSelect, JouetCreate, ImageCreate } from "../../types/ImageType";
 import { NewJouetFormValidationSchema, type NewJouetFormValidationType } from "../validation/NewJouetFormValidation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addImage } from "../../service/ImageService";
-import {mapAge} from "../../mapper/UtilsMapper";
 import { Box, Button, Field, FileUpload, Icon, NumberInput, Select, Textarea, VStack } from "@chakra-ui/react";
 import { LuUpload } from "react-icons/lu";
 import { typeAgeCollection } from "../../mapper/UtilsMapper";
-import { mapToJouetSelect } from "../../mapper/ImageMapper";
+import { useAddImageMutation } from "../../redux/features/images/ImageApi";
 
-type NewJouetFormPropType = {
-    onSuccess: (result : JouetSelect | null) => void;
-}
-export function NewJouetForm({onSuccess} : NewJouetFormPropType) {
+export function NewJouetForm() {
+
+    const [addJouet] = useAddImageMutation();
+
     const {
         control, 
         handleSubmit, 
@@ -30,17 +27,7 @@ export function NewJouetForm({onSuccess} : NewJouetFormPropType) {
     });
 
     function onSubmit(data: NewJouetFormValidationType) {
-        console.log("clique effectué");
-        console.log(data);
-        
-        addImage(data as ImageCreate).then(res => {
-            console.log("resultat jouet: ")
-            console.log(res)
-            if(res) {
-                const resJouet = mapToJouetSelect(res);
-                onSuccess({...resJouet});
-            }
-        });
+        addJouet(data);
         reset();
     }
 

@@ -1,17 +1,13 @@
-import { Box, Button, Field, FileUpload, HStack, Icon, Input, Stack, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Button, Field, FileUpload, Icon, Input, VStack } from "@chakra-ui/react";
 import { LuUpload } from "react-icons/lu";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {useForm, Controller} from "react-hook-form";
-import { type PelucheSelect, type PelucheCreate, type ImageCreate } from "../../types/ImageType";
 import { NewPelucheFormValidationSchema, type NewPelucheFormValidationType } from "../validation/NewPelucheFormValidation";
-import { addImage } from "../../service/ImageService";
-import { mapToPelucheSelect } from "../../mapper/ImageMapper";
+import { useAddImageMutation } from "../../redux/features/images/ImageApi";
 
-type NewPelucheFormPropType = {
-    onSuccess: (result : PelucheSelect | null) => void;
-}
-export function NewPelucheForm({onSuccess} : NewPelucheFormPropType) {
+export function NewPelucheForm() {
+
+    const [addPeluche] = useAddImageMutation();
 
     const {
         control,
@@ -31,12 +27,7 @@ export function NewPelucheForm({onSuccess} : NewPelucheFormPropType) {
         console.log("clique effectué");
         console.log(data.image.name);
         console.log(data.image);
-        addImage(data as ImageCreate).then(res => {            
-            if(res) {
-                const resPeluche = mapToPelucheSelect(res);
-                onSuccess(resPeluche);
-            }
-        });
+        addPeluche(data);
         reset();
     }
 

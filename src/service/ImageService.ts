@@ -90,7 +90,7 @@ export async function deleteImage(id: number) {
     if (error) return false;
     const res = await deleteR2Image(data[0].code);
     if (!res.success) {
-        console.log("deleteVideosDuMoment R2 error: ", res.error);
+        console.log("deleteImage R2 error: ", res.error);
         return false;
     }
     const {error: dbError} = await supabase.from(TABLE_IMAGE).delete().eq('id', id);
