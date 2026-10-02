@@ -31,57 +31,58 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                 width={{ base: '250px', sm: '80%', md: '80%' }}
                 height={{ base: '400px', sm: '90%', md: '100%' }}
             >
-                {imageSelect.typeImage === TYPE_IMAGE_VALUE.MARQUE && (
-                    <Box
-                        width={{ base: '250px', sm: '80%', md: '80%' }}
-                        height="100%"
-                        display="flex"
-                        flexDir="column"
-                        alignItems="center"
-                        mx="auto"
-                        gap={{ base: 2 }}
-                    >
+                {imageSelect.typeImage === TYPE_IMAGE_VALUE.MARQUE ||
+                    (imageSelect.typeImage === TYPE_IMAGE_VALUE.EDITEUR && (
                         <Box
-                            textAlign="center"
-                            flexShrink="0"
-                            mb={2}
-                            fontSize={{ base: 'sm' }}
-                            overflow="hidden"
-                        >
-                            <Heading
-                                size={{ base: 'md', md: '2xl' }}
-                                color="whiteAlpha.900"
-                                lineClamp={2}
-                            >
-                                {imageSelect.marque}
-                            </Heading>
-                        </Box>
-
-                        <Box
-                            flex="1"
-                            minHeight="0"
+                            width={{ base: '250px', sm: '80%', md: '80%' }}
+                            height="100%"
                             display="flex"
+                            flexDir="column"
                             alignItems="center"
-                            justifyContent="center"
-                            width="100%"
+                            mx="auto"
+                            gap={{ base: 2 }}
                         >
-                            <Image
-                                src={imageSelect.url}
-                                alt={imageSelect.marque}
-                                maxWidth="100%"
-                                maxHeight="100%"
-                                objectFit="contain"
-                                borderRadius="md"
-                            />
+                            <Box
+                                textAlign="center"
+                                flexShrink="0"
+                                mb={2}
+                                fontSize={{ base: 'sm' }}
+                                overflow="hidden"
+                            >
+                                <Heading
+                                    size={{ base: 'md', md: '2xl' }}
+                                    color="whiteAlpha.900"
+                                    lineClamp={2}
+                                >
+                                    {imageSelect.marque}
+                                </Heading>
+                            </Box>
+
+                            <Box
+                                flex="1"
+                                minHeight="0"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                width="100%"
+                            >
+                                <Image
+                                    src={imageSelect.url}
+                                    alt={imageSelect.marque}
+                                    maxWidth="100%"
+                                    maxHeight="100%"
+                                    objectFit="contain"
+                                    borderRadius="md"
+                                />
+                            </Box>
+                            <Box flexShrink="0" mt={2}>
+                                <ConfirmationSuppression
+                                    id={imageSelect.id}
+                                    handleDelete={handleDeleteMarque}
+                                />
+                            </Box>
                         </Box>
-                        <Box flexShrink="0" mt={2}>
-                            <ConfirmationSuppression
-                                id={imageSelect.id}
-                                handleDelete={handleDeleteMarque}
-                            />
-                        </Box>
-                    </Box>
-                )}
+                    ))}
                 {imageSelect.typeImage === TYPE_IMAGE_VALUE.PELUCHE && (
                     <Box
                         width={{ base: '250px', sm: '80%', md: '80%' }}

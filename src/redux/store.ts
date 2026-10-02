@@ -9,7 +9,12 @@ export const store = configureStore({
         [ArticleDeLaSaisonApi.reducerPath]: ArticleDeLaSaisonApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware()
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActionPaths: ['meta.arg', 'meta.baseQueryMeta', /\.createdAt$/],
+                ignoredPaths: [/\.createdAt$/],
+            },
+        })
             .concat(VideosDuMomentApi.middleware)
             .concat(ImageApi.middleware)
             .concat(ArticleDeLaSaisonApi.middleware),

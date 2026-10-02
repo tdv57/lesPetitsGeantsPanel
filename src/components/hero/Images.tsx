@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TYPE_IMAGE_VALUE, type TYPE_IMAGE_TYPE } from '../../types/ImageType';
+import { typeImageMapping, type TYPE_IMAGE_TYPE } from '../../types/ImageType';
 import TypeImageSelection from '../card/TypeImageSelection';
 import { Box, SimpleGrid, VStack } from '@chakra-ui/react';
 import { BoutonCreationImage } from '../modal/BoutonCreationImage';
@@ -12,28 +12,14 @@ import {
 export default function Images() {
     const [typeImage, setTypeImage] = useState<TYPE_IMAGE_TYPE[]>([]);
     const [deleteImage] = useDeleteImageMutation();
-    const { data: marques = [] } = useGetImageByTypeQuery(TYPE_IMAGE_VALUE.MARQUE);
-    const { data: jouets = [] } = useGetImageByTypeQuery(TYPE_IMAGE_VALUE.JOUET);
-    const { data: jeuxDeSociete = [] } = useGetImageByTypeQuery(TYPE_IMAGE_VALUE.JEU_DE_SOCIETE);
-    const { data: peluches = [] } = useGetImageByTypeQuery(TYPE_IMAGE_VALUE.PELUCHE);
+
+    const { data: images = [] } = useGetImageByTypeQuery(typeImage[0], {
+        skip: !typeImage[0],
+    });
 
     function handleDelete(id: number, type: TYPE_IMAGE_TYPE) {
         deleteImage({ id: id, type: type });
     }
-
-    const typeImageMapping = {
-        JOUET: 'Jouet',
-        PELUCHE: 'Peluche',
-        MARQUE: 'Marque',
-        'JEU DE SOCIETE': 'Jeu de société',
-    };
-
-    const images = {
-        [TYPE_IMAGE_VALUE.MARQUE]: marques,
-        [TYPE_IMAGE_VALUE.PELUCHE]: peluches,
-        [TYPE_IMAGE_VALUE.JOUET]: jouets,
-        [TYPE_IMAGE_VALUE.JEU_DE_SOCIETE]: jeuxDeSociete,
-    };
 
     return (
         <>
@@ -42,10 +28,7 @@ export default function Images() {
                 {typeImage.length > 0 ? (
                     <BoutonCreationImage
                         typeImageLabel={typeImage[0]}
-                        typeImageValue={
-                            typeImageMapping[typeImage[0]] as
-                                'Jouet' | 'Peluche' | 'Marque' | 'Jeu de société'
-                        }
+                        typeImageValue={typeImageMapping.find(typeImage[0])?.value ?? ''}
                     />
                 ) : (
                     <></>
@@ -64,7 +47,7 @@ export default function Images() {
                             alignItems="stretch"
                             margin={8}
                         >
-                            {images[type].map((image) => (
+                            {images.map((image) => (
                                 <ImageCard
                                     key={image.id}
                                     imageSelect={image}

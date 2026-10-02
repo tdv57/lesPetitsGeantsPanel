@@ -1,8 +1,9 @@
 import { z } from 'zod';
+import { TYPE_IMAGE_VALUE } from '../../types/ImageType';
 
 export const NewJeuDeSocieteFormValidationSchema = z
     .object({
-        typeImage: z.literal('JEU DE SOCIETE'),
+        typeImage: z.literal(TYPE_IMAGE_VALUE.JEU_DE_SOCIETE),
         description: z.string().trim().min(1, 'La description ne peut pas être vide'),
         typeAge: z.string().trim(),
         age: z.string().trim(),

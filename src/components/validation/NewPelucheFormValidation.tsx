@@ -1,10 +1,11 @@
 import { z } from 'zod';
+import { TYPE_IMAGE_VALUE } from '../../types/ImageType';
 
 export const CUSTOM_BRAND = '__custom__';
 
 export const NewPelucheFormValidationSchema = z
     .object({
-        typeImage: z.literal('PELUCHE'),
+        typeImage: z.literal(TYPE_IMAGE_VALUE.PELUCHE),
         marque: z.string().trim().min(1, 'La marque de la peluche ne peut pas être vide'),
         marquePersonnalise: z.string().trim().optional(),
         image: z

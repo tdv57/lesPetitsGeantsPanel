@@ -1,4 +1,4 @@
-import type { ImageSelect, RawMarque } from '../types/ImageType';
+import { TYPE_IMAGE_VALUE, type ImageSelect, type RawMarque } from '../types/ImageType';
 import { mapAge } from './UtilsMapper';
 
 export function mapMarqueFromSupabase(s: RawMarque): ImageSelect {
@@ -41,4 +41,33 @@ export function mapJeuDeSocieteFromSupabase(s: RawMarque): ImageSelect {
         typeImage: s.type_image,
         createdAt: new Date(s.created_at),
     };
+}
+
+export function mapEditeurFromSupabase(s: RawMarque): ImageSelect {
+    return {
+        id: s.id,
+        url: s.url,
+        marque: s.marque,
+        typeImage: s.type_image,
+        createdAt: new Date(s.created_at),
+    };
+}
+
+export function mapImageFromSupabase(s: RawMarque): ImageSelect {
+    switch (s.type_image) {
+        case TYPE_IMAGE_VALUE.MARQUE:
+            return mapMarqueFromSupabase(s);
+        case TYPE_IMAGE_VALUE.JEU_DE_SOCIETE:
+            return mapJeuDeSocieteFromSupabase(s);
+        case TYPE_IMAGE_VALUE.JOUET:
+            return mapJouetFromSupabase(s);
+        case TYPE_IMAGE_VALUE.PELUCHE:
+            return mapPelucheFromSupabase(s);
+        case TYPE_IMAGE_VALUE.EDITEUR:
+            return mapEditeurFromSupabase(s);
+        default: {
+            console.error('mapImageFromSupabase type image inconnu : ' + s.type_image);
+            throw new Error('no such type image ' + s.type_image);
+        }
+    }
 }

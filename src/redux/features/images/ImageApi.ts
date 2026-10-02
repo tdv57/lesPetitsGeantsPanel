@@ -6,7 +6,7 @@ import { TYPE_IMAGE_VALUE } from '../../../types/ImageType';
 export const ImageApi = createApi({
     reducerPath: 'imageApi',
     baseQuery: fakeBaseQuery(),
-    tagTypes: ['Marques', 'Jouets', 'JeuxDeSociete', 'Peluches', 'Images'],
+    tagTypes: Object.values(TYPE_IMAGE_VALUE),
     endpoints: (builder) => ({
         getImageByType: builder.query<ImageSelect[], TYPE_IMAGE_TYPE>({
             queryFn: async (type: TYPE_IMAGE_TYPE) => {
@@ -18,7 +18,7 @@ export const ImageApi = createApi({
                 }
                 return { data: result };
             },
-            providesTags: (_result, _error, type) => [mapTypeImageToTag(type)],
+            providesTags: (_result, _error, type) => [type],
         }),
 
         addImage: builder.mutation<ImageSelect, ImageCreate>({
@@ -76,20 +76,5 @@ export const ImageApi = createApi({
         }),
     }),
 });
-
-function mapTypeImageToTag(
-    type: TYPE_IMAGE_TYPE,
-): 'Marques' | 'Jouets' | 'JeuxDeSociete' | 'Peluches' {
-    switch (type) {
-        case TYPE_IMAGE_VALUE.MARQUE:
-            return 'Marques';
-        case TYPE_IMAGE_VALUE.JOUET:
-            return 'Jouets';
-        case TYPE_IMAGE_VALUE.JEU_DE_SOCIETE:
-            return 'JeuxDeSociete';
-        case TYPE_IMAGE_VALUE.PELUCHE:
-            return 'Peluches';
-    }
-}
 
 export const { useGetImageByTypeQuery, useDeleteImageMutation, useAddImageMutation } = ImageApi;

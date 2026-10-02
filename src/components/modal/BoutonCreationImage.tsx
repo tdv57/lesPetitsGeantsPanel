@@ -1,14 +1,15 @@
 import { Button, Dialog, Portal } from '@chakra-ui/react';
-import type { TYPE_IMAGE_TYPE } from '../../types/ImageType';
+import { TYPE_IMAGE_VALUE, type TYPE_IMAGE_TYPE } from '../../types/ImageType';
 import { useState, type JSX } from 'react';
 import { NewMarqueForm } from '../form/NewMarqueForm';
 import { NewJouetForm } from '../form/NewJouetForm';
 import { NewJeuDeSocieteForm } from '../form/NewJeuDeSocieteForm';
 import { NewPelucheForm } from '../form/NewPelucheForm';
+import { NewEditeurForm } from '../form/NewEditeurForm';
 
 type BoutonCreationImagePropsType = {
     typeImageLabel: TYPE_IMAGE_TYPE;
-    typeImageValue: 'Marque' | 'Jouet' | 'Jeu de société' | 'Peluche';
+    typeImageValue: string;
 };
 
 export function BoutonCreationImage({
@@ -19,14 +20,16 @@ export function BoutonCreationImage({
 
     function getForm(t: TYPE_IMAGE_TYPE): JSX.Element {
         switch (t) {
-            case 'MARQUE':
+            case TYPE_IMAGE_VALUE.MARQUE:
                 return <NewMarqueForm />;
-            case 'JOUET':
+            case TYPE_IMAGE_VALUE.JOUET:
                 return <NewJouetForm />;
-            case 'JEU DE SOCIETE':
+            case TYPE_IMAGE_VALUE.JEU_DE_SOCIETE:
                 return <NewJeuDeSocieteForm />;
-            case 'PELUCHE':
+            case TYPE_IMAGE_VALUE.PELUCHE:
                 return <NewPelucheForm />;
+            case TYPE_IMAGE_VALUE.EDITEUR:
+                return <NewEditeurForm />;
         }
         return <></>;
     }
