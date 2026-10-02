@@ -8,18 +8,6 @@ type ImageCardPropType = {
 };
 
 export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropType) {
-    function handleDeleteMarque(id: number) {
-        return handleDelete(id, TYPE_IMAGE_VALUE.MARQUE);
-    }
-    function handleDeleteJeuDeSociete(id: number) {
-        return handleDelete(id, TYPE_IMAGE_VALUE.JEU_DE_SOCIETE);
-    }
-    function handleDeletePeluche(id: number) {
-        return handleDelete(id, TYPE_IMAGE_VALUE.PELUCHE);
-    }
-    function handleDeleteJouet(id: number) {
-        handleDelete(id, TYPE_IMAGE_VALUE.JOUET);
-    }
     return (
         <>
             <Box
@@ -31,58 +19,58 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                 width={{ base: '250px', sm: '80%', md: '80%' }}
                 height={{ base: '400px', sm: '90%', md: '100%' }}
             >
-                {imageSelect.typeImage === TYPE_IMAGE_VALUE.MARQUE ||
-                    (imageSelect.typeImage === TYPE_IMAGE_VALUE.EDITEUR && (
+                {(imageSelect.typeImage === TYPE_IMAGE_VALUE.MARQUE ||
+                    imageSelect.typeImage === TYPE_IMAGE_VALUE.EDITEUR) && (
+                    <Box
+                        width={{ base: '250px', sm: '80%', md: '80%' }}
+                        height="100%"
+                        display="flex"
+                        flexDir="column"
+                        alignItems="center"
+                        mx="auto"
+                        gap={{ base: 2 }}
+                    >
                         <Box
-                            width={{ base: '250px', sm: '80%', md: '80%' }}
-                            height="100%"
-                            display="flex"
-                            flexDir="column"
-                            alignItems="center"
-                            mx="auto"
-                            gap={{ base: 2 }}
+                            textAlign="center"
+                            flexShrink="0"
+                            mb={2}
+                            fontSize={{ base: 'sm' }}
+                            overflow="hidden"
                         >
-                            <Box
-                                textAlign="center"
-                                flexShrink="0"
-                                mb={2}
-                                fontSize={{ base: 'sm' }}
-                                overflow="hidden"
+                            <Heading
+                                size={{ base: 'md', md: '2xl' }}
+                                color="whiteAlpha.900"
+                                lineClamp={2}
                             >
-                                <Heading
-                                    size={{ base: 'md', md: '2xl' }}
-                                    color="whiteAlpha.900"
-                                    lineClamp={2}
-                                >
-                                    {imageSelect.marque}
-                                </Heading>
-                            </Box>
-
-                            <Box
-                                flex="1"
-                                minHeight="0"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                width="100%"
-                            >
-                                <Image
-                                    src={imageSelect.url}
-                                    alt={imageSelect.marque}
-                                    maxWidth="100%"
-                                    maxHeight="100%"
-                                    objectFit="contain"
-                                    borderRadius="md"
-                                />
-                            </Box>
-                            <Box flexShrink="0" mt={2}>
-                                <ConfirmationSuppression
-                                    id={imageSelect.id}
-                                    handleDelete={handleDeleteMarque}
-                                />
-                            </Box>
+                                {imageSelect.marque}
+                            </Heading>
                         </Box>
-                    ))}
+
+                        <Box
+                            flex="1"
+                            minHeight="0"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            width="100%"
+                        >
+                            <Image
+                                src={imageSelect.url}
+                                alt={imageSelect.marque}
+                                maxWidth="100%"
+                                maxHeight="100%"
+                                objectFit="contain"
+                                borderRadius="md"
+                            />
+                        </Box>
+                        <Box flexShrink="0" mt={2}>
+                            <ConfirmationSuppression
+                                id={imageSelect.id}
+                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
+                            />
+                        </Box>
+                    </Box>
+                )}
                 {imageSelect.typeImage === TYPE_IMAGE_VALUE.PELUCHE && (
                     <Box
                         width={{ base: '250px', sm: '80%', md: '80%' }}
@@ -113,12 +101,14 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                         <Box flexShrink="0" mt={2}>
                             <ConfirmationSuppression
                                 id={imageSelect.id}
-                                handleDelete={handleDeletePeluche}
+                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
                             />
                         </Box>
                     </Box>
                 )}
-                {imageSelect.typeImage === TYPE_IMAGE_VALUE.JOUET && (
+                {(imageSelect.typeImage === TYPE_IMAGE_VALUE.JOUET ||
+                    imageSelect.typeImage === TYPE_IMAGE_VALUE.LOISIR_CREATIF ||
+                    imageSelect.typeImage === TYPE_IMAGE_VALUE.DEGUISEMENT) && (
                     <Box
                         width={{ base: '250px', sm: '80%', md: '80%' }}
                         height="100%"
@@ -168,7 +158,7 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                         <Box flexShrink="0" mt={2}>
                             <ConfirmationSuppression
                                 id={imageSelect.id}
-                                handleDelete={handleDeleteJouet}
+                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
                             />
                         </Box>
                     </Box>
@@ -222,7 +212,61 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                         <Box flexShrink="0" mt={2}>
                             <ConfirmationSuppression
                                 id={imageSelect.id}
-                                handleDelete={handleDeleteJeuDeSociete}
+                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
+                            />
+                        </Box>
+                    </Box>
+                )}
+                {imageSelect.typeImage === TYPE_IMAGE_VALUE.LIVRE && (
+                    <Box
+                        width={{ base: '250px', sm: '80%', md: '80%' }}
+                        height="100%"
+                        display="flex"
+                        flexDir="column"
+                        alignItems="center"
+                        mx="auto"
+                        gap={{ base: 2 }}
+                    >
+                        <Box
+                            textAlign="center"
+                            flexShrink="0"
+                            mb={2}
+                            fontSize={{ base: 'sm' }}
+                            overflow="hidden"
+                        >
+                            <Heading
+                                size={{ base: 'sm', md: '2xl' }}
+                                color="whiteAlpha.900"
+                                lineClamp={2}
+                            >
+                                {imageSelect.description}
+                            </Heading>
+                            <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
+                                {imageSelect.age}
+                            </Heading>
+                        </Box>
+
+                        <Box
+                            flex="1"
+                            minHeight="0"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            width="100%"
+                        >
+                            <Image
+                                src={imageSelect.url}
+                                alt={`${imageSelect.description ?? ''} ${imageSelect.age ?? ''}`}
+                                maxWidth="100%"
+                                maxHeight="100%"
+                                objectFit="contain"
+                                borderRadius="md"
+                            />
+                        </Box>
+                        <Box flexShrink="0" mt={2}>
+                            <ConfirmationSuppression
+                                id={imageSelect.id}
+                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
                             />
                         </Box>
                     </Box>

@@ -18,6 +18,7 @@ import {
 import { LuUpload } from 'react-icons/lu';
 import { typeAgeCollection } from '../../mapper/UtilsMapper';
 import { useAddImageMutation } from '../../redux/features/images/ImageApi';
+import { TYPE_IMAGE_VALUE } from '../../types/ImageType';
 
 export function NewJouetForm() {
     const [addJouet] = useAddImageMutation();
@@ -34,7 +35,7 @@ export function NewJouetForm() {
             age: '',
             typeAge: '',
             description: '',
-            typeImage: 'JOUET',
+            typeImage: TYPE_IMAGE_VALUE.JOUET,
         },
     });
 

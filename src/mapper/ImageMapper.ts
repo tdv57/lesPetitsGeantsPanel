@@ -53,6 +53,28 @@ export function mapEditeurFromSupabase(s: RawMarque): ImageSelect {
     };
 }
 
+export function mapLoisirCreatifFromSupabase(s: RawMarque): ImageSelect {
+    return {
+        id: s.id,
+        url: s.url,
+        age: s.age && s.type_age ? mapAge(s.age, s.type_age as 'ANS' | 'MOIS') : undefined,
+        description: s.description ? s.description : '',
+        typeImage: s.type_image,
+        createdAt: new Date(s.created_at),
+    };
+}
+
+export function mapLivreFromSupabase(s: RawMarque): ImageSelect {
+    return {
+        id: s.id,
+        url: s.url,
+        age: s.age && s.type_age ? mapAge(s.age, s.type_age as 'ANS' | 'MOIS') : undefined,
+        marque: s.marque,
+        typeImage: s.type_image,
+        createdAt: new Date(s.created_at),
+    };
+}
+
 export function mapImageFromSupabase(s: RawMarque): ImageSelect {
     switch (s.type_image) {
         case TYPE_IMAGE_VALUE.MARQUE:
@@ -65,6 +87,10 @@ export function mapImageFromSupabase(s: RawMarque): ImageSelect {
             return mapPelucheFromSupabase(s);
         case TYPE_IMAGE_VALUE.EDITEUR:
             return mapEditeurFromSupabase(s);
+        case TYPE_IMAGE_VALUE.LOISIR_CREATIF:
+            return mapLoisirCreatifFromSupabase(s);
+        case TYPE_IMAGE_VALUE.LIVRE:
+            return mapLivreFromSupabase(s);
         default: {
             console.error('mapImageFromSupabase type image inconnu : ' + s.type_image);
             throw new Error('no such type image ' + s.type_image);

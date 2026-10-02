@@ -18,6 +18,7 @@ import {
 import { typeAgeCollection } from '../../mapper/UtilsMapper';
 import { LuUpload } from 'react-icons/lu';
 import { useAddImageMutation } from '../../redux/features/images/ImageApi';
+import { TYPE_IMAGE_VALUE } from '../../types/ImageType';
 
 export function NewJeuDeSocieteForm() {
     const [addJeuDeSociete] = useAddImageMutation();
@@ -34,7 +35,7 @@ export function NewJeuDeSocieteForm() {
             age: '',
             typeAge: '',
             description: '',
-            typeImage: 'JEU DE SOCIETE',
+            typeImage: TYPE_IMAGE_VALUE.JEU_DE_SOCIETE,
         },
     });
 

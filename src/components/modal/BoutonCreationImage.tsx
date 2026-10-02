@@ -6,6 +6,9 @@ import { NewJouetForm } from '../form/NewJouetForm';
 import { NewJeuDeSocieteForm } from '../form/NewJeuDeSocieteForm';
 import { NewPelucheForm } from '../form/NewPelucheForm';
 import { NewEditeurForm } from '../form/NewEditeurForm';
+import { NewLoisirCreatifForm } from '../form/NewLoisirCreatifForm';
+import { NewLivreForm } from '../form/NewLivreForm';
+import { NewDeguisementForm } from '../form/NewDeguisementForm';
 
 type BoutonCreationImagePropsType = {
     typeImageLabel: TYPE_IMAGE_TYPE;
@@ -30,6 +33,12 @@ export function BoutonCreationImage({
                 return <NewPelucheForm />;
             case TYPE_IMAGE_VALUE.EDITEUR:
                 return <NewEditeurForm />;
+            case TYPE_IMAGE_VALUE.LOISIR_CREATIF:
+                return <NewLoisirCreatifForm />;
+            case TYPE_IMAGE_VALUE.LIVRE:
+                return <NewLivreForm />;
+            case TYPE_IMAGE_VALUE.DEGUISEMENT:
+                return <NewDeguisementForm />;
         }
         return <></>;
     }

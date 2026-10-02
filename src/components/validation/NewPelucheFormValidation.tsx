@@ -18,20 +18,9 @@ export const NewPelucheFormValidationSchema = z
                 message: 'Le fichier doit être au format png, jpeg ou webp',
             }),
     })
-    .superRefine((val, ctx) => {
-        if (val.marque === CUSTOM_BRAND && !val.marquePersonnalise) {
-            ctx.addIssue({
-                code: 'custom',
-                path: ['marquePersonnalise'],
-                message: 'Saisis le nom de la marque',
-            });
-        } else if (val.marque === CUSTOM_BRAND && val.marquePersonnalise?.trim().length === 0) {
-            ctx.addIssue({
-                code: 'custom',
-                path: ['marquePersonnalise'],
-                message: 'Le nom de la marque personnalisée ne peut pas être vide',
-            });
-        }
+    .refine((data) => data.marque === CUSTOM_BRAND && !data.marquePersonnalise, {
+        path: ['marquePersonnalise'],
+        message: 'Le nom de la marque personnalisée ne peut pas être vide',
     });
 
 export type NewPelucheFormValidationType = z.infer<typeof NewPelucheFormValidationSchema>;
