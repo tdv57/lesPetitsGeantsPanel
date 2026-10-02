@@ -16,6 +16,7 @@ import { ChargementStatut } from '../../enum/ChargementStatut';
 import { newVideoFormValidationSchema } from '../validation/NewVideoFormValidation';
 import { useCompressionProgress } from '../../hook/useCompressionProgress';
 import { compressVideo } from '../../service/FFmpegService';
+import { typeAgeCollection } from '../../mapper/UtilsMapper';
 
 type NewVideoFormPropType = {
     supabaseAction: (video: VideoCreateType) => Promise<VideoSelectType | null>;
@@ -55,13 +56,6 @@ export default function NewVideoForm({
             setVideo(e.target.files[0]);
         }
     }
-
-    const typeAgeCollection = createListCollection({
-        items: [
-            { label: 'Ans', value: 'ANS' },
-            { label: 'Mois', value: 'MOIS' },
-        ],
-    });
 
     useEffect(() => {
         if (chargementStatut === ChargementStatut.Inactif) {

@@ -18,6 +18,7 @@ export function mapAge(age: number | null, typeAge: 'ANS' | 'MOIS' | null): stri
 
 export const typeAgeCollection = createListCollection({
     items: [
+        { label: 'Aucun', value: '' },
         { label: 'Ans', value: 'ANS' },
         { label: 'Mois', value: 'MOIS' },
     ],
