@@ -1,16 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { VideoCreateType, VideoSelectType } from '../../types/VideoType';
-import {
-    Button,
-    Field,
-    Input,
-    Stack,
-    Textarea,
-    Text,
-    createListCollection,
-    NumberInput,
-    Select,
-} from '@chakra-ui/react';
+import { Button, Field, Input, Stack, Textarea, Text, NumberInput, Select } from '@chakra-ui/react';
 import type { FormPropsType } from '../modal/BoutonCreationVideo';
 import { ChargementStatut } from '../../enum/ChargementStatut';
 import { newVideoFormValidationSchema } from '../validation/NewVideoFormValidation';
