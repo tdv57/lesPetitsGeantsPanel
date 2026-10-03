@@ -16,7 +16,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { LuUpload } from 'react-icons/lu';
-import { typeAgeCollection } from '../../mapper/UtilsMapper';
+import { typeAgeCollection } from '../../mapper/AgeMapper';
 import { useAddImageMutation } from '../../redux/features/images/ImageApi';
 import { TYPE_IMAGE_VALUE } from '../../types/ImageType';
 

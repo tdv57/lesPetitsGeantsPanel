@@ -20,7 +20,7 @@ import {
     Textarea,
     VStack,
 } from '@chakra-ui/react';
-import { typeAgeCollection } from '../../mapper/UtilsMapper';
+import { typeAgeCollection } from '../../mapper/AgeMapper';
 import { LuUpload } from 'react-icons/lu';
 import { useEffect, useMemo } from 'react';
 

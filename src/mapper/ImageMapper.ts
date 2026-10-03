@@ -1,99 +1,42 @@
-import { TYPE_IMAGE_VALUE, type ImageSelect, type RawMarque } from '../types/ImageType';
-import { mapAge } from './UtilsMapper';
+import type { GenreEnum } from '../enum/GenreEnum';
+import type { ThemeEnum } from '../enum/ThemeEnum';
+import {
+    type ImageCreate,
+    type ImageSelect,
+    type RawImageCreate,
+    type RawImageSelect,
+} from '../types/ImageType';
+import { mapAge } from './AgeMapper';
+import { isGenreEnum, isThemeEnum } from './EnumMapper';
 
-export function mapMarqueFromSupabase(s: RawMarque): ImageSelect {
+export function mapRawImageSelectToImageSelect(s: RawImageSelect): ImageSelect {
     return {
-        id: s.id,
         url: s.url,
+        id: s.id,
+        typeImage: s.type_image,
         marque: s.marque,
-        typeImage: s.type_image,
-        createdAt: new Date(s.created_at),
-    };
-}
-
-export function mapPelucheFromSupabase(s: RawMarque): ImageSelect {
-    return {
-        id: s.id,
-        url: s.url,
-        marque: s.marque,
-        typeImage: s.type_image,
-        createdAt: new Date(s.created_at),
-    };
-}
-
-export function mapJouetFromSupabase(s: RawMarque): ImageSelect {
-    return {
-        id: s.id,
-        url: s.url,
         age: s.age && s.type_age ? mapAge(s.age, s.type_age as 'ANS' | 'MOIS') : undefined,
-        description: s.description ? s.description : '',
-        typeImage: s.type_image,
+        description: s.description ? s.description : undefined,
         createdAt: new Date(s.created_at),
+        theme: isThemeEnum(s.theme) ? (s.theme as ThemeEnum) : undefined,
+        genre: isGenreEnum(s.genre) ? (s.genre as GenreEnum) : undefined,
     };
 }
 
-export function mapJeuDeSocieteFromSupabase(s: RawMarque): ImageSelect {
+export function mapImageCreateToRawImageCreate(
+    s: ImageCreate,
+    url: string,
+    code: string,
+): RawImageCreate {
     return {
-        id: s.id,
-        url: s.url,
-        age: s.age && s.type_age ? mapAge(s.age, s.type_age as 'ANS' | 'MOIS') : undefined,
-        description: s.description ? s.description : '',
-        typeImage: s.type_image,
-        createdAt: new Date(s.created_at),
+        url,
+        description: s.description ? s.description : null,
+        age: s.age ? parseInt(s.age) : null,
+        type_age: s.typeAge ? s.typeAge : null,
+        marque: s.marque ? s.marque : '',
+        code,
+        type_image: s.typeImage,
+        genre: s.genre ? s.genre : null,
+        theme: s.theme ? s.theme : null,
     };
-}
-
-export function mapEditeurFromSupabase(s: RawMarque): ImageSelect {
-    return {
-        id: s.id,
-        url: s.url,
-        marque: s.marque,
-        typeImage: s.type_image,
-        createdAt: new Date(s.created_at),
-    };
-}
-
-export function mapLoisirCreatifFromSupabase(s: RawMarque): ImageSelect {
-    return {
-        id: s.id,
-        url: s.url,
-        age: s.age && s.type_age ? mapAge(s.age, s.type_age as 'ANS' | 'MOIS') : undefined,
-        description: s.description ? s.description : '',
-        typeImage: s.type_image,
-        createdAt: new Date(s.created_at),
-    };
-}
-
-export function mapLivreFromSupabase(s: RawMarque): ImageSelect {
-    return {
-        id: s.id,
-        url: s.url,
-        age: s.age && s.type_age ? mapAge(s.age, s.type_age as 'ANS' | 'MOIS') : undefined,
-        marque: s.marque,
-        typeImage: s.type_image,
-        createdAt: new Date(s.created_at),
-    };
-}
-
-export function mapImageFromSupabase(s: RawMarque): ImageSelect {
-    switch (s.type_image) {
-        case TYPE_IMAGE_VALUE.MARQUE:
-            return mapMarqueFromSupabase(s);
-        case TYPE_IMAGE_VALUE.JEU_DE_SOCIETE:
-            return mapJeuDeSocieteFromSupabase(s);
-        case TYPE_IMAGE_VALUE.JOUET:
-            return mapJouetFromSupabase(s);
-        case TYPE_IMAGE_VALUE.PELUCHE:
-            return mapPelucheFromSupabase(s);
-        case TYPE_IMAGE_VALUE.EDITEUR:
-            return mapEditeurFromSupabase(s);
-        case TYPE_IMAGE_VALUE.LOISIR_CREATIF:
-            return mapLoisirCreatifFromSupabase(s);
-        case TYPE_IMAGE_VALUE.LIVRE:
-            return mapLivreFromSupabase(s);
-        default: {
-            console.error('mapImageFromSupabase type image inconnu : ' + s.type_image);
-            throw new Error('no such type image ' + s.type_image);
-        }
-    }
 }

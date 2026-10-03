@@ -41,7 +41,7 @@ export const typeImageMapping = createListCollection<{ label: TYPE_IMAGE_TYPE; v
     ],
 });
 
-export type RawMarque = {
+export type RawImageSelect = {
     id: number;
     created_at: string;
     url: string;
@@ -51,6 +51,20 @@ export type RawMarque = {
     marque: string;
     code: string;
     type_image: TYPE_IMAGE_TYPE;
+    genre: string | null;
+    theme: string | null;
+};
+
+export type RawImageCreate = {
+    url: string;
+    description: string | null;
+    age: number | null;
+    type_age: string | null;
+    marque: string;
+    code: string;
+    type_image: TYPE_IMAGE_TYPE;
+    genre: string | null;
+    theme: string | null;
 };
 
 export type MarqueCreate = {
@@ -77,6 +91,35 @@ export type PelucheCreate = {
     image: File;
 };
 
+export type LoisirCreatifCreate = {
+    typeAge?: string;
+    age?: string;
+    description: string;
+    image: File;
+};
+
+export type LivreCreate = {
+    typeAge?: string;
+    age?: string;
+    description: string;
+    marque: string;
+    image: File;
+};
+
+export type DeguisementCreate = {
+    typeAge?: string;
+    age?: string;
+    description: string;
+    image: File;
+    genre: GenreEnum;
+    theme: ThemeEnum;
+};
+
+export type EditeurCreate = {
+    marque: string;
+    image: File;
+};
+
 export type ImageCreate = {
     typeImage: TYPE_IMAGE_TYPE;
     marque?: string;
@@ -84,6 +127,8 @@ export type ImageCreate = {
     age?: string;
     description?: string;
     image: File;
+    theme?: ThemeEnum;
+    genre?: GenreEnum;
 };
 
 export type ImageSelect = {
@@ -96,5 +141,4 @@ export type ImageSelect = {
     createdAt: Date;
     theme?: ThemeEnum;
     genre?: GenreEnum;
-    editeur?: string;
 };

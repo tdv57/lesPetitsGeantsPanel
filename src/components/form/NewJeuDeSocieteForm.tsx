@@ -15,7 +15,7 @@ import {
     Textarea,
     VStack,
 } from '@chakra-ui/react';
-import { typeAgeCollection } from '../../mapper/UtilsMapper';
+import { typeAgeCollection } from '../../mapper/AgeMapper';
 import { LuUpload } from 'react-icons/lu';
 import { useAddImageMutation } from '../../redux/features/images/ImageApi';
 import { TYPE_IMAGE_VALUE } from '../../types/ImageType';

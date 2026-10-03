@@ -6,7 +6,7 @@ import { ChargementStatut } from '../../enum/ChargementStatut';
 import { newVideoFormValidationSchema } from '../validation/NewVideoFormValidation';
 import { useCompressionProgress } from '../../hook/useCompressionProgress';
 import { compressVideo } from '../../service/FFmpegService';
-import { typeAgeCollection } from '../../mapper/UtilsMapper';
+import { typeAgeCollection } from '../../mapper/AgeMapper';
 
 type NewVideoFormPropType = {
     supabaseAction: (video: VideoCreateType) => Promise<VideoSelectType | null>;

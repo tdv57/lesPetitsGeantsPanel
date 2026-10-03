@@ -1,23 +1,17 @@
 import { supabase, TABLE_IMAGE } from './SupabaseService';
 import { R2_IMAGE_PUBLIC_URL, uploadImage, deleteImage as deleteR2Image } from './R2Service';
 import type { ImageCreate, ImageSelect, TYPE_IMAGE_TYPE } from '../types/ImageType';
-import { mapImageFromSupabase } from '../mapper/ImageMapper';
-import { mapAge } from '../mapper/UtilsMapper';
+import {
+    mapImageCreateToRawImageCreate,
+    mapRawImageSelectToImageSelect,
+} from '../mapper/ImageMapper';
 
 export async function addImage(image: ImageCreate): Promise<ImageSelect | null> {
     const code = crypto.randomUUID();
     const url = R2_IMAGE_PUBLIC_URL + '/' + code;
     const { data, error } = await supabase
         .from(TABLE_IMAGE)
-        .insert({
-            url,
-            description: image.description,
-            age: image.age,
-            type_age: image.typeAge,
-            marque: image.marque,
-            code,
-            type_image: image.typeImage,
-        })
+        .insert(mapImageCreateToRawImageCreate(image, url, code))
         .select();
     if (error) return null;
     const newImage = data[0];
@@ -27,15 +21,7 @@ export async function addImage(image: ImageCreate): Promise<ImageSelect | null> 
         await supabase.from(TABLE_IMAGE).delete().eq('id', newImage.id);
         return null;
     }
-    return {
-        url: newImage.url,
-        id: newImage.id,
-        typeImage: newImage.type_image,
-        marque: newImage.marque,
-        age: mapAge(newImage.age, newImage.type_age),
-        description: newImage.description,
-        createdAt: newImage.created_at,
-    };
+    return mapRawImageSelectToImageSelect(newImage);
 }
 
 export async function getImageByType(typeImage: TYPE_IMAGE_TYPE): Promise<ImageSelect[]> {
@@ -44,7 +30,7 @@ export async function getImageByType(typeImage: TYPE_IMAGE_TYPE): Promise<ImageS
         console.warn('getImageError : ', error);
         return [];
     } else {
-        return data.map((d) => mapImageFromSupabase(d)) as ImageSelect[];
+        return data.map((d) => mapRawImageSelectToImageSelect(d)) as ImageSelect[];
     }
 }
 

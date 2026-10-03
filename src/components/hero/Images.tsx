@@ -28,7 +28,11 @@ export default function Images() {
                 {typeImage.length > 0 ? (
                     <BoutonCreationImage
                         typeImageLabel={typeImage[0]}
-                        typeImageValue={typeImageMapping.find(typeImage[0])?.value ?? ''}
+                        typeImageValue={
+                            typeImageMapping.items
+                                .find((t) => t.label === typeImage[0])
+                                ?.value?.toLowerCase() ?? ''
+                        }
                     />
                 ) : (
                     <></>

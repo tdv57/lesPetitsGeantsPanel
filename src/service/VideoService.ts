@@ -1,6 +1,6 @@
 import { supabase, TABLE_VIDEO } from './SupabaseService';
 import { uploadVideo, deleteVideo, R2_VIDEO_PUBLIC_URL } from './R2Service';
-import { mapAge } from '../mapper/UtilsMapper';
+import { mapAge } from '../mapper/AgeMapper';
 import type { VideoSelectType, VideoCreateType } from '../types/VideoType';
 
 const ARTICLE_DE_LA_SAISON_CODE = 'ArticleDeLaSaison';
