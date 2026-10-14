@@ -1,10 +1,13 @@
 import { Box, Heading, Image } from '@chakra-ui/react';
-import { TYPE_IMAGE_VALUE, type ImageSelect, type TYPE_IMAGE_TYPE } from '../../types/ImageType';
+import type { ImageSelect } from '../../types/ImageType';
 import ConfirmationSuppression from '../modal/ConfirmationSuppression';
+import { type TypeImageEnum, TypeImageEnumValue, typeImageMapping } from '../../enum/TypeImageEnum';
+import { BoutonModificationImage } from '../modal/BoutonCreationImage';
+import { mapAge } from '../../mapper/AgeMapper';
 
 type ImageCardPropType = {
     imageSelect: ImageSelect;
-    handleDelete: (id: number, type: TYPE_IMAGE_TYPE) => void;
+    handleDelete: (id: number, type: TypeImageEnum) => void;
 };
 
 export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropType) {
@@ -19,33 +22,53 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                 width={{ base: '250px', sm: '80%', md: '80%' }}
                 height={{ base: '400px', sm: '90%', md: '100%' }}
             >
-                {(imageSelect.typeImage === TYPE_IMAGE_VALUE.MARQUE ||
-                    imageSelect.typeImage === TYPE_IMAGE_VALUE.EDITEUR) && (
-                    <Box
-                        width={{ base: '250px', sm: '80%', md: '80%' }}
-                        height="100%"
-                        display="flex"
-                        flexDir="column"
-                        alignItems="center"
-                        mx="auto"
-                        gap={{ base: 2 }}
-                    >
-                        <Box
-                            textAlign="center"
-                            flexShrink="0"
-                            mb={2}
-                            fontSize={{ base: 'sm' }}
-                            overflow="hidden"
-                        >
-                            <Heading
-                                size={{ base: 'md', md: '2xl' }}
-                                color="whiteAlpha.900"
-                                lineClamp={2}
+                <Box
+                    width={{ base: '250px', sm: '80%', md: '80%' }}
+                    height="100%"
+                    display="flex"
+                    flexDir="column"
+                    alignItems="center"
+                    mx="auto"
+                    gap={{ base: 2 }}
+                >
+                    {imageSelect.typeImage === TypeImageEnumValue.MARQUE && (
+                        <>
+                            <Box
+                                textAlign="center"
+                                flexShrink="0"
+                                mb={2}
+                                fontSize={{ base: 'sm' }}
+                                overflow="hidden"
                             >
-                                {imageSelect.marque}
-                            </Heading>
-                        </Box>
+                                <Heading
+                                    size={{ base: 'md', md: '2xl' }}
+                                    color="whiteAlpha.900"
+                                    lineClamp={2}
+                                >
+                                    {imageSelect.marque}
+                                </Heading>
+                            </Box>
 
+                            <Box
+                                flex="1"
+                                minHeight="0"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                width="100%"
+                            >
+                                <Image
+                                    src={imageSelect.url}
+                                    alt={imageSelect.marque}
+                                    maxWidth="100%"
+                                    maxHeight="100%"
+                                    objectFit="contain"
+                                    borderRadius="md"
+                                />
+                            </Box>
+                        </>
+                    )}
+                    {imageSelect.typeImage === TypeImageEnumValue.PELUCHE && (
                         <Box
                             flex="1"
                             minHeight="0"
@@ -63,214 +86,147 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 borderRadius="md"
                             />
                         </Box>
-                        <Box flexShrink="0" mt={2}>
-                            <ConfirmationSuppression
-                                id={imageSelect.id}
-                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
-                            />
-                        </Box>
-                    </Box>
-                )}
-                {imageSelect.typeImage === TYPE_IMAGE_VALUE.PELUCHE && (
-                    <Box
-                        width={{ base: '250px', sm: '80%', md: '80%' }}
-                        height="100%"
-                        display="flex"
-                        flexDir="column"
-                        alignItems="center"
-                        mx="auto"
-                        gap={{ base: 2 }}
-                    >
-                        <Box
-                            flex="1"
-                            minHeight="0"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            width="100%"
-                        >
-                            <Image
-                                src={imageSelect.url}
-                                alt={imageSelect.marque}
-                                maxWidth="100%"
-                                maxHeight="100%"
-                                objectFit="contain"
-                                borderRadius="md"
-                            />
-                        </Box>
-                        <Box flexShrink="0" mt={2}>
-                            <ConfirmationSuppression
-                                id={imageSelect.id}
-                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
-                            />
-                        </Box>
-                    </Box>
-                )}
-                {(imageSelect.typeImage === TYPE_IMAGE_VALUE.JOUET ||
-                    imageSelect.typeImage === TYPE_IMAGE_VALUE.LOISIR_CREATIF ||
-                    imageSelect.typeImage === TYPE_IMAGE_VALUE.DEGUISEMENT) && (
-                    <Box
-                        width={{ base: '250px', sm: '80%', md: '80%' }}
-                        height="100%"
-                        display="flex"
-                        flexDir="column"
-                        alignItems="center"
-                        mx="auto"
-                        gap={{ base: 2 }}
-                    >
-                        <Box
-                            textAlign="center"
-                            flexShrink="0"
-                            mb={2}
-                            fontSize={{ base: 'sm' }}
-                            overflow="hidden"
-                        >
-                            <Heading
-                                size={{ base: 'sm', md: '2xl' }}
-                                color="whiteAlpha.900"
-                                lineClamp={2}
+                    )}
+                    {(imageSelect.typeImage === TypeImageEnumValue.JOUET ||
+                        imageSelect.typeImage === TypeImageEnumValue.LOISIR_CREATIF ||
+                        imageSelect.typeImage === TypeImageEnumValue.DEGUISEMENT) && (
+                        <>
+                            <Box
+                                textAlign="center"
+                                flexShrink="0"
+                                mb={2}
+                                fontSize={{ base: 'sm' }}
+                                overflow="hidden"
                             >
-                                {imageSelect.description}
-                            </Heading>
-                            <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
-                                {imageSelect.age}
-                            </Heading>
-                        </Box>
+                                <Heading
+                                    size={{ base: 'sm', md: '2xl' }}
+                                    color="whiteAlpha.900"
+                                    lineClamp={2}
+                                >
+                                    {imageSelect.description}
+                                </Heading>
+                                <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
+                                    {mapAge(imageSelect.age, imageSelect.typeAge)}
+                                </Heading>
+                            </Box>
 
-                        <Box
-                            flex="1"
-                            minHeight="0"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            width="100%"
-                        >
-                            <Image
-                                src={imageSelect.url}
-                                alt={`${imageSelect.description ?? ''} ${imageSelect.age ?? ''}`}
-                                maxWidth="100%"
-                                maxHeight="100%"
-                                objectFit="contain"
-                                borderRadius="md"
-                            />
-                        </Box>
-
-                        <Box flexShrink="0" mt={2}>
-                            <ConfirmationSuppression
-                                id={imageSelect.id}
-                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
-                            />
-                        </Box>
-                    </Box>
-                )}
-                {imageSelect.typeImage === TYPE_IMAGE_VALUE.JEU_DE_SOCIETE && (
-                    <Box
-                        width={{ base: '250px', sm: '80%', md: '80%' }}
-                        height="100%"
-                        display="flex"
-                        flexDir="column"
-                        alignItems="center"
-                        mx="auto"
-                        gap={{ base: 2 }}
-                    >
-                        <Box
-                            textAlign="center"
-                            flexShrink="0"
-                            mb={2}
-                            fontSize={{ base: 'sm' }}
-                            overflow="hidden"
-                        >
-                            <Heading
-                                size={{ base: 'sm', md: '2xl' }}
-                                color="whiteAlpha.900"
-                                lineClamp={2}
+                            <Box
+                                flex="1"
+                                minHeight="0"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                width="100%"
                             >
-                                {imageSelect.description}
-                            </Heading>
-                            <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
-                                {imageSelect.age}
-                            </Heading>
-                        </Box>
-
-                        <Box
-                            flex="1"
-                            minHeight="0"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            width="100%"
-                        >
-                            <Image
-                                src={imageSelect.url}
-                                alt={`${imageSelect.description ?? ''} ${imageSelect.age ?? ''}`}
-                                maxWidth="100%"
-                                maxHeight="100%"
-                                objectFit="contain"
-                                borderRadius="md"
-                            />
-                        </Box>
-                        <Box flexShrink="0" mt={2}>
-                            <ConfirmationSuppression
-                                id={imageSelect.id}
-                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
-                            />
-                        </Box>
-                    </Box>
-                )}
-                {imageSelect.typeImage === TYPE_IMAGE_VALUE.LIVRE && (
-                    <Box
-                        width={{ base: '250px', sm: '80%', md: '80%' }}
-                        height="100%"
-                        display="flex"
-                        flexDir="column"
-                        alignItems="center"
-                        mx="auto"
-                        gap={{ base: 2 }}
-                    >
-                        <Box
-                            textAlign="center"
-                            flexShrink="0"
-                            mb={2}
-                            fontSize={{ base: 'sm' }}
-                            overflow="hidden"
-                        >
-                            <Heading
-                                size={{ base: 'sm', md: '2xl' }}
-                                color="whiteAlpha.900"
-                                lineClamp={2}
+                                <Image
+                                    src={imageSelect.url}
+                                    alt={`${imageSelect.description ?? ''} ${mapAge(imageSelect.age, imageSelect.typeAge)}`}
+                                    maxWidth="100%"
+                                    maxHeight="100%"
+                                    objectFit="contain"
+                                    borderRadius="md"
+                                />
+                            </Box>
+                        </>
+                    )}
+                    {imageSelect.typeImage === TypeImageEnumValue.JEU_DE_SOCIETE && (
+                        <>
+                            <Box
+                                textAlign="center"
+                                flexShrink="0"
+                                mb={2}
+                                fontSize={{ base: 'sm' }}
+                                overflow="hidden"
                             >
-                                {imageSelect.description}
-                            </Heading>
-                            <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
-                                {imageSelect.age}
-                            </Heading>
-                        </Box>
+                                <Heading
+                                    size={{ base: 'sm', md: '2xl' }}
+                                    color="whiteAlpha.900"
+                                    lineClamp={2}
+                                >
+                                    {imageSelect.description}
+                                </Heading>
+                                <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
+                                    {mapAge(imageSelect.age, imageSelect.typeAge)}
+                                </Heading>
+                            </Box>
 
-                        <Box
-                            flex="1"
-                            minHeight="0"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            width="100%"
-                        >
-                            <Image
-                                src={imageSelect.url}
-                                alt={`${imageSelect.description ?? ''} ${imageSelect.age ?? ''}`}
-                                maxWidth="100%"
-                                maxHeight="100%"
-                                objectFit="contain"
-                                borderRadius="md"
-                            />
-                        </Box>
-                        <Box flexShrink="0" mt={2}>
-                            <ConfirmationSuppression
-                                id={imageSelect.id}
-                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
-                            />
-                        </Box>
+                            <Box
+                                flex="1"
+                                minHeight="0"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                width="100%"
+                            >
+                                <Image
+                                    src={imageSelect.url}
+                                    alt={`${imageSelect.description ?? ''} ${mapAge(imageSelect.age, imageSelect.typeAge)}`}
+                                    maxWidth="100%"
+                                    maxHeight="100%"
+                                    objectFit="contain"
+                                    borderRadius="md"
+                                />
+                            </Box>
+                        </>
+                    )}
+                    {imageSelect.typeImage === TypeImageEnumValue.LIVRE && (
+                        <>
+                            <Box
+                                textAlign="center"
+                                flexShrink="0"
+                                mb={2}
+                                fontSize={{ base: 'sm' }}
+                                overflow="hidden"
+                            >
+                                <Heading
+                                    size={{ base: 'sm', md: '2xl' }}
+                                    color="whiteAlpha.900"
+                                    lineClamp={2}
+                                >
+                                    {imageSelect.description}
+                                </Heading>
+                                <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
+                                    {mapAge(imageSelect.age, imageSelect.typeAge)}
+                                </Heading>
+                            </Box>
+
+                            <Box
+                                flex="1"
+                                minHeight="0"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                width="100%"
+                            >
+                                <Image
+                                    src={imageSelect.url}
+                                    alt={`${imageSelect.description ?? ''} ${mapAge(imageSelect.age, imageSelect.typeAge)}`}
+                                    maxWidth="100%"
+                                    maxHeight="100%"
+                                    objectFit="contain"
+                                    borderRadius="md"
+                                />
+                            </Box>
+                        </>
+                    )}
+                    <Box flexShrink="0" mt={2}>
+                        <BoutonModificationImage
+                            image={imageSelect}
+                            typeImageLabel={imageSelect.typeImage}
+                            typeImageValue={
+                                typeImageMapping.items
+                                    .find((t) => t.label === imageSelect.typeImage)
+                                    ?.value?.toLowerCase() ?? ''
+                            }
+                        />
                     </Box>
-                )}
+                    <Box flexShrink="0" mt={2}>
+                        <ConfirmationSuppression
+                            id={imageSelect.id}
+                            handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
+                        />
+                    </Box>
+                </Box>
             </Box>
         </>
     );

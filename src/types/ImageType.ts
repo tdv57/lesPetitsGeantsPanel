@@ -1,45 +1,18 @@
-import { createListCollection } from '@chakra-ui/react';
 import type { GenreEnum } from '../enum/GenreEnum';
 import type { ThemeEnum } from '../enum/ThemeEnum';
+import type { TypeAgeEnum } from '../enum/TypeAgeEnum';
+import type { TypeImageEnum, TypeImageEnumValue } from '../enum/TypeImageEnum';
 
-export const TYPE_IMAGE_VALUE = {
-    MARQUE: 'MARQUE',
-    PELUCHE: 'PELUCHE',
-    JEU_DE_SOCIETE: 'JEU DE SOCIETE',
-    JOUET: 'JOUET',
-    LOISIR_CREATIF: 'LOISIR CREATIF',
-    DEGUISEMENT: 'DEGUISEMENT',
-    LIVRE: 'LIVRE',
-    EDITEUR: 'EDITEUR',
-} as const;
-
-export type TYPE_IMAGE_TYPE = (typeof TYPE_IMAGE_VALUE)[keyof typeof TYPE_IMAGE_VALUE];
-
-export const typeImageCollection = createListCollection<{ label: string; value: TYPE_IMAGE_TYPE }>({
-    items: [
-        { label: 'Marque', value: TYPE_IMAGE_VALUE.MARQUE },
-        { label: 'Jouet', value: TYPE_IMAGE_VALUE.JOUET },
-        { label: 'Jeu de société', value: TYPE_IMAGE_VALUE.JEU_DE_SOCIETE },
-        { label: 'Peluche', value: TYPE_IMAGE_VALUE.PELUCHE },
-        { label: 'Loisir créatif', value: TYPE_IMAGE_VALUE.LOISIR_CREATIF },
-        { label: 'Déguisement', value: TYPE_IMAGE_VALUE.DEGUISEMENT },
-        { label: 'Livre', value: TYPE_IMAGE_VALUE.LIVRE },
-        { label: 'Editeur', value: TYPE_IMAGE_VALUE.EDITEUR },
-    ],
-});
-
-export const typeImageMapping = createListCollection<{ label: TYPE_IMAGE_TYPE; value: string }>({
-    items: [
-        { label: TYPE_IMAGE_VALUE.MARQUE, value: 'Marque' },
-        { label: TYPE_IMAGE_VALUE.JOUET, value: 'Jouet' },
-        { label: TYPE_IMAGE_VALUE.JEU_DE_SOCIETE, value: 'Jeu de société' },
-        { label: TYPE_IMAGE_VALUE.PELUCHE, value: 'Peluche' },
-        { label: TYPE_IMAGE_VALUE.LOISIR_CREATIF, value: 'Loisir créatif' },
-        { label: TYPE_IMAGE_VALUE.DEGUISEMENT, value: 'Déguisement' },
-        { label: TYPE_IMAGE_VALUE.LIVRE, value: 'Livre' },
-        { label: TYPE_IMAGE_VALUE.EDITEUR, value: 'Editeur' },
-    ],
-});
+export type ArticleTypeImage =
+    | typeof TypeImageEnumValue.JOUET
+    | typeof TypeImageEnumValue.JEU_DE_SOCIETE
+    | typeof TypeImageEnumValue.PELUCHE
+    | typeof TypeImageEnumValue.LOISIR_CREATIF
+    | typeof TypeImageEnumValue.LIVRE
+    | typeof TypeImageEnumValue.BAGAGERIE
+    | typeof TypeImageEnumValue.BIJOUX
+    | typeof TypeImageEnumValue.DECORATION
+    | typeof TypeImageEnumValue.DEGUISEMENT;
 
 export type RawImageSelect = {
     id: number;
@@ -50,78 +23,64 @@ export type RawImageSelect = {
     type_age: string | null;
     marque: string;
     code: string;
-    type_image: TYPE_IMAGE_TYPE;
+    type_image: TypeImageEnum;
     genre: string | null;
     theme: string | null;
+    is_editeur: boolean | null;
+    id_fou: number | null;
+    id_art: number | null;
 };
 
-export type RawImageCreate = {
+export interface RawImageCreate {
     url: string;
     description: string | null;
     age: number | null;
     type_age: string | null;
     marque: string;
     code: string;
-    type_image: TYPE_IMAGE_TYPE;
+    type_image: TypeImageEnum;
     genre: string | null;
     theme: string | null;
-};
+    is_editeur: boolean | null;
+    id_fou: number | null;
+    id_art: number | null;
+}
 
-export type MarqueCreate = {
+export interface RawImageUpdate extends RawImageCreate {
+    id: number;
+}
+
+interface ImageBaseCreate {
+    image: File;
+}
+
+export interface MarqueCreate extends ImageBaseCreate {
+    typeImage: typeof TypeImageEnumValue.MARQUE;
     marque: string;
-    image: File;
-};
+    isEditeur: boolean;
+    idFou: number;
+}
 
-export type JouetCreate = {
-    typeAge?: string;
-    age?: string;
-    description: string;
-    image: File;
-};
-
-export type JeuDeSocieteCreate = {
-    typeAge?: string;
-    age?: string;
-    description: string;
-    image: File;
-};
-
-export type PelucheCreate = {
-    marque: string;
-    image: File;
-};
-
-export type LoisirCreatifCreate = {
-    typeAge?: string;
-    age?: string;
-    description: string;
-    image: File;
-};
-
-export type LivreCreate = {
-    typeAge?: string;
-    age?: string;
+interface ArticleBaseCreate extends ImageBaseCreate {
+    typeAge: TypeAgeEnum;
+    age: string;
     description: string;
     marque: string;
     image: File;
-};
+    idArt: number;
+}
 
-export type DeguisementCreate = {
-    typeAge?: string;
-    age?: string;
-    description: string;
-    image: File;
+export interface ArticleCreate extends ArticleBaseCreate {
+    typeImage: ArticleTypeImage;
+}
+
+export interface DeguisementCreate extends ArticleCreate {
     genre: GenreEnum;
     theme: ThemeEnum;
-};
-
-export type EditeurCreate = {
-    marque: string;
-    image: File;
-};
+}
 
 export type ImageCreate = {
-    typeImage: TYPE_IMAGE_TYPE;
+    typeImage: TypeImageEnum;
     marque?: string;
     typeAge?: string;
     age?: string;
@@ -129,16 +88,39 @@ export type ImageCreate = {
     image: File;
     theme?: ThemeEnum;
     genre?: GenreEnum;
+    isEditeur: boolean | null;
+    idFou: number | null;
+    idArt: number | null;
+};
+
+export type ImageUpdate = {
+    id: number;
+    typeImage: TypeImageEnum;
+    marque?: string;
+    typeAge?: string;
+    age?: string;
+    description?: string;
+    image?: File;
+    theme?: ThemeEnum;
+    genre?: GenreEnum;
+    isEditeur: boolean | null;
+    idFou: number | null;
+    idArt: number | null;
 };
 
 export type ImageSelect = {
     url: string;
+    code: string;
     id: number;
-    typeImage: TYPE_IMAGE_TYPE;
+    typeImage: TypeImageEnum;
     marque?: string;
     age?: string;
+    typeAge?: TypeAgeEnum;
     description?: string;
     createdAt: Date;
     theme?: ThemeEnum;
     genre?: GenreEnum;
+    isEditeur: boolean | null;
+    idFou: number | null;
+    idArt: number | null;
 };
