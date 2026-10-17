@@ -68,7 +68,10 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                             </Box>
                         </>
                     )}
-                    {imageSelect.typeImage === TypeImageEnumValue.PELUCHE && (
+                    {(imageSelect.typeImage === TypeImageEnumValue.PELUCHE 
+                    || imageSelect.typeImage === TypeImageEnumValue.BAGAGERIE 
+                    || imageSelect.typeImage === TypeImageEnumValue.BIJOUX) 
+                    && (
                         <Box
                             flex="1"
                             minHeight="0"
@@ -87,9 +90,9 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                             />
                         </Box>
                     )}
-                    {(imageSelect.typeImage === TypeImageEnumValue.JOUET ||
-                        imageSelect.typeImage === TypeImageEnumValue.LOISIR_CREATIF ||
-                        imageSelect.typeImage === TypeImageEnumValue.DEGUISEMENT) && (
+                    {(imageSelect.typeImage === TypeImageEnumValue.JOUET 
+                      || imageSelect.typeImage === TypeImageEnumValue.LOISIR_CREATIF
+                      || imageSelect.typeImage === TypeImageEnumValue.DEGUISEMENT) && (
                         <>
                             <Box
                                 textAlign="center"
@@ -187,6 +190,43 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 </Heading>
                                 <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
                                     {mapAge(imageSelect.age, imageSelect.typeAge)}
+                                </Heading>
+                            </Box>
+
+                            <Box
+                                flex="1"
+                                minHeight="0"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                width="100%"
+                            >
+                                <Image
+                                    src={imageSelect.url}
+                                    alt={`${imageSelect.description ?? ''} ${mapAge(imageSelect.age, imageSelect.typeAge)}`}
+                                    maxWidth="100%"
+                                    maxHeight="100%"
+                                    objectFit="contain"
+                                    borderRadius="md"
+                                />
+                            </Box>
+                        </>
+                    )}
+                    {imageSelect.typeImage === TypeImageEnumValue.DECORATION && (
+                        <>
+                            <Box
+                                textAlign="center"
+                                flexShrink="0"
+                                mb={2}
+                                fontSize={{ base: 'sm' }}
+                                overflow="hidden"
+                            >
+                                <Heading
+                                    size={{ base: 'sm', md: '2xl' }}
+                                    color="whiteAlpha.900"
+                                    lineClamp={2}
+                                >
+                                    {imageSelect.description}
                                 </Heading>
                             </Box>
 
