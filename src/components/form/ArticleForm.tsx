@@ -4,7 +4,7 @@ import {
     NewArticleFormValidationSchema,
     UpdateArticleFormValidationSchema,
     type UpdateArticleFormValidationType,
-} from '../validation/ArticleFormValidation';
+} from '../validation/form/ArticleFormValidation';
 import type { TypeArticleEnum } from '../../enum/TypeArticleEnum';
 import {
     useAddImageMutation,
@@ -16,12 +16,13 @@ import TextAreaField from './fields/TextAreaField';
 import NumberField from './fields/NumberField';
 import { typeAgeCollection } from '../../enum/TypeAgeEnum';
 import SelectField from './fields/SelectField';
-import ImageField from './fields/ImageField';
+import MediaField from './fields/MediaField';
 import { TypeImageEnumValue } from '../../enum/TypeImageEnum';
 import { useMemo } from 'react';
-import { CUSTOM_BRAND } from '../validation/ArticleFormValidationBase';
+import { CUSTOM_BRAND } from '../validation/form/ArticleFormValidationBase';
 import InputField from './fields/InputField';
 import type { ImageSelect } from '../../types/ImageType';
+import { TypeMediaEnumValue } from '../../enum/TypeMediaEnum';
 
 type ArticleFormPropsType = {
     typeArticle: Exclude<TypeArticleEnum, 'DEGUISEMENT'>;
@@ -165,7 +166,8 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
                             placeholder={' '}
                         />
                     )}
-                    <ImageField
+                    <MediaField
+                        mediaType={TypeMediaEnumValue.IMAGE}
                         error={errors.image}
                         label="Ajouter une image"
                         name="image"

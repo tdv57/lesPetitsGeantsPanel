@@ -4,6 +4,7 @@ import Login from '../components/hero/Login';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Images from '../components/hero/Images';
 import { HomeIndex } from './HomeIndex';
+import { Annonce } from '../components/hero/Annonce';
 
 export const router = createBrowserRouter([
     {
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
                 path: 'images',
                 element: <Images />,
             },
+            {
+                path: 'annonces',
+                element: <Annonce/>
+            }
         ],
     },
     {

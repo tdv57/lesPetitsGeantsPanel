@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { TypeAgeEnumValue } from '../../enum/TypeAgeEnum';
+import { imageValidation } from '../ImageValidation';
+import { TypeAgeEnumValue } from '../../../enum/TypeAgeEnum';
 
 export const CUSTOM_BRAND = '__custom__';
 
@@ -14,40 +15,17 @@ const ArticleFormValidationBase = {
     description: z.string().max(200),
     marque: z.string().trim().min(1, 'La marque de la peluche ne peut pas être vide'),
     marquePersonnalise: z.string().trim().optional(),
-    image: z
-        .instanceof(File, { message: 'Une image est requise' })
-        .refine((file) => file.size < 5 * 1024 * 1024, {
-            message: 'Le fichier doit faire moins de 5 Mo',
-        })
-        .refine((file) => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type), {
-            message: 'Le fichier doit être au format png, jpeg ou webp',
-        }),
+    image: imageValidation,
     idArt: z.int({ error: "L'identifiant d'article est obligatoire" }),
 };
 
 const NewArticleFormValidationBase = {
     ...ArticleFormValidationBase,
-    image: z
-        .instanceof(File, { message: 'Une image est requise' })
-        .refine((file) => file.size < 5 * 1024 * 1024, {
-            message: 'Le fichier doit faire moins de 5 Mo',
-        })
-        .refine((file) => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type), {
-            message: 'Le fichier doit être au format png, jpeg ou webp',
-        }),
 };
 
 const UpdateArticleFormValidationBase = {
     ...ArticleFormValidationBase,
-    image: z
-        .instanceof(File, { message: 'Une image est requise' })
-        .refine((file) => file.size < 5 * 1024 * 1024, {
-            message: 'Le fichier doit faire moins de 5 Mo',
-        })
-        .refine((file) => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type), {
-            message: 'Le fichier doit être au format png, jpeg ou webp',
-        })
-        .optional(),
+    image: imageValidation.optional(),
     id: z.int({ error: "L'identifiant de l'image est obligatoire" }),
 };
 

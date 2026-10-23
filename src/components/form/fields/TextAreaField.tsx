@@ -5,11 +5,12 @@ type TextareaPropsType = {
     error: FieldError | undefined;
     register: UseFormRegisterReturn;
     label: string;
+    locked?: boolean;
 };
 
-export default function TextAreaField({ error, register, label }: TextareaPropsType) {
+export default function TextAreaField({ error, register, label, locked }: TextareaPropsType) {
     return (
-        <Field.Root width="50%" invalid={!!error}>
+        <Field.Root width="50%" invalid={!!error} readOnly={locked}>
             <Field.Label>{label}</Field.Label>
             <Textarea {...register} color="black" />
             <Field.ErrorText>{error?.message}</Field.ErrorText>

@@ -23,7 +23,6 @@ export async function findAllAnnonce(): Promise<AnnonceSelect[]> {
         console.warn("Client annonce non initialisé");
         return [];
     }
-    
 }
 
 export async function createAnnonce(annonce: AnnonceCreate): Promise<AnnonceSelect | null> {

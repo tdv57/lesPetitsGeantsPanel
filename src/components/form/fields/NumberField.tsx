@@ -12,6 +12,7 @@ type NumberFieldPropsType<T extends FieldValues> = {
     control: Control<T>;
     name: FieldPath<T>;
     label: string;
+    locked?: boolean;
 };
 
 export default function NumberField<T extends FieldValues>({
@@ -19,9 +20,10 @@ export default function NumberField<T extends FieldValues>({
     control,
     name,
     label,
+    locked = false,
 }: NumberFieldPropsType<T>) {
     return (
-        <Field.Root width="50%" invalid={!!error}>
+        <Field.Root width="50%" invalid={!!error} readOnly={locked}>
             <Field.Label>{label}</Field.Label>
             <Controller
                 name={name}

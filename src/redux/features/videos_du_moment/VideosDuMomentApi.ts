@@ -24,10 +24,13 @@ export const VideosDuMomentApi = createApi({
         deleteVideosDuMoment: builder.mutation<void, number>({
             queryFn: async (id: number) => {
                 try {
-                    await deleteVideosDuMoment(id);
-                    return { data: undefined };
+                    const result = await deleteVideosDuMoment(id);
+                    if (result) {
+                        return { data: undefined };
+                    }
+                    return { error: { message: `Erreur lors de la suppresion de la vidéo avec l'id ${id}` } };
                 } catch {
-                    return { error: 'Erreur lors de la suppresion' };
+                    return { error: { message: `Erreur lors de la suppresion de la vidéo avec l'id ${id}` } };
                 }
             },
             async onQueryStarted(id, { dispatch, queryFulfilled }) {

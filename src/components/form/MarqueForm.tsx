@@ -5,14 +5,15 @@ import {
     NewMarqueFormValidationSchema,
     UpdateMarqueFormValidationSchema,
     type UpdateMarqueFormValidationType,
-} from '../validation/MarqueFormValidation';
+} from '../validation/form/MarqueFormValidation';
 import { useAddImageMutation, useUpdateImageMutation } from '../../redux/features/images/ImageApi';
 import InputField from './fields/InputField';
 import NumberField from './fields/NumberField';
 import SelectField from './fields/SelectField';
-import ImageField from './fields/ImageField';
+import MediaField from './fields/MediaField';
 import type { ImageSelect } from '../../types/ImageType';
 import { TypeImageEnumValue } from '../../enum/TypeImageEnum';
+import { TypeMediaEnumValue } from '../../enum/TypeMediaEnum';
 
 type MarqueFormPropsType = {
     onSuccess?: () => void;
@@ -115,7 +116,8 @@ export function MarqueForm({ onSuccess, marque }: MarqueFormPropsType) {
                         label="Est-ce un éditeur ?"
                         collection={isEditeurCollection}
                     />
-                    <ImageField
+                    <MediaField
+                        mediaType={TypeMediaEnumValue.IMAGE}
                         error={errors.image}
                         control={control}
                         label={'Image de la marque'}

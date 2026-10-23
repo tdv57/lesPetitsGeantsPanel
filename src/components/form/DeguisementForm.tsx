@@ -8,7 +8,7 @@ import {
     type UpdateDeguisementFormValidationType,
     NewDeguisementFormValidationSchema,
     UpdateDeguisementFormValidationSchema,
-} from '../validation/DeguisementFormValidation';
+} from '../validation/form/DeguisementFormValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ThemeEnumValue } from '../../enum/ThemeEnum';
 import { createListCollection } from '@ark-ui/react/select';
@@ -20,10 +20,11 @@ import TextAreaField from './fields/TextAreaField';
 import NumberField from './fields/NumberField';
 import SelectField from './fields/SelectField';
 import InputField from './fields/InputField';
-import { CUSTOM_BRAND } from '../validation/ArticleFormValidationBase';
+import { CUSTOM_BRAND } from '../validation/form/ArticleFormValidationBase';
 import { useMemo } from 'react';
-import ImageField from './fields/ImageField';
+import MediaField from './fields/MediaField';
 import type { ImageSelect } from '../../types/ImageType';
+import { TypeMediaEnumValue } from '../../enum/TypeMediaEnum';
 
 type DeguisementFormPropsType = {
     deguisement?: ImageSelect;
@@ -191,7 +192,8 @@ export function DeguisementForm({ deguisement, onSuccess }: DeguisementFormProps
                             placeholder={' '}
                         />
                     )}
-                    <ImageField
+                    <MediaField
+                        mediaType={TypeMediaEnumValue.IMAGE}
                         error={errors.image}
                         label="Ajouter une image"
                         name="image"

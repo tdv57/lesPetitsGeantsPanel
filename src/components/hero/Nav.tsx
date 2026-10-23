@@ -58,6 +58,20 @@ export default function Nav() {
                         </NavLink>
                     </Button>
                     <Button
+                        asChild
+                        colorPalette="purple"
+                        flex="1"
+                        height={{ base: '50px' }}
+                        size="lg"
+                    >
+                        <NavLink to="/annonces">
+                            <Heading size="lg" color="whiteAlpha.900">
+                                {' '}
+                                Gérer les annonces{' '}
+                            </Heading>
+                        </NavLink>
+                    </Button>
+                    <Button
                         onClick={() => logout()}
                         colorPalette="red"
                         flex="1"
@@ -124,6 +138,20 @@ export default function Nav() {
                                     <Heading size="xl" color="whiteAlpha.900">
                                         {' '}
                                         Gérer les images{' '}
+                                    </Heading>
+                                </NavLink>
+                            </Button>
+                            <Button
+                                asChild
+                                colorPalette="purple"
+                                width={{ base: '250px' }}
+                                height={{ base: '50px' }}
+                                size="lg"
+                            >
+                                <NavLink to="/annonces">
+                                    <Heading size="xl" color="whiteAlpha.900">
+                                        {' '}
+                                        Gérer les annonces{' '}
                                     </Heading>
                                 </NavLink>
                             </Button>

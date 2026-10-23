@@ -1,8 +1,8 @@
 import z from 'zod';
 import { UseNewArticleFormValidationBase } from './ArticleFormValidationBase';
-import { TypeArticleEnumValue } from '../../enum/TypeArticleEnum';
-import { GenreEnumValue } from '../../enum/GenreEnum';
-import { ThemeEnumValue } from '../../enum/ThemeEnum';
+import { TypeArticleEnumValue } from '../../../enum/TypeArticleEnum';
+import { GenreEnumValue } from '../../../enum/GenreEnum';
+import { ThemeEnumValue } from '../../../enum/ThemeEnum';
 
 const {
     NewArticleFormValidationBase,

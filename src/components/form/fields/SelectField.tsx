@@ -13,6 +13,7 @@ type SelectFieldPropsType<T extends FieldValues> = {
     name: FieldPath<T>;
     label: string;
     collection: ListCollection;
+    locked?: boolean
 };
 
 export default function SelectField<T extends FieldValues>({
@@ -21,9 +22,10 @@ export default function SelectField<T extends FieldValues>({
     name,
     label,
     collection,
+    locked = false,
 }: SelectFieldPropsType<T>) {
     return (
-        <Field.Root width="50%" invalid={!!error}>
+        <Field.Root width="50%" invalid={!!error} readOnly={locked}>
             <Field.Label>{label}</Field.Label>
             <Controller
                 name={name}

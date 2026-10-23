@@ -1,6 +1,6 @@
 import z from 'zod';
 import { UseNewArticleFormValidationBase } from './ArticleFormValidationBase';
-import { TypeArticleEnumValue } from '../../enum/TypeArticleEnum';
+import { TypeArticleEnumValue } from '../../../enum/TypeArticleEnum';
 
 const {
     NewArticleFormValidationBase,

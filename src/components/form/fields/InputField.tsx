@@ -6,6 +6,7 @@ type InputFieldPropsType = {
     register: UseFormRegisterReturn;
     fieldLabel: string;
     placeholder?: string;
+    locked?: boolean;
 };
 
 export default function InputField({
@@ -13,9 +14,10 @@ export default function InputField({
     register,
     fieldLabel,
     placeholder,
+    locked = false,
 }: InputFieldPropsType) {
     return (
-        <Field.Root width="50%" invalid={!!error} mt={3}>
+        <Field.Root width="50%" invalid={!!error} mt={3} readOnly={locked}>
             <Field.Label>{fieldLabel}</Field.Label>
             <Input
                 type="text"

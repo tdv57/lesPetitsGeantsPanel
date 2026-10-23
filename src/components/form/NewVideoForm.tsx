@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import type { VideoCreateType, VideoSelectType } from '../../types/VideoType';
 import { Button, Field, Input, Stack, Textarea, Text, NumberInput, Select } from '@chakra-ui/react';
 import type { FormPropsType } from '../modal/BoutonCreationVideo';
-import { ChargementStatut } from '../../enum/ChargementStatut';
-import { newVideoFormValidationSchema } from '../validation/NewVideoFormValidation';
+import { ChargementStatutEnumValue } from '../../enum/ChargementStatut';
+import { newVideoFormValidationSchema } from '../validation/form/NewVideoFormValidation';
 import { useCompressionProgress } from '../../hook/useCompressionProgress';
 import { compressVideo } from '../../service/FFmpegService';
 import { typeAgeCollection } from '../../mapper/AgeMapper';
@@ -48,10 +48,10 @@ export default function NewVideoForm({
     }
 
     useEffect(() => {
-        if (chargementStatut === ChargementStatut.Inactif) {
+        if (chargementStatut === ChargementStatutEnumValue.Inactif) {
             setSubmitMessageState(submitMessage);
             setIsLocked(false);
-        } else if (chargementStatut === ChargementStatut.EnAttente) {
+        } else if (chargementStatut === ChargementStatutEnumValue.EnAttente) {
             setIsLocked(true);
             if (compressionProgress < 1) {
                 setSubmitMessageState(
@@ -60,7 +60,7 @@ export default function NewVideoForm({
             } else {
                 setSubmitMessageState('Compression terminée, envoi en cours...');
             }
-        } else if (chargementStatut === ChargementStatut.Terminee) {
+        } else if (chargementStatut === ChargementStatutEnumValue.Terminee) {
             setIsLocked(true);
             setSubmitMessageState('Chargement terminée: ' + resetMessage);
         }
@@ -69,8 +69,8 @@ export default function NewVideoForm({
     async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
         if (
-            chargementStatut === ChargementStatut.EnAttente ||
-            chargementStatut === ChargementStatut.Terminee
+            chargementStatut === ChargementStatutEnumValue.EnAttente ||
+            chargementStatut === ChargementStatutEnumValue.Terminee
         )
             return;
 
@@ -98,7 +98,7 @@ export default function NewVideoForm({
         const videoTypeAge: 'ANS' | 'MOIS' | null =
             result.data.typeAge === '' ? null : (result.data.typeAge as 'ANS' | 'MOIS');
         let videoBlob = result.data.video;
-        setChargementStatut(ChargementStatut.EnAttente);
+        setChargementStatut(ChargementStatutEnumValue.EnAttente);
         try {
             videoBlob = await compressVideo(videoBlob);
             await supabaseAction({
@@ -107,21 +107,21 @@ export default function NewVideoForm({
                 typeAge: videoTypeAge,
                 video: videoBlob,
             });
-            setChargementStatut(ChargementStatut.Terminee);
+            setChargementStatut(ChargementStatutEnumValue.Terminee);
         } catch (e) {
             console.error('Erreur pendant la création :', e);
         }
     }
 
     function getSubmitButton() {
-        if (chargementStatut === ChargementStatut.Inactif) {
+        if (chargementStatut === ChargementStatutEnumValue.Inactif) {
             return (
                 <>
                     <Button type="submit">{submitMessageState}</Button>
                     <Button onClick={() => onReset()}>Réinitialiser les données</Button>
                 </>
             );
-        } else if (chargementStatut === ChargementStatut.EnAttente) {
+        } else if (chargementStatut === ChargementStatutEnumValue.EnAttente) {
             return <Button disabled={true}>{submitMessageState}</Button>;
         } else {
             return <Button onClick={() => onReset()}>{submitMessageState}</Button>;
