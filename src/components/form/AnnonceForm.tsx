@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Stack } from '@chakra-ui/react';
+import { Button, VStack } from '@chakra-ui/react';
 import { ChargementStatutEnumValue, type ChargementStatutEnum } from '../../enum/ChargementStatut';
 import { useCompressionProgress } from '../../hook/useCompressionProgress';
 import { compressVideo } from '../../service/FFmpegService';
@@ -126,24 +126,29 @@ export default function AnnonceForm({
         }
     }
 
+    function onReset(mediaType: TypeMediaEnum, annonce?: AnnonceSelect): UpdateAnnonceFormValidationType {
+        setChargementStatut(ChargementStatutEnumValue.Inactif);
+        return getDefaultValues(mediaType, annonce);
+    }
+
     function getSubmitButton() {
         if (chargementStatut === ChargementStatutEnumValue.Inactif) {
             return (
                 <>
                     <Button type="submit">{submitMessageState}</Button>
-                    <Button onClick={() => reset(getDefaultValues(mediaType, annonce))}>Réinitialiser les données</Button>
+                    <Button onClick={() => reset(onReset(mediaType, annonce))}>Réinitialiser les données</Button>
                 </>
             );
         } else if (chargementStatut === ChargementStatutEnumValue.EnAttente) {
             return <Button disabled={true}>{submitMessageState}</Button>;
         } else {
-            return <Button onClick={() => reset(getDefaultValues(mediaType, annonce))}>{submitMessageState}</Button>;
+            return <Button onClick={() => reset(onReset(mediaType, annonce))}>{submitMessageState}</Button>;
         }
     }
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Stack gap={4}>
+                <VStack gap={4} alignItems="center" justifyItems="center">
                     <TextAreaField 
                         error={ errors.commentaire }
                         register={ register('commentaire') }
@@ -166,7 +171,7 @@ export default function AnnonceForm({
                         locked={isLocked}
                     />
                     {getSubmitButton()}
-                </Stack>
+                </VStack>
             </form>
         </>
     );

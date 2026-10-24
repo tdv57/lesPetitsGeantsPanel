@@ -104,7 +104,7 @@ export class AnnonceClient {
         const res = await this.request('/annonces', {
             method: 'POST',
             headers: {
-                Accept: 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(annonce),
         });
@@ -119,7 +119,7 @@ export class AnnonceClient {
         const res = await this.request(`/annonces/${id}`, {
             method: 'PUT',
             headers: {
-                Accept: 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(annonce),
         });
@@ -134,7 +134,7 @@ export class AnnonceClient {
         const res = await this.request(`/annonces/${id}`, {
             method: 'DELETE',
             headers: {
-                Accept: 'application/json'
+                'Accept': 'application/json'
             },
         });
         if (!res.ok) {

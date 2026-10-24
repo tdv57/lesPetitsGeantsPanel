@@ -58,6 +58,7 @@ export async function uploadAnnonce(file: File, code: string) {
 }
 
 export async function deleteAnnonce(key: string) {
+    console.log(key);
     return await deleteR2(R2_ANNONCE_BUCKET_NAME, key);
 }
 

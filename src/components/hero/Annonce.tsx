@@ -1,26 +1,37 @@
-import { Box, VStack } from "@chakra-ui/react";
-import BoutonCreationVideo from "../modal/BoutonCreationVideo";
-import VideoCard from "../card/VideoCard";
-import { useGetAnnonceQuery } from "../../redux/features/annonce/AnnonceApi";
+import { HStack, VStack } from "@chakra-ui/react";
+import { useDeleteAnnonceMutation, useGetAnnonceQuery } from "../../redux/features/annonce/AnnonceApi";
+import { BoutonAnnonce } from "../modal/BoutonAnnonce";
+import { TypeMediaEnumValue } from "../../enum/TypeMediaEnum";
+import { AnnonceCard } from "../card/AnnonceCard";
 
 export function Annonce() {
 
-    const { data: annonces } = useGetAnnonceQuery();
-    
+    const { data: annonces = [] } = useGetAnnonceQuery();
+    const [ deleteAnnonce ] = useDeleteAnnonceMutation();
+
+    const handleDelete = async (id: number) => deleteAnnonce(id);
+
     return (
         <>
             <VStack align="center">
-                <BoutonCreationVideo
-                    submitMessage="Ajouter une vidéo"
-                    resetMessage="Ajouter une nouvelle vidéo"
-                    supabaseAction={supabaseAction}
-                />
+                <HStack>
+                    <BoutonAnnonce
+                        submitMessage="Ajouter une annonce utilisant une image"
+                        resetMessage="Ajouter une nouvelle annonce utilisant une image"
+                        mediaType={TypeMediaEnumValue.IMAGE}
+                    />
+                    <BoutonAnnonce
+                        submitMessage="Ajouter une annonce utilisant une vidéo"
+                        resetMessage="Ajouter une nouvelle annonce utilisant une vidéo"
+                        mediaType={TypeMediaEnumValue.VIDEO}
+                    />
+                </HStack>
                 {/* <NewVideoForm submitMessage="Ajouter un vidéo" supabaseAction={addVideosDuMoment}/> */}
                 <VStack gap={10} align="center">
-                    {videos.map((v, index) => {
+                    {annonces.map((annonce, index) => {
                         return (
                             <>
-                                <VideoCard v={v} index={index} handleDelete={handleDelete} />
+                                <AnnonceCard annonce={annonce} key={index} index={index} handleDelete={handleDelete} />
                             </>
                         );
                     })}

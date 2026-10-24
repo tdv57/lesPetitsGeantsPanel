@@ -7,7 +7,7 @@ const AnnonceBaseShape = {
     commentaire: z.string().max(200, {
         error: 'Le commentaire ne peut pas dépasser 200 caractères',
     }),
-    redirectionLink: z.url().optional()
+    redirectionLink: z.url().optional().or(z.literal(''))
 };
 
 const AnnonceBaseFormValidation = z.discriminatedUnion(

@@ -28,6 +28,7 @@ export function BoutonAnnonce({ submitMessage, mediaType, resetMessage, annonce 
                 if (details.open) setIsOpen(true);
                 else {
                     setIsOpen(false);
+                    if (ChargementStatutEnumValue.Terminee === chargementStatut) setChargementStatut(ChargementStatutEnumValue.Inactif);
                 }
             }}
         >
@@ -45,7 +46,7 @@ export function BoutonAnnonce({ submitMessage, mediaType, resetMessage, annonce 
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
                     <Dialog.Content maxW={{ base: '70vw', sm: '50vw', md: '50vw' }}>
-                        <Dialog.Body>
+                        <Dialog.Body color="black">
                             <AnnonceForm
                                 mediaType={mediaType}
                                 submitMessage={submitMessage}

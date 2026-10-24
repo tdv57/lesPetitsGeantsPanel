@@ -30,14 +30,14 @@ export async function createAnnonce(annonce: AnnonceCreate): Promise<AnnonceSele
         const code = crypto.randomUUID();
         const url = R2_ANNONCE_PUBLIC_URL + '/' + code;
         const newAnnonce = 
-            await AnnonceClient.getInstance().createAnnonce(mapAnnonceCreateToD1AnnonceInsert(annonce, code, url));
+            await AnnonceClient.getInstance().createAnnonce(mapAnnonceCreateToD1AnnonceInsert(annonce, url, code));
         if (newAnnonce === null) {
             return null;
         }
         const res = await uploadAnnonce(annonce.file, code);
         if (!res.success) {
             console.warn('createAnnonce R2 error: ', res.error);
-            await deleteAnnonce(newAnnonce.id);
+            await annonceClient.deleteAnnonce(newAnnonce.id);
             return null;
         }
         return newAnnonce;
@@ -63,7 +63,7 @@ export async function updateAnnonce(
             code = crypto.randomUUID();
             url = R2_ANNONCE_PUBLIC_URL + '/' + code;
         }
-        const updatedAnnonce = await AnnonceClient.getInstance().updateAnnonce(
+        const updatedAnnonce = await annonceClient.updateAnnonce(
             mapAnnonceUpdateToD1AnnonceUpdate(newAnnonce, url, code), 
             oldAnnonce.id);
         if (!updatedAnnonce) {
@@ -74,7 +74,7 @@ export async function updateAnnonce(
             const res = await uploadAnnonce(newAnnonce.file, code);
             if (!res.success) {
                 console.warn('UpdateAnnonce R2 error: ', res.error);
-                deleteAnnonce(updatedAnnonce.id)
+                annonceClient.deleteAnnonce(updatedAnnonce.id)
                 return null;
             }
         }
@@ -87,6 +87,7 @@ export async function updateAnnonce(
 
 export async function deleteAnnonce(id: number): Promise<boolean> {
     if(annonceClient) {
+        console.log(id);
         const annonce = await annonceClient.getAnnonceById(id);
         if (!annonce) {
             return false;
