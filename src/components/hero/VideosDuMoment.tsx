@@ -4,7 +4,7 @@ import {
     useGetVideosDuMomentQuery,
 } from '../../redux/features/videos_du_moment/VideosDuMomentApi';
 import type { VideoCreateType, VideoSelectType } from '../../types/VideoType';
-import { VStack } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import VideoCard from '../card/VideoCard';
 import BoutonCreationVideo from '../modal/BoutonCreationVideo';
 export default function VideosDuMoment() {
@@ -26,6 +26,12 @@ export default function VideosDuMoment() {
         }
     }
 
+    const videoSize = {
+        w: { base: '85vw', md: '100%' },
+        maxW: { base: '1100px', md: 'none' },
+        h: { base: '48vh', sm: '52vh', md: '40vh', lg: '48vh' },
+    };
+
     return (
         <>
             <VStack align="center">
@@ -36,13 +42,26 @@ export default function VideosDuMoment() {
                 />
                 {/* <NewVideoForm submitMessage="Ajouter un vidéo" supabaseAction={addVideosDuMoment}/> */}
                 <VStack gap={10} align="center">
-                    {videos.map((v, index) => {
-                        return (
-                            <>
-                                <VideoCard v={v} index={index} handleDelete={handleDelete} />
-                            </>
-                        );
-                    })}
+                    <Box
+                        display={{ base: 'contents', md: 'grid' }}
+                        gridTemplateColumns={{ md: 'repeat(2, 1fr)' }}
+                        gap={{ md: '12' }}
+                        w={{ md: '100%' }}
+                        maxW={{ md: '1400px' }}
+                        px={{ md: 4 }}
+                    >
+                        {videos.map((v, index) => {
+                            return (
+                                <VideoCard
+                                    key={`${v.id}`}
+                                    v={v}
+                                    index={index}
+                                    handleDelete={handleDelete}
+                                    videoSize={videoSize}
+                                />
+                            );
+                        })}
+                    </Box>
                 </VStack>
             </VStack>
         </>

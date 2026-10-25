@@ -9,7 +9,7 @@ export const NewMarqueFormValidationSchema = z.object({
     isEditeur: z.enum(['true', 'false'], {
         error: 'Il faut indiquer si la marque est un éditeur ou non',
     }),
-    image: imageValidation
+    image: imageValidation,
 });
 
 export const UpdateMarqueFormValidationSchema = z.object({

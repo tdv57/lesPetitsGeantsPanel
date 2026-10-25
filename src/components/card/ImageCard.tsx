@@ -4,6 +4,7 @@ import ConfirmationSuppression from '../modal/ConfirmationSuppression';
 import { type TypeImageEnum, TypeImageEnumValue, typeImageMapping } from '../../enum/TypeImageEnum';
 import { BoutonModificationImage } from '../modal/BoutonCreationImage';
 import { mapAge } from '../../mapper/AgeMapper';
+import { COLORS } from '../../theme/Couleur';
 
 type ImageCardPropType = {
     imageSelect: ImageSelect;
@@ -14,16 +15,17 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
     return (
         <>
             <Box
-                bg="whiteAlpha.100"
+                bg={COLORS.backgroundCard}
                 backdropFilter="blur(10px)"
                 border="1px solid"
+                color={COLORS.primary}
                 borderColor="whiteAlpha.200"
                 borderRadius="12px"
-                width={{ base: '250px', sm: '80%', md: '80%' }}
-                height={{ base: '400px', sm: '90%', md: '100%' }}
+                width={{ base: '250px', md: '80%' }}
+                height={{ base: '400px', md: '100%' }}
             >
                 <Box
-                    width={{ base: '250px', sm: '80%', md: '80%' }}
+                    width={{ base: '250px', md: '80%' }}
                     height="100%"
                     display="flex"
                     flexDir="column"
@@ -41,8 +43,8 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 overflow="hidden"
                             >
                                 <Heading
-                                    size={{ base: 'md', md: '2xl' }}
-                                    color="whiteAlpha.900"
+                                    fontWeight="normal"
+                                    fontSize={{ base: 'xs', md: 'sm', lg: 'lg' }}
                                     lineClamp={2}
                                 >
                                     {imageSelect.marque}
@@ -68,10 +70,9 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                             </Box>
                         </>
                     )}
-                    {(imageSelect.typeImage === TypeImageEnumValue.PELUCHE 
-                    || imageSelect.typeImage === TypeImageEnumValue.BAGAGERIE 
-                    || imageSelect.typeImage === TypeImageEnumValue.BIJOUX) 
-                    && (
+                    {(imageSelect.typeImage === TypeImageEnumValue.PELUCHE ||
+                        imageSelect.typeImage === TypeImageEnumValue.BAGAGERIE ||
+                        imageSelect.typeImage === TypeImageEnumValue.BIJOUX) && (
                         <Box
                             flex="1"
                             minHeight="0"
@@ -90,9 +91,9 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                             />
                         </Box>
                     )}
-                    {(imageSelect.typeImage === TypeImageEnumValue.JOUET 
-                      || imageSelect.typeImage === TypeImageEnumValue.LOISIR_CREATIF
-                      || imageSelect.typeImage === TypeImageEnumValue.DEGUISEMENT) && (
+                    {(imageSelect.typeImage === TypeImageEnumValue.JOUET ||
+                        imageSelect.typeImage === TypeImageEnumValue.LOISIR_CREATIF ||
+                        imageSelect.typeImage === TypeImageEnumValue.DEGUISEMENT) && (
                         <>
                             <Box
                                 textAlign="center"
@@ -102,13 +103,17 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 overflow="hidden"
                             >
                                 <Heading
-                                    size={{ base: 'sm', md: '2xl' }}
-                                    color="whiteAlpha.900"
+                                    fontWeight="normal"
+                                    fontSize={{ base: 'xs', md: 'sm', lg: 'lg' }}
                                     lineClamp={2}
                                 >
                                     {imageSelect.description}
                                 </Heading>
-                                <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
+                                <Heading
+                                    fontWeight="normal"
+                                    fontSize={{ base: 'xs', lg: 'lg' }}
+                                    lineClamp={1}
+                                >
                                     {mapAge(imageSelect.age, imageSelect.typeAge)}
                                 </Heading>
                             </Box>
@@ -142,13 +147,17 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 overflow="hidden"
                             >
                                 <Heading
-                                    size={{ base: 'sm', md: '2xl' }}
-                                    color="whiteAlpha.900"
+                                    fontWeight="normal"
+                                    fontSize={{ base: 'xs', md: 'sm', lg: 'lg' }}
                                     lineClamp={2}
                                 >
                                     {imageSelect.description}
                                 </Heading>
-                                <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
+                                <Heading
+                                    fontWeight="normal"
+                                    fontSize={{ base: 'xs', lg: 'lg' }}
+                                    lineClamp={1}
+                                >
                                     {mapAge(imageSelect.age, imageSelect.typeAge)}
                                 </Heading>
                             </Box>
@@ -182,13 +191,17 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 overflow="hidden"
                             >
                                 <Heading
-                                    size={{ base: 'sm', md: '2xl' }}
-                                    color="whiteAlpha.900"
+                                    fontWeight="normal"
+                                    fontSize={{ base: 'xs', md: 'sm', lg: 'lg' }}
                                     lineClamp={2}
                                 >
                                     {imageSelect.description}
                                 </Heading>
-                                <Heading size="sm" color="whiteAlpha.600" lineClamp={1}>
+                                <Heading
+                                    fontWeight="normal"
+                                    fontSize={{ base: 'xs', lg: 'lg' }}
+                                    lineClamp={1}
+                                >
                                     {mapAge(imageSelect.age, imageSelect.typeAge)}
                                 </Heading>
                             </Box>
@@ -222,8 +235,8 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 overflow="hidden"
                             >
                                 <Heading
-                                    size={{ base: 'sm', md: '2xl' }}
-                                    color="whiteAlpha.900"
+                                    fontWeight="normal"
+                                    fontSize={{ base: 'xs', md: 'sm', lg: 'lg' }}
                                     lineClamp={2}
                                 >
                                     {imageSelect.description}
@@ -249,22 +262,35 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                             </Box>
                         </>
                     )}
-                    <Box flexShrink="0" mt={2}>
-                        <BoutonModificationImage
-                            image={imageSelect}
-                            typeImageLabel={imageSelect.typeImage}
-                            typeImageValue={
-                                typeImageMapping.items
-                                    .find((t) => t.label === imageSelect.typeImage)
-                                    ?.value?.toLowerCase() ?? ''
-                            }
-                        />
-                    </Box>
-                    <Box flexShrink="0" mt={2}>
-                        <ConfirmationSuppression
-                            id={imageSelect.id}
-                            handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
-                        />
+                    <Box
+                        flexShrink="0"
+                        mt="auto"
+                        display="flex"
+                        flexDir="row"
+                        flexWrap="wrap"
+                        justifyContent="center"
+                        gap={2}
+                        w="100%"
+                        pb={3}
+                    >
+                        <Box flex="1 1 140px">
+                            <BoutonModificationImage
+                                size="small"
+                                image={imageSelect}
+                                typeImageLabel={imageSelect.typeImage}
+                                typeImageValue={
+                                    typeImageMapping.items
+                                        .find((t) => t.label === imageSelect.typeImage)
+                                        ?.value?.toLowerCase() ?? ''
+                                }
+                            />
+                        </Box>
+                        <Box flex="1 1 140px">
+                            <ConfirmationSuppression
+                                id={imageSelect.id}
+                                handleDelete={(id) => handleDelete(id, imageSelect.typeImage)}
+                            />
+                        </Box>
                     </Box>
                 </Box>
             </Box>

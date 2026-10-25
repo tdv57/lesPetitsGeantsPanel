@@ -4,6 +4,7 @@ import { setR2Client } from '../../service/R2Service';
 import { Heading, Stack, VStack, Text, HStack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../form/LoginForm';
+import { COLORS } from '../../theme/Couleur';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -32,8 +33,8 @@ export default function Login() {
                 align="center"
                 minW="100vw"
                 minH="100vh"
-                bg="black"
-                color="white"
+                bg={COLORS.backgroundCard}
+                color={COLORS.textDark}
             >
                 <VStack align="center" justify="center" w="90vw" h="90vh">
                     <Stack gap={2}>

@@ -58,7 +58,6 @@ export async function uploadAnnonce(file: File, code: string) {
 }
 
 export async function deleteAnnonce(key: string) {
-    console.log(key);
     return await deleteR2(R2_ANNONCE_BUCKET_NAME, key);
 }
 
@@ -86,7 +85,7 @@ async function uploadR2(file: File, bucket: string, code: string) {
     }
 }
 
-async function deleteR2(bucket : string, key: string) {
+async function deleteR2(bucket: string, key: string) {
     if (r2) {
         try {
             await r2.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));

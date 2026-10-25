@@ -1,9 +1,16 @@
-import { AnnonceClient } from "../cloudflare/AnnonceClient";
-import { mapAnnonceCreateToD1AnnonceInsert, mapAnnonceUpdateToD1AnnonceUpdate } from "../mapper/AnnonceMapper";
-import type { AnnonceSelect, AnnonceCreate, AnnonceUpdate } from "../types/AnnonceType";
-import { R2_ANNONCE_PUBLIC_URL, uploadAnnonce, deleteAnnonce as deleteR2Annonce } from "./R2Service";
+import { AnnonceClient } from '../cloudflare/AnnonceClient';
+import {
+    mapAnnonceCreateToD1AnnonceInsert,
+    mapAnnonceUpdateToD1AnnonceUpdate,
+} from '../mapper/AnnonceMapper';
+import type { AnnonceSelect, AnnonceCreate, AnnonceUpdate } from '../types/AnnonceType';
+import {
+    R2_ANNONCE_PUBLIC_URL,
+    uploadAnnonce,
+    deleteAnnonce as deleteR2Annonce,
+} from './R2Service';
 
-let annonceClient: AnnonceClient | null = null; 
+let annonceClient: AnnonceClient | null = null;
 
 export function setAnnonceClient() {
     annonceClient = AnnonceClient.getInstance();
@@ -15,22 +22,22 @@ export function clearAnnonceClient() {
     }
 }
 
-
 export async function findAllAnnonce(): Promise<AnnonceSelect[]> {
     if (annonceClient) {
         return await AnnonceClient.getInstance().findAllAnnonce();
     } else {
-        console.warn("Client annonce non initialisé");
+        console.warn('Client annonce non initialisé');
         return [];
     }
 }
 
 export async function createAnnonce(annonce: AnnonceCreate): Promise<AnnonceSelect | null> {
-    if(annonceClient) {
+    if (annonceClient) {
         const code = crypto.randomUUID();
         const url = R2_ANNONCE_PUBLIC_URL + '/' + code;
-        const newAnnonce = 
-            await AnnonceClient.getInstance().createAnnonce(mapAnnonceCreateToD1AnnonceInsert(annonce, url, code));
+        const newAnnonce = await AnnonceClient.getInstance().createAnnonce(
+            mapAnnonceCreateToD1AnnonceInsert(annonce, url, code),
+        );
         if (newAnnonce === null) {
             return null;
         }
@@ -42,14 +49,14 @@ export async function createAnnonce(annonce: AnnonceCreate): Promise<AnnonceSele
         }
         return newAnnonce;
     } else {
-        console.warn("Client annonce non initialisé");
+        console.warn('Client annonce non initialisé');
         return null;
     }
 }
 
 export async function updateAnnonce(
     oldAnnonce: AnnonceSelect,
-    newAnnonce: AnnonceUpdate 
+    newAnnonce: AnnonceUpdate,
 ): Promise<AnnonceSelect | null> {
     if (annonceClient) {
         let code = oldAnnonce.code;
@@ -64,8 +71,9 @@ export async function updateAnnonce(
             url = R2_ANNONCE_PUBLIC_URL + '/' + code;
         }
         const updatedAnnonce = await annonceClient.updateAnnonce(
-            mapAnnonceUpdateToD1AnnonceUpdate(newAnnonce, url, code), 
-            oldAnnonce.id);
+            mapAnnonceUpdateToD1AnnonceUpdate(newAnnonce, url, code),
+            oldAnnonce.id,
+        );
         if (!updatedAnnonce) {
             console.warn('updateAnnonce D1 error');
             return null;
@@ -74,20 +82,19 @@ export async function updateAnnonce(
             const res = await uploadAnnonce(newAnnonce.file, code);
             if (!res.success) {
                 console.warn('UpdateAnnonce R2 error: ', res.error);
-                annonceClient.deleteAnnonce(updatedAnnonce.id)
+                annonceClient.deleteAnnonce(updatedAnnonce.id);
                 return null;
             }
         }
         return updatedAnnonce;
     } else {
-        console.warn("Client annonce non initialisé");
+        console.warn('Client annonce non initialisé');
         return null;
     }
 }
 
 export async function deleteAnnonce(id: number): Promise<boolean> {
-    if(annonceClient) {
-        console.log(id);
+    if (annonceClient) {
         const annonce = await annonceClient.getAnnonceById(id);
         if (!annonce) {
             return false;
@@ -97,12 +104,12 @@ export async function deleteAnnonce(id: number): Promise<boolean> {
             console.warn('deleteAnnonce R2 error: ', res.error);
             return false;
         }
-        if(await annonceClient.deleteAnnonce(id)) {
+        if (await annonceClient.deleteAnnonce(id)) {
             return true;
         }
         return false;
     } else {
-        console.warn("Client annonce non initialisé");
+        console.warn('Client annonce non initialisé');
         return false;
     }
 }

@@ -22,16 +22,16 @@ const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 const VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
 
 const IMAGE_HINTS = {
-        mediaNameMaj: 'Image',
-        mediaNameMin: 'image',
-        hint: 'PNG, JPG, WEBP jusqu\'à 5MO',
-        unit: 'Ko'
+    mediaNameMaj: 'Image',
+    mediaNameMin: 'image',
+    hint: "PNG, JPG, WEBP jusqu'à 5MO",
+    unit: 'Ko',
 };
 const VIDEO_HINTS = {
-        mediaNameMaj: 'Vidéo',
-        mediaNameMin: 'vidéo',
-        hint: 'MP4, WEBM, QUICKTIME jusqu\'à 300 Mo',
-        unit: 'Mo'
+    mediaNameMaj: 'Vidéo',
+    mediaNameMin: 'vidéo',
+    hint: "MP4, WEBM, QUICKTIME jusqu'à 300 Mo",
+    unit: 'Mo',
 };
 
 export default function MediaField<T extends FieldValues>({
@@ -42,7 +42,6 @@ export default function MediaField<T extends FieldValues>({
     mediaType,
     locked = false,
 }: MediaFieldPropsType<T>) {
-
     const TYPES = mediaType === TypeMediaEnumValue.IMAGE ? IMAGE_TYPES : VIDEO_TYPES;
     const HINTS = mediaType === TypeMediaEnumValue.IMAGE ? IMAGE_HINTS : VIDEO_HINTS;
 
@@ -86,12 +85,23 @@ export default function MediaField<T extends FieldValues>({
                             <FileUpload.DropzoneContent>
                                 {field.value ? (
                                     <>
-                                        <Box>{HINTS.mediaNameMaj}: {field.value.name}</Box>
-                                        <Box>Taille: {mediaType === TypeMediaEnumValue.IMAGE ? (field.value.size / 1024).toFixed(2) : (field.value.size / 1_000_000).toFixed(1) } {HINTS.unit}</Box>
+                                        <Box>
+                                            {HINTS.mediaNameMaj}: {field.value.name}
+                                        </Box>
+                                        <Box>
+                                            Taille:{' '}
+                                            {mediaType === TypeMediaEnumValue.IMAGE
+                                                ? (field.value.size / 1024).toFixed(2)
+                                                : (field.value.size / 1_000_000).toFixed(1)}{' '}
+                                            {HINTS.unit}
+                                        </Box>
                                     </>
                                 ) : (
                                     <>
-                                        <Box>Glisse une {HINTS.mediaNameMin} ici ou clique pour parcourir</Box>
+                                        <Box>
+                                            Glisse une {HINTS.mediaNameMin} ici ou clique pour
+                                            parcourir
+                                        </Box>
                                         <Box>{HINTS.hint}</Box>
                                     </>
                                 )}

@@ -4,13 +4,20 @@ import { ChargementStatutEnumValue, type ChargementStatutEnum } from '../../enum
 import { useCompressionProgress } from '../../hook/useCompressionProgress';
 import { compressVideo } from '../../service/FFmpegService';
 import type { AnnonceCreate, AnnonceSelect, AnnonceUpdate } from '../../types/AnnonceType';
-import { NewAnnonceFormValidationSchema, UpdateAnnonceFormValidationSchema, type UpdateAnnonceFormValidationType } from '../validation/form/AnnonceFormValidation';
+import {
+    NewAnnonceFormValidationSchema,
+    UpdateAnnonceFormValidationSchema,
+    type UpdateAnnonceFormValidationType,
+} from '../validation/form/AnnonceFormValidation';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TypeMediaEnumValue, type TypeMediaEnum } from '../../enum/TypeMediaEnum';
 import UrlField from './fields/UrlField';
 import TextAreaField from './fields/TextAreaField';
-import { useAddAnnonceMutation, useUpdateAnnonceMutation } from '../../redux/features/annonce/AnnonceApi';
+import {
+    useAddAnnonceMutation,
+    useUpdateAnnonceMutation,
+} from '../../redux/features/annonce/AnnonceApi';
 import MediaField from './fields/MediaField';
 
 type AnnonceFormPropsType = {
@@ -18,11 +25,14 @@ type AnnonceFormPropsType = {
     submitMessage: string;
     resetMessage: string;
     annonce?: AnnonceSelect;
-    chargementStatut: ChargementStatutEnum,
-    setChargementStatut: (newStatut: ChargementStatutEnum) => void,
+    chargementStatut: ChargementStatutEnum;
+    setChargementStatut: (newStatut: ChargementStatutEnum) => void;
 };
 
-function getDefaultValues(mediaType: TypeMediaEnum, annonce?: AnnonceSelect): UpdateAnnonceFormValidationType {
+function getDefaultValues(
+    mediaType: TypeMediaEnum,
+    annonce?: AnnonceSelect,
+): UpdateAnnonceFormValidationType {
     if (!annonce) {
         return {
             commentaire: '',
@@ -47,20 +57,23 @@ export default function AnnonceForm({
     resetMessage,
     annonce,
     chargementStatut,
-    setChargementStatut
+    setChargementStatut,
 }: AnnonceFormPropsType) {
     const [submitMessageState, setSubmitMessageState] = useState(submitMessage);
     const [isLocked, setIsLocked] = useState(true);
     const compressionProgress = useCompressionProgress();
-    const [ addAnnonce ] = useAddAnnonceMutation();
-    const [ updateAnnonce ] = useUpdateAnnonceMutation();
+    const [addAnnonce] = useAddAnnonceMutation();
+    const [updateAnnonce] = useUpdateAnnonceMutation();
 
-    async function applyAction(newAnnonce: AnnonceUpdate, oldAnnonce?: AnnonceSelect ): Promise<AnnonceSelect | undefined> {
+    async function applyAction(
+        newAnnonce: AnnonceUpdate,
+        oldAnnonce?: AnnonceSelect,
+    ): Promise<AnnonceSelect | undefined> {
         try {
             if (oldAnnonce) {
                 return await updateAnnonce({
                     oldAnnonce,
-                    newAnnonce
+                    newAnnonce,
                 }).unwrap();
             }
             return await addAnnonce(newAnnonce as AnnonceCreate).unwrap();
@@ -68,7 +81,7 @@ export default function AnnonceForm({
             return annonce;
         }
     }
-    
+
     const {
         control,
         handleSubmit,
@@ -103,22 +116,25 @@ export default function AnnonceForm({
 
     async function onSubmit(data: UpdateAnnonceFormValidationType) {
         if (
-            mediaType === TypeMediaEnumValue.VIDEO 
-            && (chargementStatut === ChargementStatutEnumValue.EnAttente 
-            ||chargementStatut === ChargementStatutEnumValue.Terminee )
+            mediaType === TypeMediaEnumValue.VIDEO &&
+            (chargementStatut === ChargementStatutEnumValue.EnAttente ||
+                chargementStatut === ChargementStatutEnumValue.Terminee)
         )
             return;
 
         if (mediaType === TypeMediaEnumValue.VIDEO) {
             setChargementStatut(ChargementStatutEnumValue.EnAttente);
-        }    
+        }
 
         try {
             let file = data.file;
             if (file && data.mediaType === 'VIDEO') {
                 file = await compressVideo(file);
             }
-            annonce = await applyAction({ ...data, redirectionLink: data.redirectionLink || undefined, file }, annonce);
+            annonce = await applyAction(
+                { ...data, redirectionLink: data.redirectionLink || undefined, file },
+                annonce,
+            );
             setChargementStatut(ChargementStatutEnumValue.Terminee);
         } catch (e) {
             console.error('Erreur pendant la création :', e);
@@ -126,9 +142,12 @@ export default function AnnonceForm({
         }
     }
 
-    function onReset(mediaType: TypeMediaEnum, annonce?: AnnonceSelect): UpdateAnnonceFormValidationType {
+    function onReset(
+        resetMediaType: TypeMediaEnum,
+        resetAnnonce?: AnnonceSelect,
+    ): UpdateAnnonceFormValidationType {
         setChargementStatut(ChargementStatutEnumValue.Inactif);
-        return getDefaultValues(mediaType, annonce);
+        return getDefaultValues(resetMediaType, resetAnnonce);
     }
 
     function getSubmitButton() {
@@ -136,27 +155,33 @@ export default function AnnonceForm({
             return (
                 <>
                     <Button type="submit">{submitMessageState}</Button>
-                    <Button onClick={() => reset(onReset(mediaType, annonce))}>Réinitialiser les données</Button>
+                    <Button onClick={() => reset(onReset(mediaType, annonce))}>
+                        Réinitialiser les données
+                    </Button>
                 </>
             );
         } else if (chargementStatut === ChargementStatutEnumValue.EnAttente) {
             return <Button disabled={true}>{submitMessageState}</Button>;
         } else {
-            return <Button onClick={() => reset(onReset(mediaType, annonce))}>{submitMessageState}</Button>;
+            return (
+                <Button onClick={() => reset(onReset(mediaType, annonce))}>
+                    {submitMessageState}
+                </Button>
+            );
         }
     }
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <VStack gap={4} alignItems="center" justifyItems="center">
-                    <TextAreaField 
-                        error={ errors.commentaire }
-                        register={ register('commentaire') }
+                    <TextAreaField
+                        error={errors.commentaire}
+                        register={register('commentaire')}
                         label={'Commentaire du média'}
                         locked={isLocked}
                     />
                     <UrlField
-                        error={ errors.redirectionLink }
+                        error={errors.redirectionLink}
                         register={register('redirectionLink')}
                         fieldLabel={'Lien de redirection si on clique sur le média'}
                         placeholder={' '}

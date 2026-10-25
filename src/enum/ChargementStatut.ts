@@ -4,4 +4,5 @@ export const ChargementStatutEnumValue = {
     Terminee: 'TERMINEE',
 } as const;
 
-export type ChargementStatutEnum = (typeof ChargementStatutEnumValue)[keyof typeof ChargementStatutEnumValue];
+export type ChargementStatutEnum =
+    (typeof ChargementStatutEnumValue)[keyof typeof ChargementStatutEnumValue];

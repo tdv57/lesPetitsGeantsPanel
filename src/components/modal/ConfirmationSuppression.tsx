@@ -17,14 +17,30 @@ export default function ConfirmationSuppression({
     }
     return (
         <>
-            <VStack align="center" margin="8px">
+            <VStack align="center" w="100%" h="100%">
                 <Dialog.Root
                     open={isOpen}
                     onOpenChange={(details) => setIsOpen(details.open)}
                     placement="center"
                 >
                     <Dialog.Trigger asChild>
-                        <Button colorPalette="red" onClick={() => setIsOpen(true)}>
+                        <Button
+                            variant="solid"
+                            bg="red.500"
+                            color="white"
+                            border="2px solid"
+                            borderColor="red.500"
+                            borderRadius="xl"
+                            minH="36px"
+                            flex="1"
+                            w="100%"
+                            fontSize="sm"
+                            cursor="pointer"
+                            transitionProperty="colors"
+                            transitionDuration="moderate"
+                            _hover={{ bg: 'transparent', color: 'red.500' }}
+                            onClick={() => setIsOpen(true)}
+                        >
                             Supprimer
                         </Button>
                     </Dialog.Trigger>

@@ -1,9 +1,84 @@
-import { Box, Button, Heading, HStack, IconButton, VStack } from '@chakra-ui/react';
+import { Box, Button, IconButton, VStack } from '@chakra-ui/react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { logout } from '../../service/SupabaseService';
 import { LuLogOut } from 'react-icons/lu';
 import { HiMenu, HiX } from 'react-icons/hi';
 import { useState } from 'react';
+import { navItems } from '../../router/NavItems';
+import { COLORS } from '../../theme/Couleur';
+
+const navTextStyle = {
+    fontSize: 'clamp(0.6rem, 1.45vw, 1.125rem)',
+    textTransform: 'uppercase' as const,
+    letterSpacing: 'wide',
+    whiteSpace: 'nowrap' as const,
+};
+
+const navTextStyleMobile = {
+    ...navTextStyle,
+    fontSize: 'md',
+};
+
+type NavItemLinkPropsType = {
+    item: (typeof navItems)[number];
+    textStyle: typeof navTextStyle;
+    onClick?: () => void;
+};
+
+function NavItemLink({ item, textStyle, onClick }: NavItemLinkPropsType) {
+    return (
+        <NavLink to={item.to} style={{ textDecoration: 'none' }} onClick={onClick}>
+            {({ isActive }) => (
+                <Box
+                    as="span"
+                    display="inline-block"
+                    cursor="pointer"
+                    pb="1"
+                    {...textStyle}
+                    color={isActive ? COLORS.boutonBordClique : COLORS.primary}
+                    fontWeight={isActive ? '600' : '400'}
+                    borderBottom="3px solid"
+                    borderColor={isActive ? COLORS.boutonBordClique : 'transparent'}
+                    transitionProperty="common"
+                    transitionDuration="moderate"
+                    _hover={{ opacity: 0.8 }}
+                >
+                    {item.label}
+                </Box>
+            )}
+        </NavLink>
+    );
+}
+
+type LogoutButtonPropsType = {
+    textStyle: typeof navTextStyle;
+    onClick: () => void;
+};
+
+function LogoutButton({ textStyle, onClick }: LogoutButtonPropsType) {
+    return (
+        <Button
+            variant="plain"
+            onClick={onClick}
+            pb="1"
+            h="auto"
+            minW="0"
+            px="0"
+            borderRadius="0"
+            {...textStyle}
+            color="red.500"
+            fontWeight="400"
+            borderBottom="3px solid transparent"
+            transitionProperty="common"
+            transitionDuration="moderate"
+            _hover={{ opacity: 0.8 }}
+        >
+            <LuLogOut />
+            Déconnexion
+        </Button>
+    );
+}
+
 export default function Nav() {
     const navigate = useNavigate();
     const [showNav, setShowNav] = useState(false);
@@ -14,161 +89,49 @@ export default function Nav() {
     }
     return (
         <>
-            <Box display={{ base: 'none', md: 'block' }}>
-                <HStack justify="center" padding="20px" gap={4} width="100%">
-                    <Button
-                        asChild
-                        colorPalette="purple"
-                        flex="1"
-                        height={{ base: '50px' }}
-                        size="lg"
-                    >
-                        <NavLink to="/videos-du-moment">
-                            <Heading size="lg" color="whiteAlpha.900">
-                                Vidéos du moment
-                            </Heading>
-                        </NavLink>
-                    </Button>
-                    <Button
-                        asChild
-                        colorPalette="purple"
-                        flex="1"
-                        height={{ base: '50px' }}
-                        size="lg"
-                    >
-                        <NavLink to="/article-de-la-saison">
-                            <Heading size="lg" color="whiteAlpha.900">
-                                {' '}
-                                Article de la saison{' '}
-                            </Heading>
-                        </NavLink>
-                    </Button>
-                    <Button
-                        asChild
-                        colorPalette="purple"
-                        flex="1"
-                        height={{ base: '50px' }}
-                        size="lg"
-                    >
-                        <NavLink to="/images">
-                            <Heading size="lg" color="whiteAlpha.900">
-                                {' '}
-                                Gérer les images{' '}
-                            </Heading>
-                        </NavLink>
-                    </Button>
-                    <Button
-                        asChild
-                        colorPalette="purple"
-                        flex="1"
-                        height={{ base: '50px' }}
-                        size="lg"
-                    >
-                        <NavLink to="/annonces">
-                            <Heading size="lg" color="whiteAlpha.900">
-                                {' '}
-                                Gérer les annonces{' '}
-                            </Heading>
-                        </NavLink>
-                    </Button>
-                    <Button
-                        onClick={() => logout()}
-                        colorPalette="red"
-                        flex="1"
-                        height={{ base: '50px' }}
-                        size="lg"
-                    >
-                        <HStack gap={2}>
-                            <LuLogOut size={40} />
-                            <Heading size="lg" color="whiteAlpha.900">
-                                Déconnexion
-                            </Heading>
-                        </HStack>
-                    </Button>
-                </HStack>
+            <Box
+                display={{ base: 'none', md: 'flex' }}
+                flexWrap="nowrap"
+                justifyContent="center"
+                columnGap="clamp(0.5rem, 1.4vw, 3rem)"
+                px={4}
+                pt={4}
+                pb={2}
+                mx="auto"
+                maxW={{ lg: '1550px' }}
+                bg={COLORS.background}
+            >
+                {navItems.map((item) => (
+                    <NavItemLink key={item.to} item={item} textStyle={navTextStyle} />
+                ))}
+                <LogoutButton textStyle={navTextStyle} onClick={handleLogout} />
             </Box>
 
-            <Box mx="auto" justifyContent="center" display={{ base: 'flex', md: 'none' }}>
-                <VStack justify="center" padding="20px" gap={8}>
+            <Box
+                display={{ base: 'flex', md: 'none' }}
+                justifyContent="center"
+                bg={COLORS.background}
+            >
+                <VStack justify="center" pt={4} pb={2} gap={4}>
                     <IconButton
                         aria-label={showNav ? 'Fermer le menu' : 'Ouvrir le menu'}
                         onClick={() => setShowNav(!showNav)}
                         variant="ghost"
-                        color="whiteAlpha.900"
+                        color={COLORS.primary}
                     >
-                        {showNav ? <HiMenu /> : <HiX />}
+                        {showNav ? <HiX /> : <HiMenu />}
                     </IconButton>
                     {showNav && (
                         <>
-                            <Button
-                                asChild
-                                colorPalette="purple"
-                                width={{ base: '250px' }}
-                                height={{ base: '50px' }}
-                                size="lg"
-                            >
-                                <NavLink to="/videos-du-moment">
-                                    <Heading size="xl" color="whiteAlpha.900">
-                                        Vidéos du moment
-                                    </Heading>
-                                </NavLink>
-                            </Button>
-                            <Button
-                                asChild
-                                colorPalette="purple"
-                                width={{ base: '250px' }}
-                                height={{ base: '50px' }}
-                                size="lg"
-                            >
-                                <NavLink to="/article-de-la-saison">
-                                    <Heading size="xl" color="whiteAlpha.900">
-                                        {' '}
-                                        Article de la saison{' '}
-                                    </Heading>
-                                </NavLink>
-                            </Button>
-                            <Button
-                                asChild
-                                colorPalette="purple"
-                                width={{ base: '250px' }}
-                                height={{ base: '50px' }}
-                                size="lg"
-                            >
-                                <NavLink to="/images">
-                                    <Heading size="xl" color="whiteAlpha.900">
-                                        {' '}
-                                        Gérer les images{' '}
-                                    </Heading>
-                                </NavLink>
-                            </Button>
-                            <Button
-                                asChild
-                                colorPalette="purple"
-                                width={{ base: '250px' }}
-                                height={{ base: '50px' }}
-                                size="lg"
-                            >
-                                <NavLink to="/annonces">
-                                    <Heading size="xl" color="whiteAlpha.900">
-                                        {' '}
-                                        Gérer les annonces{' '}
-                                    </Heading>
-                                </NavLink>
-                            </Button>
-                            <Button
-                                onClick={() => handleLogout()}
-                                colorPalette="red"
-                                width={{ base: '250px' }}
-                                height={{ base: '50px' }}
-                                size="lg"
-                            >
-                                <HStack gap={2}>
-                                    <LuLogOut size={40} />
-                                    <Heading size="xl" color="whiteAlpha.900">
-                                        Déconnexion
-                                    </Heading>
-                                </HStack>
-                            </Button>
+                            {navItems.map((item) => (
+                                <NavItemLink
+                                    key={item.to}
+                                    item={item}
+                                    textStyle={navTextStyleMobile}
+                                    onClick={() => setShowNav(false)}
+                                />
+                            ))}
+                            <LogoutButton textStyle={navTextStyleMobile} onClick={handleLogout} />
                         </>
                     )}
                 </VStack>

@@ -5,19 +5,23 @@ import { MarqueForm } from '../form/MarqueForm';
 import { DeguisementForm } from '../form/DeguisementForm';
 import ArticleForm from '../form/ArticleForm';
 import type { ImageSelect } from '../../types/ImageType';
+import { COLORS } from '../../theme/Couleur';
 
 type BoutonCreationImagePropsType = {
     typeImageLabel: TypeImageEnum;
     typeImageValue: string;
     image?: ImageSelect;
+    size?: 'large' | 'small';
 };
 
 export function BoutonModificationImage({
     typeImageLabel,
     typeImageValue,
     image,
+    size = image ? 'small' : 'large',
 }: BoutonCreationImagePropsType) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const isLarge = size === 'large';
 
     function getForm(t: TypeImageEnum): JSX.Element {
         if (t === TypeImageEnumValue.MARQUE) {
@@ -49,9 +53,24 @@ export function BoutonModificationImage({
             <Dialog.Root open={isOpen} onOpenChange={(value) => setIsOpen(value.open)}>
                 <Dialog.Trigger asChild>
                     <Button
-                        colorPalette="blue"
-                        size={{ base: 'lg', sm: 'xl', md: '2xl' }}
-                        my={{ base: 4, sm: 6, md: 10 }}
+                        variant="outline"
+                        color={COLORS.textLight}
+                        background={COLORS.boutonInterieurClique}
+                        border="2px solid"
+                        borderColor={COLORS.boutonBordNonClique}
+                        borderRadius="xl"
+                        cursor="pointer"
+                        whiteSpace="nowrap"
+                        h={isLarge ? '40px' : '36px'}
+                        w={isLarge ? '300px' : '100%'}
+                        maxW="100%"
+                        fontSize={isLarge ? { base: 'md', md: 'lg' } : 'sm'}
+                        transitionProperty="colors"
+                        transitionDuration="moderate"
+                        _hover={{
+                            background: COLORS.boutonInterieurNonClique,
+                            color: COLORS.primary,
+                        }}
                     >
                         {image
                             ? `Modifier un(e) ` + typeImageValue

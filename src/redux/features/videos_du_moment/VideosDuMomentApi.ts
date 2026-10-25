@@ -28,9 +28,17 @@ export const VideosDuMomentApi = createApi({
                     if (result) {
                         return { data: undefined };
                     }
-                    return { error: { message: `Erreur lors de la suppresion de la vidéo avec l'id ${id}` } };
+                    return {
+                        error: {
+                            message: `Erreur lors de la suppresion de la vidéo avec l'id ${id}`,
+                        },
+                    };
                 } catch {
-                    return { error: { message: `Erreur lors de la suppresion de la vidéo avec l'id ${id}` } };
+                    return {
+                        error: {
+                            message: `Erreur lors de la suppresion de la vidéo avec l'id ${id}`,
+                        },
+                    };
                 }
             },
             async onQueryStarted(id, { dispatch, queryFulfilled }) {

@@ -5,7 +5,7 @@ export const newVideoFormValidationSchema = z
         description: z.string().trim(),
         age: z.string().trim(),
         typeAge: z.string().trim(),
-        video: videoValidation
+        video: videoValidation,
     })
     .refine((data) => !!data.age.trim() === !!data.typeAge.trim(), {
         message: "L'âge et le type doivent être renseignés ensemble",
