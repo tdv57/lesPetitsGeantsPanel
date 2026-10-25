@@ -1,12 +1,17 @@
-import type { AnnonceCreate, AnnonceUpdate, D1AnnonceInsert, D1AnnonceUpdate } from "../types/AnnonceType";
+import type {
+    AnnonceCreate,
+    AnnonceUpdate,
+    D1AnnonceInsert,
+    D1AnnonceUpdate,
+} from '../types/AnnonceType';
 
-export function mapAnnonceCreateToD1AnnonceInsert(    
+export function mapAnnonceCreateToD1AnnonceInsert(
     s: AnnonceCreate,
     url: string,
     code: string,
-) : D1AnnonceInsert {
+): D1AnnonceInsert {
     return {
-        code, 
+        code,
         url,
         mediaType: s.mediaType,
         commentaire: s.commentaire,
@@ -20,11 +25,10 @@ export function mapAnnonceUpdateToD1AnnonceUpdate(
     code: string,
 ): D1AnnonceUpdate {
     return {
-        code, 
+        code,
         url,
         mediaType: s.mediaType,
         commentaire: s.commentaire,
         redirectionLink: s.redirectionLink,
     };
 }
-

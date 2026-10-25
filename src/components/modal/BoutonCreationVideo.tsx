@@ -4,6 +4,7 @@ import type { VideoCreateType, VideoSelectType } from '../../types/VideoType';
 import { useState } from 'react';
 import type { ChargementStatutEnum } from '../../enum/ChargementStatut';
 import { ChargementStatutEnumValue } from '../../enum/ChargementStatut';
+import { COLORS } from '../../theme/Couleur';
 
 export type FormPropsType = {
     description: string;
@@ -72,7 +73,8 @@ export default function BoutonCreationVideo({
                 <Dialog.Trigger asChild>
                     <Button
                         onClick={() => setIsOpen(true)}
-                        colorPalette="blue"
+                        color={COLORS.textLight}
+                        background={COLORS.boutonBordNonClique}
                         size={{ base: 'lg', sm: 'xl', md: '2xl' }}
                         my={{ base: 4, sm: 6, md: 10 }}
                     >

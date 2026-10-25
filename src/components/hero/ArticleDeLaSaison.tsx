@@ -1,4 +1,4 @@
-import { VStack } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import VideoCard from '../card/VideoCard';
 import BoutonCreationVideo from '../modal/BoutonCreationVideo';
 import type { VideoCreateType, VideoSelectType } from '../../types/VideoType';
@@ -26,6 +26,12 @@ export default function ArticleDeLaSaison() {
         deleteArticleDeLaSaison();
     }
 
+    const videoSize = {
+        w: { base: '85vw', md: '100%' },
+        maxW: { base: '1100px', md: 'none' },
+        h: { base: '48vh', sm: '52vh', md: '40vh', lg: '60vh' },
+    };
+
     return (
         <VStack align="center">
             <BoutonCreationVideo
@@ -34,9 +40,27 @@ export default function ArticleDeLaSaison() {
                 supabaseAction={supabaseAction}
             />
             {/* <NewVideoForm submitMessage="Ajouter un vidéo" supabaseAction={addVideosDuMoment}/> */}
-            <VStack gap={10} align="center">
-                {video ? <VideoCard v={video} index={1} handleDelete={handleDelete} /> : <></>}
-            </VStack>
+            <Box display="flex" w="full" justifyContent="center">
+                {video ? (
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        minW={{ md: '0' }}
+                        w={{ md: 'calc(50% - 0.5rem)' }}
+                        maxW={{ md: '676px' }}
+                    >
+                        <VideoCard
+                            v={video}
+                            index={1}
+                            handleDelete={handleDelete}
+                            videoSize={videoSize}
+                        />
+                    </Box>
+                ) : (
+                    <></>
+                )}
+            </Box>
         </VStack>
     );
 }

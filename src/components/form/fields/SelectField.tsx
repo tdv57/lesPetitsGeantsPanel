@@ -13,7 +13,7 @@ type SelectFieldPropsType<T extends FieldValues> = {
     name: FieldPath<T>;
     label: string;
     collection: ListCollection;
-    locked?: boolean
+    locked?: boolean;
 };
 
 export default function SelectField<T extends FieldValues>({

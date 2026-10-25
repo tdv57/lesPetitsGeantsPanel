@@ -16,8 +16,8 @@ const config = defineConfig({
     theme: {
         tokens: {
             fonts: {
-                heading: { value: "'Baloo 2', sans-serif" },
-                body: { value: "'Baloo 2', sans-serif" },
+                heading: { value: "'Fredoka', sans-serif" },
+                body: { value: "'Fredoka', sans-serif" },
             },
             colors: {
                 brand: {

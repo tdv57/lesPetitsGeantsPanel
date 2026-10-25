@@ -24,10 +24,11 @@ export default function Images() {
 
     return (
         <>
-            <VStack alignContent="center" justifyContent="center">
+            <VStack alignContent="center" justifyContent="center" pt={{ base: 4, md: 8 }}>
                 <TypeImageSelection typeImage={typeImage} setTypeImage={setTypeImage} />
                 {typeImage.length > 0 ? (
                     <BoutonModificationImage
+                        size="large"
                         typeImageLabel={typeImage[0]}
                         typeImageValue={
                             typeImageMapping.items
@@ -46,7 +47,7 @@ export default function Images() {
                         justifyContent="center"
                     >
                         <SimpleGrid
-                            columns={{ base: 1, sm: 2, md: 3 }}
+                            columns={{ base: 1, md: 3 }}
                             gap={8}
                             justifyItems="center"
                             alignItems="stretch"

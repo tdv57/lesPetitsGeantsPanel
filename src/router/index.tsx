@@ -31,8 +31,8 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'annonces',
-                element: <Annonce/>
-            }
+                element: <Annonce />,
+            },
         ],
     },
     {

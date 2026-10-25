@@ -1,5 +1,6 @@
 import { Portal, Select } from '@chakra-ui/react';
 import { type TypeImageEnum, typeImageCollection } from '../../enum/TypeImageEnum';
+import { COLORS } from '../../theme/Couleur';
 
 type TypeImageSelectionPropsType = {
     setTypeImage: React.Dispatch<React.SetStateAction<TypeImageEnum[]>>;
@@ -19,6 +20,7 @@ export default function TypeImageSelection({
                 size="md"
                 variant="outline"
                 colorPalette="teal"
+                color={COLORS.primary}
                 width="300px"
             >
                 <Select.HiddenSelect />
@@ -26,10 +28,10 @@ export default function TypeImageSelection({
                     Type d'image
                 </Select.Label>
                 <Select.Control>
-                    <Select.Trigger>
+                    <Select.Trigger borderColor={COLORS.primary} borderWidth="2px">
                         <Select.ValueText
                             fontSize={{ base: 'md', sm: 'lg', md: 'lg' }}
-                            color="white"
+                            color={COLORS.textDark}
                             placeholder="Sélectionner le type d'image"
                         />
                     </Select.Trigger>
