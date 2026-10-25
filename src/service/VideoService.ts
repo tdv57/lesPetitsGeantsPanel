@@ -9,7 +9,8 @@ export async function getArticleDeLaSaison(): Promise<VideoSelectType | null> {
     const { data, error } = await supabase
         .from(TABLE_VIDEO)
         .select()
-        .eq('code', ARTICLE_DE_LA_SAISON_CODE);
+        .eq('code', ARTICLE_DE_LA_SAISON_CODE)
+        .order('created_at', { ascending: false });
     if (error) {
         return null;
     }
@@ -27,7 +28,10 @@ export async function getArticleDeLaSaison(): Promise<VideoSelectType | null> {
 }
 
 export async function getVideosDuMoment(): Promise<VideoSelectType[] | null> {
-    const { data, error } = await supabase.from(TABLE_VIDEO).select();
+    const { data, error } = await supabase
+        .from(TABLE_VIDEO)
+        .select()
+        .order('created_at', { ascending: false });
     if (error) {
         return null;
     }

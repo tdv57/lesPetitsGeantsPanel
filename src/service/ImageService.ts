@@ -27,7 +27,11 @@ export async function addImage(image: ImageCreate): Promise<ImageSelect | null> 
 }
 
 export async function getImageByType(typeImage: TypeImageEnum): Promise<ImageSelect[]> {
-    const { data, error } = await supabase.from(TABLE_IMAGE).select().eq('type_image', typeImage);
+    const { data, error } = await supabase
+        .from(TABLE_IMAGE)
+        .select()
+        .eq('type_image', typeImage)
+        .order('created_at', { ascending: false });
     if (error) {
         console.warn('getImageError : ', error);
         return [];
