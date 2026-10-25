@@ -1,15 +1,15 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import { addImage, deleteImage, getImageByType } from '../../../service/ImageService';
-import type { ImageCreate, ImageSelect, TYPE_IMAGE_TYPE } from '../../../types/ImageType';
-import { TYPE_IMAGE_VALUE } from '../../../types/ImageType';
+import { addImage, deleteImage, getImageByType, updateImage } from '../../../service/ImageService';
+import type { ImageUpdate, ImageCreate, ImageSelect } from '../../../types/ImageType';
+import { TypeImageEnumValue, type TypeImageEnum } from '../../../enum/TypeImageEnum';
 
 export const ImageApi = createApi({
     reducerPath: 'imageApi',
     baseQuery: fakeBaseQuery(),
-    tagTypes: Object.values(TYPE_IMAGE_VALUE),
+    tagTypes: Object.values(TypeImageEnumValue),
     endpoints: (builder) => ({
-        getImageByType: builder.query<ImageSelect[], TYPE_IMAGE_TYPE>({
-            queryFn: async (type: TYPE_IMAGE_TYPE) => {
+        getImageByType: builder.query<ImageSelect[], TypeImageEnum>({
+            queryFn: async (type: TypeImageEnum) => {
                 const result = await getImageByType(type);
                 if (result === null) {
                     return {
@@ -46,8 +46,43 @@ export const ImageApi = createApi({
             },
         }),
 
-        deleteImage: builder.mutation<void, { id: number; type: TYPE_IMAGE_TYPE }>({
-            queryFn: async ({ id, type: _type }: { id: number; type: TYPE_IMAGE_TYPE }) => {
+        updateImage: builder.mutation<
+            ImageSelect,
+            { oldImage: ImageSelect; newImage: ImageUpdate }
+        >({
+            queryFn: async ({
+                oldImage,
+                newImage,
+            }: {
+                oldImage: ImageSelect;
+                newImage: ImageUpdate;
+            }) => {
+                const result = await updateImage(oldImage, newImage);
+                if (result === null) {
+                    return { error: { message: "Erreur lors de la modification d'une image " } };
+                }
+                return { data: result };
+            },
+            async onQueryStarted({ oldImage, newImage: _newImage }, { dispatch, queryFulfilled }) {
+                try {
+                    const { data: updated } = await queryFulfilled;
+
+                    dispatch(
+                        ImageApi.util.updateQueryData(
+                            'getImageByType',
+                            oldImage.typeImage,
+                            (draft) => {
+                                const index = draft.findIndex((image) => image.id === updated.id);
+                                if (index !== -1) draft[index] = updated;
+                            },
+                        ),
+                    );
+                } catch {}
+            },
+        }),
+
+        deleteImage: builder.mutation<void, { id: number; type: TypeImageEnum }>({
+            queryFn: async ({ id, type: _type }: { id: number; type: TypeImageEnum }) => {
                 if (!(await deleteImage(id))) {
                     return {
                         error: {
@@ -58,7 +93,7 @@ export const ImageApi = createApi({
                 return { data: undefined };
             },
             async onQueryStarted(
-                { id, type }: { id: number; type: TYPE_IMAGE_TYPE },
+                { id, type }: { id: number; type: TypeImageEnum },
                 { dispatch, queryFulfilled },
             ) {
                 const patchResult = dispatch(
@@ -77,4 +112,9 @@ export const ImageApi = createApi({
     }),
 });
 
-export const { useGetImageByTypeQuery, useDeleteImageMutation, useAddImageMutation } = ImageApi;
+export const {
+    useGetImageByTypeQuery,
+    useDeleteImageMutation,
+    useAddImageMutation,
+    useUpdateImageMutation,
+} = ImageApi;

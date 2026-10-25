@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { VideosDuMomentApi } from './features/videos_du_moment/VideosDuMomentApi';
 import { ImageApi } from './features/images/ImageApi';
 import { ArticleDeLaSaisonApi } from './features/article_de_la_saison/ArticleDeLaSaisonApi';
+import { AnnonceApi } from './features/annonce/AnnonceApi';
 export const store = configureStore({
     reducer: {
         [VideosDuMomentApi.reducerPath]: VideosDuMomentApi.reducer,
         [ImageApi.reducerPath]: ImageApi.reducer,
         [ArticleDeLaSaisonApi.reducerPath]: ArticleDeLaSaisonApi.reducer,
+        [AnnonceApi.reducerPath]: AnnonceApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -17,5 +19,6 @@ export const store = configureStore({
         })
             .concat(VideosDuMomentApi.middleware)
             .concat(ImageApi.middleware)
-            .concat(ArticleDeLaSaisonApi.middleware),
+            .concat(ArticleDeLaSaisonApi.middleware)
+            .concat(AnnonceApi.middleware),
 });

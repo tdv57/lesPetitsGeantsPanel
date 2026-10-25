@@ -1,32 +1,34 @@
 import { useState } from 'react';
-import { typeImageMapping, type TYPE_IMAGE_TYPE } from '../../types/ImageType';
 import TypeImageSelection from '../card/TypeImageSelection';
 import { Box, SimpleGrid, VStack } from '@chakra-ui/react';
-import { BoutonCreationImage } from '../modal/BoutonCreationImage';
+import { BoutonModificationImage } from '../modal/BoutonCreationImage';
 import ImageCard from '../card/ImageCard';
 import {
     useDeleteImageMutation,
     useGetImageByTypeQuery,
 } from '../../redux/features/images/ImageApi';
+import { typeImageMapping, type TypeImageEnum } from '../../enum/TypeImageEnum';
+import type { ImageSelect } from '../../types/ImageType';
 
 export default function Images() {
-    const [typeImage, setTypeImage] = useState<TYPE_IMAGE_TYPE[]>([]);
+    const [typeImage, setTypeImage] = useState<TypeImageEnum[]>([]);
     const [deleteImage] = useDeleteImageMutation();
 
     const { data: images = [] } = useGetImageByTypeQuery(typeImage[0], {
         skip: !typeImage[0],
     });
 
-    function handleDelete(id: number, type: TYPE_IMAGE_TYPE) {
+    function handleDelete(id: number, type: TypeImageEnum) {
         deleteImage({ id: id, type: type });
     }
 
     return (
         <>
-            <VStack alignContent="center" justifyContent="center">
+            <VStack alignContent="center" justifyContent="center" pt={{ base: 4, md: 8 }}>
                 <TypeImageSelection typeImage={typeImage} setTypeImage={setTypeImage} />
                 {typeImage.length > 0 ? (
-                    <BoutonCreationImage
+                    <BoutonModificationImage
+                        size="large"
                         typeImageLabel={typeImage[0]}
                         typeImageValue={
                             typeImageMapping.items
@@ -45,13 +47,13 @@ export default function Images() {
                         justifyContent="center"
                     >
                         <SimpleGrid
-                            columns={{ base: 1, sm: 2, md: 3 }}
+                            columns={{ base: 1, md: 3 }}
                             gap={8}
                             justifyItems="center"
                             alignItems="stretch"
                             margin={8}
                         >
-                            {images.map((image) => (
+                            {images.map((image: ImageSelect) => (
                                 <ImageCard
                                     key={image.id}
                                     imageSelect={image}

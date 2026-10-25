@@ -1,58 +1,80 @@
 import { Button, Dialog, Portal } from '@chakra-ui/react';
-import { TYPE_IMAGE_VALUE, type TYPE_IMAGE_TYPE } from '../../types/ImageType';
+import { TypeImageEnumValue, type TypeImageEnum } from '../../enum/TypeImageEnum';
 import { useState, type JSX } from 'react';
-import { NewMarqueForm } from '../form/NewMarqueForm';
-import { NewJouetForm } from '../form/NewJouetForm';
-import { NewJeuDeSocieteForm } from '../form/NewJeuDeSocieteForm';
-import { NewPelucheForm } from '../form/NewPelucheForm';
-import { NewEditeurForm } from '../form/NewEditeurForm';
-import { NewLoisirCreatifForm } from '../form/NewLoisirCreatifForm';
-import { NewLivreForm } from '../form/NewLivreForm';
-import { NewDeguisementForm } from '../form/NewDeguisementForm';
+import { MarqueForm } from '../form/MarqueForm';
+import { DeguisementForm } from '../form/DeguisementForm';
+import ArticleForm from '../form/ArticleForm';
+import type { ImageSelect } from '../../types/ImageType';
+import { COLORS } from '../../theme/Couleur';
 
 type BoutonCreationImagePropsType = {
-    typeImageLabel: TYPE_IMAGE_TYPE;
+    typeImageLabel: TypeImageEnum;
     typeImageValue: string;
+    image?: ImageSelect;
+    size?: 'large' | 'small';
 };
 
-export function BoutonCreationImage({
+export function BoutonModificationImage({
     typeImageLabel,
     typeImageValue,
+    image,
+    size = image ? 'small' : 'large',
 }: BoutonCreationImagePropsType) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const isLarge = size === 'large';
 
-    function getForm(t: TYPE_IMAGE_TYPE): JSX.Element {
-        switch (t) {
-            case TYPE_IMAGE_VALUE.MARQUE:
-                return <NewMarqueForm />;
-            case TYPE_IMAGE_VALUE.JOUET:
-                return <NewJouetForm />;
-            case TYPE_IMAGE_VALUE.JEU_DE_SOCIETE:
-                return <NewJeuDeSocieteForm />;
-            case TYPE_IMAGE_VALUE.PELUCHE:
-                return <NewPelucheForm />;
-            case TYPE_IMAGE_VALUE.EDITEUR:
-                return <NewEditeurForm />;
-            case TYPE_IMAGE_VALUE.LOISIR_CREATIF:
-                return <NewLoisirCreatifForm />;
-            case TYPE_IMAGE_VALUE.LIVRE:
-                return <NewLivreForm />;
-            case TYPE_IMAGE_VALUE.DEGUISEMENT:
-                return <NewDeguisementForm />;
+    function getForm(t: TypeImageEnum): JSX.Element {
+        if (t === TypeImageEnumValue.MARQUE) {
+            return <MarqueForm key={image ? 'update' : 'new'} marque={image} onSuccess={close} />;
+        } else if (t === TypeImageEnumValue.DEGUISEMENT) {
+            return (
+                <DeguisementForm
+                    key={image ? 'update' : 'new'}
+                    deguisement={image}
+                    onSuccess={close}
+                />
+            );
+        } else {
+            return (
+                <ArticleForm
+                    key={image ? 'update' : 'new'}
+                    typeArticle={t}
+                    article={image}
+                    onSuccess={close}
+                />
+            );
         }
-        return <></>;
     }
+
+    const close = () => setIsOpen(false);
 
     return (
         <>
             <Dialog.Root open={isOpen} onOpenChange={(value) => setIsOpen(value.open)}>
                 <Dialog.Trigger asChild>
                     <Button
-                        colorPalette="blue"
-                        size={{ base: 'lg', sm: 'xl', md: '2xl' }}
-                        my={{ base: 4, sm: 6, md: 10 }}
+                        variant="outline"
+                        color={COLORS.textLight}
+                        background={COLORS.boutonInterieurClique}
+                        border="2px solid"
+                        borderColor={COLORS.boutonBordNonClique}
+                        borderRadius="xl"
+                        cursor="pointer"
+                        whiteSpace="nowrap"
+                        h={isLarge ? '40px' : '36px'}
+                        w={isLarge ? '300px' : '100%'}
+                        maxW="100%"
+                        fontSize={isLarge ? { base: 'md', md: 'lg' } : 'sm'}
+                        transitionProperty="colors"
+                        transitionDuration="moderate"
+                        _hover={{
+                            background: COLORS.boutonInterieurNonClique,
+                            color: COLORS.primary,
+                        }}
                     >
-                        {`Ajouter un(e) ` + typeImageValue}
+                        {image
+                            ? `Modifier un(e) ` + typeImageValue
+                            : `Ajouter un(e) ` + typeImageValue}
                     </Button>
                 </Dialog.Trigger>
 

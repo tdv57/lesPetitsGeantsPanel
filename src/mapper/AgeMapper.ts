@@ -1,17 +1,18 @@
 import { createListCollection } from '@chakra-ui/react';
 
-export function mapAge(age: number | null, typeAge: 'ANS' | 'MOIS' | null): string {
-    if (!age || age < 0 || !typeAge || (typeAge !== 'ANS' && typeAge !== 'MOIS')) {
+export function mapAge(age: string | undefined, typeAge: 'ANS' | 'MOIS' | undefined): string {
+    let intAge = age ? parseInt(age) : undefined;
+    if (!intAge || intAge < 0 || !typeAge || (typeAge !== 'ANS' && typeAge !== 'MOIS')) {
         return '';
     }
     if (typeAge === 'ANS') {
-        if (age === 1 || age === 0) {
-            return 'Dès ' + age + ' an';
+        if (intAge === 1 || intAge === 0) {
+            return 'Dès ' + intAge + ' an';
         } else {
-            return 'Dès ' + age + ' ans';
+            return 'Dès ' + intAge + ' ans';
         }
     } else if (typeAge === 'MOIS') {
-        return 'Dès ' + age + ' mois';
+        return 'Dès ' + intAge + ' mois';
     }
     return '';
 }

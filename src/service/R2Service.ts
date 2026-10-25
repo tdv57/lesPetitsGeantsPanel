@@ -4,8 +4,10 @@ import { supabase } from './SupabaseService.ts';
 let r2: S3Client | null = null;
 export const R2_IMAGE_PUBLIC_URL = 'https://pub-5f1a24a80f174f9d918f6aaef649443d.r2.dev';
 export const R2_VIDEO_PUBLIC_URL = 'https://pub-f7df7364451c4bdbb896bec94fed2057.r2.dev';
+export const R2_ANNONCE_PUBLIC_URL = 'https://pub-9b12e0dc1c364dcb9166888391912649.r2.dev';
 export const R2_IMAGE_BUCKET_NAME = 'les-petits-geants-image';
 export const R2_VIDEO_BUCKET_NAME = 'les-petits-geants-video';
+export const R2_ANNONCE_BUCKET_NAME = 'les-petits-geants-annonces';
 
 export async function setR2Client() {
     if (!r2) {
@@ -36,11 +38,35 @@ export function clearR2Client() {
 }
 
 export async function uploadImage(file: File, code: string) {
+    return await uploadR2(file, R2_IMAGE_BUCKET_NAME, code);
+}
+
+export async function deleteImage(key: string) {
+    return await deleteR2(R2_IMAGE_BUCKET_NAME, key);
+}
+
+export async function uploadVideo(file: File, code: string) {
+    return await uploadR2(file, R2_VIDEO_BUCKET_NAME, code);
+}
+
+export async function deleteVideo(key: string) {
+    return await deleteR2(R2_VIDEO_BUCKET_NAME, key);
+}
+
+export async function uploadAnnonce(file: File, code: string) {
+    return await uploadR2(file, R2_ANNONCE_BUCKET_NAME, code);
+}
+
+export async function deleteAnnonce(key: string) {
+    return await deleteR2(R2_ANNONCE_BUCKET_NAME, key);
+}
+
+async function uploadR2(file: File, bucket: string, code: string) {
     if (r2) {
         try {
             await r2.send(
                 new PutObjectCommand({
-                    Bucket: R2_IMAGE_BUCKET_NAME,
+                    Bucket: bucket,
                     Key: code,
                     Body: file,
                     ContentType: file.type,
@@ -59,51 +85,10 @@ export async function uploadImage(file: File, code: string) {
     }
 }
 
-export async function deleteImage(key: string) {
+async function deleteR2(bucket: string, key: string) {
     if (r2) {
         try {
-            await r2.send(new DeleteObjectCommand({ Bucket: R2_IMAGE_BUCKET_NAME, Key: key }));
-            return { success: true };
-        } catch (error) {
-            console.error('Error deleting image from R2:', error);
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : 'Erreur inconnue',
-            };
-        }
-    } else {
-        return { success: false, error: 'Client R2 non initialisé' };
-    }
-}
-
-export async function uploadVideo(file: File, code: string) {
-    if (r2) {
-        try {
-            await r2.send(
-                new PutObjectCommand({
-                    Bucket: R2_VIDEO_BUCKET_NAME,
-                    Key: code,
-                    Body: file,
-                    ContentType: file.type,
-                }),
-            );
-            return { success: true };
-        } catch (error) {
-            console.error('Error uploading video to R2:', error);
-            return {
-                success: false,
-                error: error instanceof Error ? error.message : 'Erreur inconnue',
-            };
-        }
-    } else {
-        return { success: false, error: 'Client R2 non initialisé' };
-    }
-}
-
-export async function deleteVideo(key: string) {
-    if (r2) {
-        try {
-            await r2.send(new DeleteObjectCommand({ Bucket: R2_VIDEO_BUCKET_NAME, Key: key }));
+            await r2.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
             return { success: true };
         } catch (error) {
             console.error('Error deleting video from R2:', error);

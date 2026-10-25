@@ -3,7 +3,8 @@ import NewVideoForm from '../form/NewVideoForm';
 import type { VideoCreateType, VideoSelectType } from '../../types/VideoType';
 import { useState } from 'react';
 import type { ChargementStatutEnum } from '../../enum/ChargementStatut';
-import { ChargementStatut } from '../../enum/ChargementStatut';
+import { ChargementStatutEnumValue } from '../../enum/ChargementStatut';
+import { COLORS } from '../../theme/Couleur';
 
 export type FormPropsType = {
     description: string;
@@ -34,14 +35,14 @@ export default function BoutonCreationVideo({
     const [typeAge, setTypeAge] = useState<'' | 'ANS' | 'MOIS'>('');
     const [video, setVideo] = useState<File | null>(null);
     const [chargementStatut, setChargementStatut] = useState<ChargementStatutEnum>(
-        ChargementStatut.Inactif,
+        ChargementStatutEnumValue.Inactif,
     );
 
     function onReset() {
         setDescription('');
         setAge('');
         setVideo(null);
-        setChargementStatut(ChargementStatut.Inactif);
+        setChargementStatut(ChargementStatutEnumValue.Inactif);
     }
 
     const formProps: FormPropsType = {
@@ -65,14 +66,15 @@ export default function BoutonCreationVideo({
                     if (details.open) setIsOpen(true);
                     else {
                         setIsOpen(false);
-                        if (ChargementStatut.Terminee === chargementStatut) onReset();
+                        if (ChargementStatutEnumValue.Terminee === chargementStatut) onReset();
                     }
                 }}
             >
                 <Dialog.Trigger asChild>
                     <Button
                         onClick={() => setIsOpen(true)}
-                        colorPalette="blue"
+                        color={COLORS.textLight}
+                        background={COLORS.boutonBordNonClique}
                         size={{ base: 'lg', sm: 'xl', md: '2xl' }}
                         my={{ base: 4, sm: 6, md: 10 }}
                     >
