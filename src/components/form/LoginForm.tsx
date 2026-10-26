@@ -65,6 +65,11 @@ export default function LoginForm({ setPassword, setEmail, handleSubmit }: Login
                             border={'3px solid'}
                             borderColor={COLORS.primary}
                             onChange={(e) => setPassword(e.target.value)}
+                            css={{
+                                '&::-ms-reveal, &::-ms-clear': {
+                                    display: 'none',
+                                },
+                            }}
                         />
                     </InputGroup>
                 </Field.Root>

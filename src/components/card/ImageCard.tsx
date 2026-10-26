@@ -21,11 +21,11 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                 color={COLORS.primary}
                 borderColor="whiteAlpha.200"
                 borderRadius="12px"
-                width={{ base: '250px', md: '80%' }}
-                height={{ base: '400px', md: '100%' }}
+                width="100%"
+                height="100%"
             >
                 <Box
-                    width={{ base: '250px', md: '80%' }}
+                    width="90%"
                     height="100%"
                     display="flex"
                     flexDir="column"
@@ -43,9 +43,8 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 overflow="hidden"
                             >
                                 <Heading
-                                    fontWeight="normal"
-                                    fontSize={{ base: 'xs', md: 'sm', lg: 'lg' }}
-                                    lineClamp={2}
+                                    fontWeight="bold"
+                                    fontSize={{ base: 'md', md: 'xl', lg: '3xl' }}
                                 >
                                     {imageSelect.marque}
                                 </Heading>
@@ -62,8 +61,8 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 <Image
                                     src={imageSelect.url}
                                     alt={imageSelect.marque}
-                                    maxWidth="100%"
-                                    maxHeight="100%"
+                                    maxWidth="80%"
+                                    maxHeight="80%"
                                     objectFit="contain"
                                     borderRadius="md"
                                 />
@@ -105,14 +104,12 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 <Heading
                                     fontWeight="normal"
                                     fontSize={{ base: 'xs', md: 'sm', lg: 'lg' }}
-                                    lineClamp={2}
                                 >
                                     {imageSelect.description}
                                 </Heading>
                                 <Heading
                                     fontWeight="normal"
                                     fontSize={{ base: 'xs', lg: 'lg' }}
-                                    lineClamp={1}
                                 >
                                     {mapAge(imageSelect.age, imageSelect.typeAge)}
                                 </Heading>
@@ -149,14 +146,12 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 <Heading
                                     fontWeight="normal"
                                     fontSize={{ base: 'xs', md: 'sm', lg: 'lg' }}
-                                    lineClamp={2}
                                 >
                                     {imageSelect.description}
                                 </Heading>
                                 <Heading
                                     fontWeight="normal"
                                     fontSize={{ base: 'xs', lg: 'lg' }}
-                                    lineClamp={1}
                                 >
                                     {mapAge(imageSelect.age, imageSelect.typeAge)}
                                 </Heading>
@@ -193,14 +188,12 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 <Heading
                                     fontWeight="normal"
                                     fontSize={{ base: 'xs', md: 'sm', lg: 'lg' }}
-                                    lineClamp={2}
                                 >
                                     {imageSelect.description}
                                 </Heading>
                                 <Heading
                                     fontWeight="normal"
                                     fontSize={{ base: 'xs', lg: 'lg' }}
-                                    lineClamp={1}
                                 >
                                     {mapAge(imageSelect.age, imageSelect.typeAge)}
                                 </Heading>
@@ -237,7 +230,6 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 <Heading
                                     fontWeight="normal"
                                     fontSize={{ base: 'xs', md: 'sm', lg: 'lg' }}
-                                    lineClamp={2}
                                 >
                                     {imageSelect.description}
                                 </Heading>
