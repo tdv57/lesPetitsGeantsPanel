@@ -47,7 +47,12 @@ export default function Images() {
                         justifyContent="center"
                     >
                         <SimpleGrid
-                            columns={{ base: 1, md: 3 }}
+                            templateColumns={{
+                                base: 'min(85vw, 320px)',
+                                md: 'repeat(2, minmax(0, 40vw))',
+                                lg: 'repeat(3, minmax(0, 28vw))',
+                            }}
+                            autoRows="clamp(380px, 60vh, 560px)"
                             gap={8}
                             justifyItems="center"
                             alignItems="stretch"

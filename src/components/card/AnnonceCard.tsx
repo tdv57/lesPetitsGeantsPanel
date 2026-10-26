@@ -33,7 +33,6 @@ export function AnnonceCard({ index, annonce, handleDelete }: AnnonceCardPropsTy
                             <Heading
                                 fontWeight="normal"
                                 fontSize={{ base: 'lg', sm: 'xl', md: '2xl', lg: '3xl' }}
-                                lineClamp={3}
                             >
                                 {annonce.commentaire}
                             </Heading>
@@ -56,6 +55,7 @@ export function AnnonceCard({ index, annonce, handleDelete }: AnnonceCardPropsTy
                             />
                         )}
                         {annonce.mediaType === TypeMediaEnumValue.IMAGE && (
+                            annonce.redirectionLink ? 
                             <a
                                 href={annonce.redirectionLink ? annonce.redirectionLink : ''}
                                 target="_blank"
@@ -69,6 +69,16 @@ export function AnnonceCard({ index, annonce, handleDelete }: AnnonceCardPropsTy
                                     borderRadius="md"
                                 />
                             </a>
+                            :
+                            <Image
+                                src={annonce.url}
+                                alt={annonce.commentaire}
+                                maxWidth="100%"
+                                maxHeight="min(60vh, 500px)"
+                                objectFit="contain"
+                                borderRadius="md"
+                            />
+
                         )}
                     </Box>
                     <Box
