@@ -5,6 +5,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Images from '../components/hero/Images';
 import { HomeIndex } from './HomeIndex';
 import { Annonce } from '../components/hero/Annonce';
+import { ImageTraitement } from '../components/form/ImageTraitement';
 
 export const router = createBrowserRouter([
     {
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
                 path: 'actualites',
                 element: <Annonce />,
             },
+            { 
+                path: 'traitement',
+                element: <ImageTraitement/>
+            }
         ],
     },
     {

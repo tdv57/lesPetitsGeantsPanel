@@ -1,4 +1,4 @@
-import { AnnonceClient } from '../cloudflare/AnnonceClient';
+import { AnnonceClient } from '../client/AnnonceClient';
 import {
     mapAnnonceCreateToD1AnnonceInsert,
     mapAnnonceUpdateToD1AnnonceUpdate,

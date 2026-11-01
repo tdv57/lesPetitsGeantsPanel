@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../service/SupabaseService';
 import { setR2Client, clearR2Client } from '../service/R2Service';
 import { clearAnnonceClient, setAnnonceClient } from '../service/AnnonceService';
+import { clearWorkflowClient, setWorkflowClient } from '../service/WorkflowService';
 export function useAuth() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -11,9 +12,11 @@ export function useAuth() {
             if (session) {
                 await setR2Client();
                 setAnnonceClient();
+                setWorkflowClient();
             } else {
                 clearR2Client();
                 clearAnnonceClient();
+                clearWorkflowClient();
             }
             setLoading(false);
         });
