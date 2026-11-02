@@ -54,12 +54,22 @@ export function AnnonceCard({ index, annonce, handleDelete }: AnnonceCardPropsTy
                                 }}
                             />
                         )}
-                        {annonce.mediaType === TypeMediaEnumValue.IMAGE && (
-                            annonce.redirectionLink ? 
-                            <a
-                                href={annonce.redirectionLink ? annonce.redirectionLink : ''}
-                                target="_blank"
-                            >
+                        {annonce.mediaType === TypeMediaEnumValue.IMAGE &&
+                            (annonce.redirectionLink ? (
+                                <a
+                                    href={annonce.redirectionLink ? annonce.redirectionLink : ''}
+                                    target="_blank"
+                                >
+                                    <Image
+                                        src={annonce.url}
+                                        alt={annonce.commentaire}
+                                        maxWidth="100%"
+                                        maxHeight="min(60vh, 500px)"
+                                        objectFit="contain"
+                                        borderRadius="md"
+                                    />
+                                </a>
+                            ) : (
                                 <Image
                                     src={annonce.url}
                                     alt={annonce.commentaire}
@@ -68,18 +78,7 @@ export function AnnonceCard({ index, annonce, handleDelete }: AnnonceCardPropsTy
                                     objectFit="contain"
                                     borderRadius="md"
                                 />
-                            </a>
-                            :
-                            <Image
-                                src={annonce.url}
-                                alt={annonce.commentaire}
-                                maxWidth="100%"
-                                maxHeight="min(60vh, 500px)"
-                                objectFit="contain"
-                                borderRadius="md"
-                            />
-
-                        )}
+                            ))}
                     </Box>
                     <Box
                         flexShrink="0"

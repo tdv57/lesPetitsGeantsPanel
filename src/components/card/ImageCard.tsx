@@ -107,10 +107,7 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 >
                                     {imageSelect.description}
                                 </Heading>
-                                <Heading
-                                    fontWeight="normal"
-                                    fontSize={{ base: 'xs', lg: 'lg' }}
-                                >
+                                <Heading fontWeight="normal" fontSize={{ base: 'xs', lg: 'lg' }}>
                                     {mapAge(imageSelect.age, imageSelect.typeAge)}
                                 </Heading>
                             </Box>
@@ -149,10 +146,7 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 >
                                     {imageSelect.description}
                                 </Heading>
-                                <Heading
-                                    fontWeight="normal"
-                                    fontSize={{ base: 'xs', lg: 'lg' }}
-                                >
+                                <Heading fontWeight="normal" fontSize={{ base: 'xs', lg: 'lg' }}>
                                     {mapAge(imageSelect.age, imageSelect.typeAge)}
                                 </Heading>
                             </Box>
@@ -191,10 +185,7 @@ export default function ImageCard({ imageSelect, handleDelete }: ImageCardPropTy
                                 >
                                     {imageSelect.description}
                                 </Heading>
-                                <Heading
-                                    fontWeight="normal"
-                                    fontSize={{ base: 'xs', lg: 'lg' }}
-                                >
+                                <Heading fontWeight="normal" fontSize={{ base: 'xs', lg: 'lg' }}>
                                     {mapAge(imageSelect.age, imageSelect.typeAge)}
                                 </Heading>
                             </Box>

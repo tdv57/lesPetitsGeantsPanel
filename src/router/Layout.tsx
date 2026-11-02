@@ -5,8 +5,9 @@ import { TraitementImage } from '../components/hero/TraitementImage';
 
 export function Layout() {
     const location = useLocation();
-    const keepAlivePaths =
-        ['/videos-du-moment', '/article-de-la-saison', '/traitement'].includes(location.pathname)
+    const keepAlivePaths = ['/videos-du-moment', '/article-de-la-saison', '/traitement'].includes(
+        location.pathname,
+    );
 
     return (
         <>

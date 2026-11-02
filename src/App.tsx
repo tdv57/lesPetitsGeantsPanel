@@ -21,7 +21,7 @@ function App() {
         <>
             {isAuthenticated ? (
                 <Box>
-                    <JobsEventsListener/>
+                    <JobsEventsListener />
                     <Nav />
                     <main>
                         <Layout />

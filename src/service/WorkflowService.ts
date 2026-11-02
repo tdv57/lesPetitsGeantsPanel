@@ -1,5 +1,5 @@
-import { WorkflowClient } from "../client/WorkflowClient";
-import type { JobAcceptedType, JobImagePayloadOutType } from "../types/WorkflowType";
+import { WorkflowClient } from '../client/WorkflowClient';
+import type { JobAcceptedType, JobImagePayloadOutType } from '../types/WorkflowType';
 
 let workflowClient: WorkflowClient | null = null;
 
@@ -20,7 +20,7 @@ export async function traitement(image: File): Promise<JobAcceptedType | null> {
         console.warn('Client workflow non initialisé');
         return null;
     }
-} 
+}
 
 export async function getTraitementJob(jobId: string): Promise<JobImagePayloadOutType | null> {
     if (workflowClient) {
