@@ -1,5 +1,6 @@
-import { JobEventSchema, type JobEventType } from "../schema/WorkflowSchema";
+import { JobEventSchema } from "../schema/WorkflowSchema";
 import { fetchEventSource } from "@microsoft/fetch-event-source"
+import type { JobEventType } from "../types/WorkflowType";
 
 const STREAM_JOB_URL = "/api/events/jobs";
 

@@ -20,16 +20,7 @@ export const UpdateMarqueFormValidationSchema = z.object({
     isEditeur: z.enum(['true', 'false'], {
         message: 'Il faut indiquer si la marque est un éditeur ou non',
     }),
-    image: z
-        .instanceof(File, { message: 'Une image est requise' })
-        .refine((file) => file.size > 0, { message: 'Le fichier ne peut pas être vide' })
-        .refine((file) => file.size < 5 * 1024 * 1024, {
-            message: 'Le fichier doit faire moins de 5 Mo',
-        })
-        .refine((file) => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type), {
-            message: 'Le fichier doit être au format png, jpeg ou webp',
-        })
-        .optional(),
+    image: imageValidation.optional(),
 });
 
 export type UpdateMarqueFormValidationType = z.infer<typeof NewMarqueFormValidationSchema>;

@@ -5,7 +5,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Images from '../components/hero/Images';
 import { HomeIndex } from './HomeIndex';
 import { Annonce } from '../components/hero/Annonce';
-import { ImageTraitement } from '../components/form/ImageTraitement';
+import { TraitementImage } from '../components/hero/TraitementImage';
 
 export const router = createBrowserRouter([
     {
@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
             },
             { 
                 path: 'traitement',
-                element: <ImageTraitement/>
+                element: null
             }
         ],
     },

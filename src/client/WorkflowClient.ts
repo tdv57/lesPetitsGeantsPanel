@@ -1,4 +1,5 @@
-import { JobAcceptedSchema, JobImagePayloadOutSchema, type JobAcceptedType, type JobImagePayloadOutType } from "../schema/WorkflowSchema";
+import { JobAcceptedSchema, JobImagePayloadOutSchema } from "../schema/WorkflowSchema";
+import type { JobAcceptedType, JobImagePayloadOutType } from "../types/WorkflowType";
 
 export class WorkflowClient {
     private static instance: WorkflowClient | null = null;

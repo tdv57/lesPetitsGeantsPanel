@@ -6,6 +6,7 @@ import { Box } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { preloadFFmpeg } from './service/FFmpegService';
 import { Layout } from './router/Layout';
+import { JobsEventsListener } from './components/listener/JobsEventsListener';
 
 function App() {
     useEffect(() => {
@@ -20,6 +21,7 @@ function App() {
         <>
             {isAuthenticated ? (
                 <Box>
+                    <JobsEventsListener/>
                     <Nav />
                     <main>
                         <Layout />

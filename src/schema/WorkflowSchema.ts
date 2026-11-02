@@ -20,13 +20,9 @@ export const JobEventSchema = z.object({
     status: z.enum(JobStatusEnumValue)
 });
 
-const JobImagePayloadSchema = z.object({
+export const ImagePayloadSchema = z.object({
     data: z.string(), 
     mime_type: z.string()
 })
 
-export const JobImagePayloadOutSchema = JobOutSchema(JobImagePayloadSchema)
-
-export type JobAcceptedType = z.infer<typeof JobAcceptedSchema>
-export type JobEventType = z.infer<typeof JobEventSchema>
-export type JobImagePayloadOutType = z.infer<typeof JobImagePayloadOutSchema>
+export const JobImagePayloadOutSchema = JobOutSchema(ImagePayloadSchema)
