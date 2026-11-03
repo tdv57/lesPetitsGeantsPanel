@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import { JobStatusEnumValue, type JobStatusEnum } from '../../enum/JobStatusEnum';
 import type { ImagePayloadType } from '../../types/WorkflowType';
 import { skipToken } from '@reduxjs/toolkit/query';
+import { GenerateForm } from './GenerateForm';
 
 type ImageTraitementFormPropsType = {
     onSuccess: (image: ImagePayloadType | null) => void;
@@ -26,7 +27,7 @@ export function TraitementImageForm({ onSuccess, onError }: ImageTraitementFormP
 
     const event = useJobsEvents(jobId);
 
-    const isDone = event?.status === (JobStatusEnumValue.COMPLETE || JobStatusEnumValue.FAILED);
+    const isDone = event?.status === JobStatusEnumValue.COMPLETE  ||  event?.status === JobStatusEnumValue.FAILED;
     const isSending = jobId && !event;
     const isRunning = event && !isDone;
     const isLocked = !!(isRunning || isSending);

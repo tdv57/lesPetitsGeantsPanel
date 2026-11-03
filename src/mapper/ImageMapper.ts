@@ -8,6 +8,7 @@ import {
     type RawImageCreate,
     type RawImageSelect,
 } from '../types/ImageType';
+import type { ImagePayloadType } from '../types/WorkflowType';
 import { isGenreEnum, isThemeEnum } from './EnumMapper';
 
 export function mapRawImageSelectToImageSelect(s: RawImageSelect): ImageSelect {
@@ -69,4 +70,14 @@ export function mapImageUpdateToRawImageCreate(
         id_fou: s.idFou,
         id_art: s.idArt,
     };
+}
+
+export async function mapFileToImagePayload(image: File): Promise<ImagePayloadType> {
+  const bytes = new Uint8Array(await image.arrayBuffer());
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return {
+    data: btoa(binary),
+    mime_type: image.type,
+  };
 }

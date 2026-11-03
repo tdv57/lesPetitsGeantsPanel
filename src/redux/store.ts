@@ -5,6 +5,7 @@ import { ArticleDeLaSaisonApi } from './features/article_de_la_saison/ArticleDeL
 import { AnnonceApi } from './features/annonce/AnnonceApi';
 import { jobsReducer } from './slice/JobsSlice';
 import { TraitementApi } from './features/traitement/TraitementApi';
+import { GenerateApi } from './features/generate/GenerateApi';
 
 export const store = configureStore({
     reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
         [ArticleDeLaSaisonApi.reducerPath]: ArticleDeLaSaisonApi.reducer,
         [AnnonceApi.reducerPath]: AnnonceApi.reducer,
         [TraitementApi.reducerPath]: TraitementApi.reducer,
+        [GenerateApi.reducerPath]: GenerateApi.reducer,
         jobs: jobsReducer,
     },
     middleware: (getDefaultMiddleware) =>
@@ -26,7 +28,8 @@ export const store = configureStore({
             .concat(ImageApi.middleware)
             .concat(ArticleDeLaSaisonApi.middleware)
             .concat(AnnonceApi.middleware)
-            .concat(TraitementApi.middleware),
+            .concat(TraitementApi.middleware)
+            .concat(GenerateApi.middleware)
 });
 
 export type RootState = ReturnType<typeof store.getState>;
