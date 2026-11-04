@@ -30,12 +30,12 @@ export default function NumberField<T extends FieldValues>({
                 control={control}
                 render={({ field }) => (
                     <NumberInput.Root
-                        value={String(field.value)}
-                        onValueChange={(details) => field.onChange(details.valueAsNumber)}
+                        value={field.value === null || Number.isNaN(field.value) ? '' : String(field.value)}
+                        onValueChange={(details) => field.onChange(Number.isNaN(details.valueAsNumber) ? null : details.valueAsNumber)}
                         color="black"
                     >
                         <NumberInput.Control />
-                        <NumberInput.Input id={name} name={name} onBlur={field.onBlur} />
+                        <NumberInput.Input name={name} onBlur={field.onBlur} />
                     </NumberInput.Root>
                 )}
             />

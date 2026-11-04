@@ -10,10 +10,9 @@ import { Button, VStack } from '@chakra-ui/react';
 import { TypeMediaEnumValue } from '../../enum/TypeMediaEnum';
 import MediaField from './fields/MediaField';
 import { useEffect } from 'react';
-import { JobStatusEnumValue, type JobStatusEnum } from '../../enum/JobStatusEnum';
+import { type JobStatusEnum } from '../../enum/JobStatusEnum';
 import type { ImagePayloadType } from '../../types/WorkflowType';
 import { skipToken } from '@reduxjs/toolkit/query';
-import { GenerateForm } from './GenerateForm';
 
 type ImageTraitementFormPropsType = {
     onSuccess: (image: ImagePayloadType | null) => void;
@@ -25,12 +24,8 @@ export function TraitementImageForm({ onSuccess, onError }: ImageTraitementFormP
         useCreateTraitementMutation();
     const jobId = jobAcceptedData?.job_id ? jobAcceptedData.job_id : null;
 
-    const event = useJobsEvents(jobId);
+    const { isLocked, isRunning, isSending, isDone } = useJobsEvents(jobId);
 
-    const isDone = event?.status === JobStatusEnumValue.COMPLETE  ||  event?.status === JobStatusEnumValue.FAILED;
-    const isSending = jobId && !event;
-    const isRunning = event && !isDone;
-    const isLocked = !!(isRunning || isSending);
 
     const { data: jobOutData, error: jobOutError } = useGetTraitementJobsQuery(
         isDone && jobId ? jobId : skipToken,

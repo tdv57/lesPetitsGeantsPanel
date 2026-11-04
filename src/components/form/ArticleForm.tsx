@@ -11,7 +11,7 @@ import {
     useGetImageByTypeQuery,
     useUpdateImageMutation,
 } from '../../redux/features/images/ImageApi';
-import { Button, createListCollection, VStack } from '@chakra-ui/react';
+import { Button, createListCollection, VStack, Image } from '@chakra-ui/react';
 import TextAreaField from './fields/TextAreaField';
 import NumberField from './fields/NumberField';
 import { typeAgeCollection } from '../../enum/TypeAgeEnum';
@@ -19,10 +19,15 @@ import SelectField from './fields/SelectField';
 import MediaField from './fields/MediaField';
 import { TypeImageEnumValue } from '../../enum/TypeImageEnum';
 import { useMemo } from 'react';
-import { CUSTOM_BRAND } from '../validation/form/ArticleFormValidationBase';
+import { CUSTOM_BRAND, NewArticleFormValidationBase } from '../validation/form/ArticleFormValidationBase';
 import InputField from './fields/InputField';
 import type { ImageSelect } from '../../types/ImageType';
 import { TypeMediaEnumValue } from '../../enum/TypeMediaEnum';
+import { GenerateAccordion } from '../accordion/GenerateAccordion';
+import z from 'zod';
+import { ErrorMessage } from '../error/ErrorMessage';
+import { COLORS } from '../../theme/Couleur';
+import { useGenerateForm } from '../../hook/useGenerateForm';
 
 type ArticleFormPropsType = {
     typeArticle: Exclude<TypeArticleEnum, 'DEGUISEMENT'>;
@@ -68,9 +73,8 @@ function getDefaultValues(
 export default function ArticleForm({ typeArticle, article, onSuccess }: ArticleFormPropsType) {
     const [addArticle] = useAddImageMutation();
     const [updateArticle] = useUpdateImageMutation();
-
-    const { data: marques } = useGetImageByTypeQuery(TypeImageEnumValue.MARQUE);
-
+    const { data: marques = [] } = useGetImageByTypeQuery(TypeImageEnumValue.MARQUE);
+    
     const marqueCollection = useMemo(
         () =>
             createListCollection({
@@ -85,6 +89,8 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
     const {
         control,
         handleSubmit,
+        getValues,
+        setValue,
         register,
         reset,
         watch,
@@ -95,6 +101,34 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
         ) as Resolver<UpdateArticleFormValidationType>,
         defaultValues: getDefaultValues(typeArticle, article),
     });
+
+    const onResult = (fields: Record<string, unknown>, image: File) => {
+        for (const [key, value] of Object.entries(fields)) {
+            setValue(key as never, value as never, { shouldValidate: true, shouldDirty: true });
+        }
+        setValue('image', image, { shouldValidate: true });
+    }
+    const shape = z.object({
+        ...NewArticleFormValidationBase,         
+        marque: marques.length > 0
+        ? z.enum(marques.map((m) => m.marque) as [string, ...string[]])
+        : NewArticleFormValidationBase.marque}); 
+    const basePrompt = "Pour l'article les valeurs suivantes sont déjà connues: ";
+    const validationSchemaForSafeParse = NewArticleFormValidationSchema
+    const ignored = ['id', 'idArt', 'typeImage', 'image', 'marquePersonnalise'];
+    const { jobOutData, jobErrorMessage, isLocked, onGenerateSubmit: _onGenerateSubmit } = useGenerateForm({
+        shape,
+        basePrompt,
+        validationSchemaForSafeParse, 
+        onResult,
+        getValues,
+        ignored,
+        typeImage: typeArticle
+    })
+
+    function onGenerateSubmit(prompt : string) {
+        _onGenerateSubmit(prompt);
+    }
 
     function onSubmit(data: UpdateArticleFormValidationType) {
         if (article) {
@@ -137,19 +171,22 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
                         control={control}
                         name="idArt"
                         label="Identifiant article"
+                        locked={isLocked}
                     />
                     <TextAreaField
                         error={errors.description}
                         register={register('description')}
                         label="Description"
+                        locked={isLocked}
                     />
-                    <NumberField error={errors.age} control={control} name={'age'} label={'âge'} />
+                    <NumberField error={errors.age} control={control} name={'age'} label={'âge'} locked={isLocked}/>
                     <SelectField
                         error={errors.typeAge}
                         control={control}
                         name={'typeAge'}
                         label={"Type d'âge"}
                         collection={typeAgeCollection}
+                        locked={isLocked}
                     />
                     <SelectField
                         error={errors.marque}
@@ -157,6 +194,7 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
                         name={'marque'}
                         label={"Marque de l'article"}
                         collection={marqueCollection}
+                        locked={isLocked}
                     />
                     {isCustom && (
                         <InputField
@@ -164,6 +202,7 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
                             register={register('marquePersonnalise')}
                             fieldLabel={'Marque personnalisée'}
                             placeholder={' '}
+                            locked={isLocked}
                         />
                     )}
                     <MediaField
@@ -172,8 +211,31 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
                         label="Ajouter une image"
                         name="image"
                         control={control}
+                        locked={isLocked}
                     />
+                    {jobOutData ?                         
+                        <Image
+                            src={`data:${jobOutData.image.mime_type};base64,${jobOutData.image.data}`}
+                            alt="Image traitée"
+                            w="100%"
+                            maxH="480px"
+                            objectFit="contain"
+                            borderRadius="lg"
+                            boxShadow="md"
+                            bg={COLORS.backgroundCard}
+                        /> : 
+                        <></>
+                    }
                     <Button type="submit">{article ? "Modifier l'image" : "Créer l'image"}</Button>
+                    <GenerateAccordion locked={isLocked} onSubmit={onGenerateSubmit} typeImage={typeArticle} />
+                    { jobErrorMessage ? 
+                        <ErrorMessage 
+                            title={"Erreur lors de la génération de donnée"} 
+                            description={jobErrorMessage}
+                            onClose={() => {}}
+                        /> 
+                        :
+                        <></>}
                 </VStack>
             </form>
         </>

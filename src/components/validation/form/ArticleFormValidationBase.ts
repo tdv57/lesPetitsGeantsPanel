@@ -19,7 +19,7 @@ const ArticleFormValidationBase = {
     idArt: z.int({ error: "L'identifiant d'article est obligatoire" }),
 };
 
-const NewArticleFormValidationBase = {
+export const NewArticleFormValidationBase = {
     ...ArticleFormValidationBase,
 };
 

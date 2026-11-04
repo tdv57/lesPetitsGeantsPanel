@@ -4,6 +4,7 @@ import { eventsJobs } from '../../client/SseClient';
 import type { JobEventType } from '../../types/WorkflowType';
 import { jobEventReceived } from '../../redux/slice/JobsSlice';
 import { TraitementApi } from '../../redux/features/traitement/TraitementApi';
+import { GenerateApi } from '../../redux/features/generate/GenerateApi';
 
 export function JobsEventsListener() {
     const dispatch = useAppDispatch();
@@ -13,6 +14,9 @@ export function JobsEventsListener() {
             dispatch(jobEventReceived(jobEvent));
             dispatch(
                 TraitementApi.util.invalidateTags([{ type: 'traitement', id: jobEvent.job_id }]),
+            );
+            dispatch(
+                GenerateApi.util.invalidateTags([{ type: 'generate', id: jobEvent.job_id }]),
             );
         });
     }, [dispatch]);

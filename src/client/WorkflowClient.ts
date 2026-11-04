@@ -68,7 +68,8 @@ export class WorkflowClient {
             type_image: params.typeImage,
             image: params.image ? mapFileToImagePayload(params.image) : null
         }
-        const response = await this.request('/images/generate', {method: 'POST', body});
+        const headers = { 'Content-Type': 'application/json' };
+        const response = await this.request('/images/generate', {method: 'POST', headers, body: JSON.stringify(body)});
         if (!response.ok) {
             console.warn('Generate échoué');
             return null;

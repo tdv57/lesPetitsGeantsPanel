@@ -81,3 +81,8 @@ export async function mapFileToImagePayload(image: File): Promise<ImagePayloadTy
     mime_type: image.type,
   };
 }
+
+export function mapImagePayloadToFile(imagePayload: ImagePayloadType, fileName:string): File {
+    const bytes = Uint8Array.from(atob(imagePayload.data), (c) => c.charCodeAt(0));
+    return new File([bytes], fileName, { type: imagePayload.mime_type }); 
+}
