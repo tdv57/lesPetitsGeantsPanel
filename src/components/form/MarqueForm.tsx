@@ -32,7 +32,7 @@ function getDefaultValues(getDraft: () => Record<string, unknown>, marque?: Imag
         const start = {
             idFou: undefined,
             marque: '',
-            isEditeur: null,
+            isEditeur: undefined,
             image: undefined,
             typeImage: TypeImageEnumValue.MARQUE,
         };
