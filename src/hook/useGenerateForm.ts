@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState, type Ref, type RefObject } from "react";
 import { useJobsEvents } from "./useJobsEvents";
 import { useCreateGenerateMutation, useGetGenerateJobQuery } from "../redux/features/generate/GenerateApi";
 import { skipToken } from "@reduxjs/toolkit/query";
@@ -9,6 +9,7 @@ import { mapImagePayloadToFile } from "../mapper/ImageMapper";
 import type { JobGenerateOutType } from "../types/WorkflowType";
 
 type useGenerateFormPropsType = {
+    keyJobId: string | null;
     getValues: () => Record<string, unknown>; 
     ignored: string[]; 
     validationSchemaForSafeParse: ZodObject; 
@@ -18,17 +19,21 @@ type useGenerateFormPropsType = {
     onResult: (fields: Record<string, unknown>, image: File) => void;
 }
 
-export function useGenerateForm({shape,validationSchemaForSafeParse, onResult, getValues, ignored, basePrompt, typeImage} : useGenerateFormPropsType) {
-    const [ createGenerate, { data: jobAcceptedData, reset: resetGenerate }] = useCreateGenerateMutation();
+const toFillRefMap: Map<string, { current: string[] }> = new Map();
+
+export function useGenerateForm({keyJobId,shape,validationSchemaForSafeParse, onResult, getValues, ignored, basePrompt, typeImage} : useGenerateFormPropsType) {
+    const [ createGenerate, { data: jobAcceptedData, reset: resetGenerate }] = useCreateGenerateMutation({fixedCacheKey: keyJobId ? keyJobId : undefined});
     const jobId = jobAcceptedData ? jobAcceptedData.job_id : null;
     const {isLocked, isDone} = useJobsEvents(jobId);
     const [validationError, setValidationError] = useState<string | null>(null);
-    const toFillRef = useRef<string[]>([]);
+
+    const toFillRef = (keyJobId && toFillRefMap.get(keyJobId)) || { current: [] as string[] };
+    keyJobId && toFillRefMap.set(keyJobId, toFillRef);
+
     const { data: jobOutData, error: jobOutError } = useGetGenerateJobQuery(
         isDone && jobId ? jobId : skipToken,
     );
 
-    
     const queryErrorMessage = jobOutError
         ? 'message' in jobOutError && jobOutError.message
             ? jobOutError.message
@@ -71,5 +76,5 @@ export function useGenerateForm({shape,validationSchemaForSafeParse, onResult, g
         });
     }
 
-    return { jobOutData, jobErrorMessage, isLocked, onGenerateSubmit };
+    return { jobOutData, jobErrorMessage, isLocked, onGenerateSubmit, resetGenerate };
 }

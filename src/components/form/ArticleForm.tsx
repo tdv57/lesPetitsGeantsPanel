@@ -28,6 +28,7 @@ import z from 'zod';
 import { ErrorMessage } from '../error/ErrorMessage';
 import { COLORS } from '../../theme/Couleur';
 import { useGenerateForm } from '../../hook/useGenerateForm';
+import { useFormDraft } from '../../hook/useFormDraft';
 
 type ArticleFormPropsType = {
     typeArticle: Exclude<TypeArticleEnum, 'DEGUISEMENT'>;
@@ -37,10 +38,11 @@ type ArticleFormPropsType = {
 
 function getDefaultValues(
     typeArticle: Exclude<TypeArticleEnum, 'DEGUISEMENT'>,
+    getDraft: () => Record<string, unknown> ,
     article?: ImageSelect,
 ) {
     if (!article) {
-        return {
+        const start = {
             id: undefined,
             typeImage: typeArticle,
             typeAge: undefined,
@@ -50,6 +52,10 @@ function getDefaultValues(
             image: undefined,
             idArt: undefined,
             marquePersonnalise: undefined,
+        };
+        return {
+            ...start,
+            ...getDraft()
         };
     }
 
@@ -74,7 +80,9 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
     const [addArticle] = useAddImageMutation();
     const [updateArticle] = useUpdateImageMutation();
     const { data: marques = [] } = useGetImageByTypeQuery(TypeImageEnumValue.MARQUE);
-    
+    const draftKey = article ? null : `article-${typeArticle}`;
+    const {getDraft, useSaveDraft, reset: resetAll} = useFormDraft<UpdateArticleFormValidationType>(draftKey);
+    const emptyDefaultValues = getDefaultValues(typeArticle, () => ({}), article);
     const marqueCollection = useMemo(
         () =>
             createListCollection({
@@ -99,8 +107,10 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
         resolver: zodResolver(
             article ? UpdateArticleFormValidationSchema : NewArticleFormValidationSchema,
         ) as Resolver<UpdateArticleFormValidationType>,
-        defaultValues: getDefaultValues(typeArticle, article),
+        defaultValues: getDefaultValues(typeArticle, getDraft, article ),
     });
+
+    useSaveDraft(watch);
 
     const onResult = (fields: Record<string, unknown>, image: File) => {
         for (const [key, value] of Object.entries(fields)) {
@@ -108,6 +118,11 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
         }
         setValue('image', image, { shouldValidate: true });
     }
+
+    const handleReset = () => {
+        resetAll(() => {reset(emptyDefaultValues), resetGenerate()});
+    }
+
     const shape = z.object({
         ...NewArticleFormValidationBase,         
         marque: marques.length > 0
@@ -116,7 +131,8 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
     const basePrompt = "Pour l'article les valeurs suivantes sont déjà connues: ";
     const validationSchemaForSafeParse = NewArticleFormValidationSchema
     const ignored = ['id', 'idArt', 'typeImage', 'image', 'marquePersonnalise'];
-    const { jobOutData, jobErrorMessage, isLocked, onGenerateSubmit: _onGenerateSubmit } = useGenerateForm({
+    const { jobOutData, jobErrorMessage, isLocked, onGenerateSubmit: _onGenerateSubmit, resetGenerate } = useGenerateForm({
+        keyJobId: draftKey,
         shape,
         basePrompt,
         validationSchemaForSafeParse, 
@@ -154,7 +170,7 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
                 isEditeur: null,
                 idFou: null,
             });
-            reset();
+            handleReset();
         }
         onSuccess?.();
     }
@@ -226,8 +242,11 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
                         /> : 
                         <></>
                     }
-                    <Button type="submit">{article ? "Modifier l'image" : "Créer l'image"}</Button>
-                    <GenerateAccordion locked={isLocked} onSubmit={onGenerateSubmit} typeImage={typeArticle} />
+                    <Button disabled={isLocked} type="submit">{article ? "Modifier l'image" : "Créer l'image"}</Button>
+                    <Button type="button" variant="outline" disabled={isLocked} onClick={() => handleReset()}>
+                        Réinitialiser
+                    </Button>
+                    <GenerateAccordion draftKey={draftKey} locked={isLocked} onSubmit={onGenerateSubmit} typeImage={typeArticle} />
                     { jobErrorMessage ? 
                         <ErrorMessage 
                             title={"Erreur lors de la génération de donnée"} 

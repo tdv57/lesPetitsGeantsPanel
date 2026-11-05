@@ -3,6 +3,7 @@ import { GenerateForm } from "../form/GenerateForm";
 import type { TypeImageEnum } from "../../enum/TypeImageEnum";
 
 type GenerateAccordionPropsType = {
+    draftKey: string | null;
     onSubmit: (prompt: string) => void;
     typeImage: TypeImageEnum;
     locked?: boolean

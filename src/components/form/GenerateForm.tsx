@@ -6,26 +6,31 @@ import InputField from "./fields/InputField";
 import { ArrayField } from "./fields/ArrayField";
 import TextAreaField from "./fields/TextAreaField";
 import { type TypeImageEnum } from "../../enum/TypeImageEnum";
+import { useFormDraft } from "../../hook/useFormDraft";
 
 
 type GenerateFormPropsType = {
+    draftKey: string | null ;
     onSubmit: (prompt: string) => void;
     typeImage: TypeImageEnum; 
     locked?: boolean
 }
 
-export function GenerateForm({onSubmit: createGenerate, locked, typeImage}: GenerateFormPropsType) {
-
+export function GenerateForm({draftKey, onSubmit: createGenerate, locked, typeImage}: GenerateFormPropsType) {
+    const { getDraft, useSaveDraft } = useFormDraft<GenerateFormValidationType>(draftKey);
     const {
         control,
         handleSubmit,
         register,
+        watch,
         formState: { errors },
     } = useForm<GenerateFormValidationType>({
         resolver: zodResolver(
             GenerateFormValidationSchema
         ),
+        defaultValues: { multicodes: [], ...getDraft() }
     });
+    useSaveDraft(watch);
 
     const fieldArray = useFieldArray({
         control,
