@@ -29,7 +29,7 @@ export const store = configureStore({
             .concat(ArticleDeLaSaisonApi.middleware)
             .concat(AnnonceApi.middleware)
             .concat(TraitementApi.middleware)
-            .concat(GenerateApi.middleware)
+            .concat(GenerateApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

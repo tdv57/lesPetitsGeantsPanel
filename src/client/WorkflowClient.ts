@@ -1,7 +1,15 @@
 import { type TypeImageEnum } from '../enum/TypeImageEnum';
 import { mapFileToImagePayload } from '../mapper/ImageMapper';
-import { JobAcceptedSchema, JobGenerateOutSchema, JobImagePayloadOutSchema } from '../schema/WorkflowSchema';
-import type { JobAcceptedType, JobGenerateOutType, JobImagePayloadOutType } from '../types/WorkflowType';
+import {
+    JobAcceptedSchema,
+    JobGenerateOutSchema,
+    JobImagePayloadOutSchema,
+} from '../schema/WorkflowSchema';
+import type {
+    JobAcceptedType,
+    JobGenerateOutType,
+    JobImagePayloadOutType,
+} from '../types/WorkflowType';
 
 export class WorkflowClient {
     private static instance: WorkflowClient | null = null;
@@ -57,19 +65,23 @@ export class WorkflowClient {
     }
 
     public async generate(params: {
-        prompt: string,
-        schema: object,
-        typeImage: TypeImageEnum,
-        image?: File
+        prompt: string;
+        schema: object;
+        typeImage: TypeImageEnum;
+        image?: File;
     }): Promise<JobAcceptedType | null> {
         const body = {
-            prompt: params.prompt, 
+            prompt: params.prompt,
             json_schema: JSON.stringify(params.schema),
             type_image: params.typeImage,
-            image: params.image ? mapFileToImagePayload(params.image) : null
-        }
+            image: params.image ? mapFileToImagePayload(params.image) : null,
+        };
         const headers = { 'Content-Type': 'application/json' };
-        const response = await this.request('/images/generate', {method: 'POST', headers, body: JSON.stringify(body)});
+        const response = await this.request('/images/generate', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(body),
+        });
         if (!response.ok) {
             console.warn('Generate échoué');
             return null;

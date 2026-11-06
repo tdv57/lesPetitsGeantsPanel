@@ -17,12 +17,11 @@ export default function InputNumericField({
     placeholder,
     locked = false,
 }: InputFieldPropsType) {
-
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         e.target.value = e.target.value.replace(/\D/g, '');
         register.onChange(e);
     };
-    
+
     return (
         <Field.Root width="50%" invalid={!!error} mt={3} readOnly={locked}>
             <Field.Label>{fieldLabel}</Field.Label>

@@ -67,6 +67,7 @@ export default function MediaField<T extends FieldValues>({
                             const file = details.acceptedFiles[0];
                             field.onChange(file);
                         }}
+                        disabled={locked}
                     >
                         <FileUpload.HiddenInput />
                         <FileUpload.Dropzone

@@ -7,8 +7,8 @@ type useJobsEventsReturnType = {
     isSending: boolean;
     isRunning: boolean;
     isDone: boolean;
-    isLocked: boolean
-}
+    isLocked: boolean;
+};
 export function useJobsEvents(jobId: string | null): useJobsEventsReturnType {
     const event = useAppSelector((s) => (jobId ? (s.jobs.events[jobId] ?? null) : null));
 
@@ -19,5 +19,5 @@ export function useJobsEvents(jobId: string | null): useJobsEventsReturnType {
     const isRunning = !!event && !isDone;
     const isLocked = isSending || isRunning;
 
-    return { jobEvent:event, isSending, isRunning, isDone, isLocked };
+    return { jobEvent: event, isSending, isRunning, isDone, isLocked };
 }

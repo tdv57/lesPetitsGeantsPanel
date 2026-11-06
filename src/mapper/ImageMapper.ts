@@ -73,16 +73,16 @@ export function mapImageUpdateToRawImageCreate(
 }
 
 export async function mapFileToImagePayload(image: File): Promise<ImagePayloadType> {
-  const bytes = new Uint8Array(await image.arrayBuffer());
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return {
-    data: btoa(binary),
-    mime_type: image.type,
-  };
+    const bytes = new Uint8Array(await image.arrayBuffer());
+    let binary = '';
+    for (const byte of bytes) binary += String.fromCharCode(byte);
+    return {
+        data: btoa(binary),
+        mime_type: image.type,
+    };
 }
 
-export function mapImagePayloadToFile(imagePayload: ImagePayloadType, fileName:string): File {
+export function mapImagePayloadToFile(imagePayload: ImagePayloadType, fileName: string): File {
     const bytes = Uint8Array.from(atob(imagePayload.data), (c) => c.charCodeAt(0));
-    return new File([bytes], fileName, { type: imagePayload.mime_type }); 
+    return new File([bytes], fileName, { type: imagePayload.mime_type });
 }

@@ -19,7 +19,10 @@ import SelectField from './fields/SelectField';
 import MediaField from './fields/MediaField';
 import { TypeImageEnumValue } from '../../enum/TypeImageEnum';
 import { useMemo } from 'react';
-import { CUSTOM_BRAND, NewArticleFormValidationBase } from '../validation/form/ArticleFormValidationBase';
+import {
+    CUSTOM_BRAND,
+    NewArticleFormValidationBase,
+} from '../validation/form/ArticleFormValidationBase';
 import InputField from './fields/InputField';
 import type { ImageSelect } from '../../types/ImageType';
 import { TypeMediaEnumValue } from '../../enum/TypeMediaEnum';
@@ -38,24 +41,25 @@ type ArticleFormPropsType = {
 
 function getDefaultValues(
     typeArticle: Exclude<TypeArticleEnum, 'DEGUISEMENT'>,
-    getDraft: () => Record<string, unknown> ,
+    getDraft: () => Record<string, unknown>,
     article?: ImageSelect,
 ) {
     if (!article) {
         const start = {
             id: undefined,
             typeImage: typeArticle,
-            typeAge: undefined,
-            age: undefined,
+            typeAge: null as unknown as undefined,
+
+            age: null as unknown as undefined,
             description: '',
-            marque: undefined,
-            image: undefined,
-            idArt: undefined,
-            marquePersonnalise: undefined,
+            marque: null as unknown as undefined,
+            image: null as unknown as undefined,
+            idArt: null as unknown as undefined,
+            marquePersonnalise: null as unknown as undefined,
         };
         return {
             ...start,
-            ...getDraft()
+            ...getDraft(),
         };
     }
 
@@ -63,15 +67,21 @@ function getDefaultValues(
 
     return {
         id: article.id,
-        idArt: article.idArt ? article.idArt : undefined,
+        idArt: article.idArt ? article.idArt : (null as unknown as undefined),
         description: article.description ?? '',
-        age: article.age ? parseInt(article.age) : undefined,
-        typeAge: article.typeAge,
+        age: article.age ? parseInt(article.age) : (null as unknown as undefined),
+        typeAge: article.typeAge ? article.typeAge : (null as unknown as undefined),
         genre: undefined,
         theme: undefined,
-        marque: isCustomBrand ? CUSTOM_BRAND : article.marque,
-        marquePersonnalise: isCustomBrand ? article.marque?.slice(CUSTOM_BRAND.length) : undefined,
-        image: undefined,
+        marque: isCustomBrand
+            ? CUSTOM_BRAND
+            : article.marque
+              ? article.marque
+              : (null as unknown as undefined),
+        marquePersonnalise: isCustomBrand
+            ? article.marque?.slice(CUSTOM_BRAND.length)
+            : (null as unknown as undefined),
+        image: null as unknown as undefined,
         typeImage: typeArticle,
     };
 }
@@ -81,7 +91,11 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
     const [updateArticle] = useUpdateImageMutation();
     const { data: marques = [] } = useGetImageByTypeQuery(TypeImageEnumValue.MARQUE);
     const draftKey = article ? null : `article-${typeArticle}`;
-    const {getDraft, useSaveDraft, reset: resetAll} = useFormDraft<UpdateArticleFormValidationType>(draftKey);
+    const {
+        getDraft,
+        useSaveDraft,
+        reset: resetAll,
+    } = useFormDraft<UpdateArticleFormValidationType>(draftKey);
     const emptyDefaultValues = getDefaultValues(typeArticle, () => ({}), article);
     const marqueCollection = useMemo(
         () =>
@@ -107,7 +121,7 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
         resolver: zodResolver(
             article ? UpdateArticleFormValidationSchema : NewArticleFormValidationSchema,
         ) as Resolver<UpdateArticleFormValidationType>,
-        defaultValues: getDefaultValues(typeArticle, getDraft, article ),
+        defaultValues: getDefaultValues(typeArticle, getDraft, article),
     });
 
     useSaveDraft(watch);
@@ -117,32 +131,43 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
             setValue(key as never, value as never, { shouldValidate: true, shouldDirty: true });
         }
         setValue('image', image, { shouldValidate: true });
-    }
+    };
 
     const handleReset = () => {
-        resetAll(() => {reset(emptyDefaultValues), resetGenerate()});
-    }
+        resetAll(() => {
+            reset(emptyDefaultValues);
+            resetGenerate();
+        });
+    };
 
     const shape = z.object({
-        ...NewArticleFormValidationBase,         
-        marque: marques.length > 0
-        ? z.enum(marques.map((m) => m.marque) as [string, ...string[]])
-        : NewArticleFormValidationBase.marque}); 
+        ...NewArticleFormValidationBase,
+        marque:
+            marques.length > 0
+                ? z.enum(marques.map((m) => m.marque) as [string, ...string[]])
+                : NewArticleFormValidationBase.marque,
+    });
     const basePrompt = "Pour l'article les valeurs suivantes sont déjà connues: ";
-    const validationSchemaForSafeParse = NewArticleFormValidationSchema
+    const validationSchemaForSafeParse = NewArticleFormValidationSchema;
     const ignored = ['id', 'idArt', 'typeImage', 'image', 'marquePersonnalise'];
-    const { jobOutData, jobErrorMessage, isLocked, onGenerateSubmit: _onGenerateSubmit, resetGenerate } = useGenerateForm({
+    const {
+        jobOutData,
+        jobErrorMessage,
+        isLocked,
+        onGenerateSubmit: _onGenerateSubmit,
+        resetGenerate,
+    } = useGenerateForm({
         keyJobId: draftKey,
         shape,
         basePrompt,
-        validationSchemaForSafeParse, 
+        validationSchemaForSafeParse,
         onResult,
         getValues,
         ignored,
-        typeImage: typeArticle
-    })
+        typeImage: typeArticle,
+    });
 
-    function onGenerateSubmit(prompt : string) {
+    function onGenerateSubmit(prompt: string) {
         _onGenerateSubmit(prompt);
     }
 
@@ -195,7 +220,13 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
                         label="Description"
                         locked={isLocked}
                     />
-                    <NumberField error={errors.age} control={control} name={'age'} label={'âge'} locked={isLocked}/>
+                    <NumberField
+                        error={errors.age}
+                        control={control}
+                        name={'age'}
+                        label={'âge'}
+                        locked={isLocked}
+                    />
                     <SelectField
                         error={errors.typeAge}
                         control={control}
@@ -229,7 +260,7 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
                         control={control}
                         locked={isLocked}
                     />
-                    {jobOutData ?                         
+                    {jobOutData ? (
                         <Image
                             src={`data:${jobOutData.image.mime_type};base64,${jobOutData.image.data}`}
                             alt="Image traitée"
@@ -239,22 +270,36 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
                             borderRadius="lg"
                             boxShadow="md"
                             bg={COLORS.backgroundCard}
-                        /> : 
+                        />
+                    ) : (
                         <></>
-                    }
-                    <Button disabled={isLocked} type="submit">{article ? "Modifier l'image" : "Créer l'image"}</Button>
-                    <Button type="button" variant="outline" disabled={isLocked} onClick={() => handleReset()}>
+                    )}
+                    <Button disabled={isLocked} type="submit">
+                        {article ? "Modifier l'image" : "Créer l'image"}
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        disabled={isLocked}
+                        onClick={() => handleReset()}
+                    >
                         Réinitialiser
                     </Button>
-                    <GenerateAccordion draftKey={draftKey} locked={isLocked} onSubmit={onGenerateSubmit} typeImage={typeArticle} />
-                    { jobErrorMessage ? 
-                        <ErrorMessage 
-                            title={"Erreur lors de la génération de donnée"} 
+                    <GenerateAccordion
+                        draftKey={`IA-${draftKey}`}
+                        locked={isLocked}
+                        onSubmit={onGenerateSubmit}
+                        typeImage={typeArticle}
+                    />
+                    {jobErrorMessage ? (
+                        <ErrorMessage
+                            title={'Erreur lors de la génération de donnée'}
                             description={jobErrorMessage}
                             onClose={() => {}}
-                        /> 
-                        :
-                        <></>}
+                        />
+                    ) : (
+                        <></>
+                    )}
                 </VStack>
             </form>
         </>

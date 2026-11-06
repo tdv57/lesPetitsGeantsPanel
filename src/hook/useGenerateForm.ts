@@ -1,34 +1,47 @@
-import { useEffect, useEffectEvent, useRef, useState, type Ref, type RefObject } from "react";
-import { useJobsEvents } from "./useJobsEvents";
-import { useCreateGenerateMutation, useGetGenerateJobQuery } from "../redux/features/generate/GenerateApi";
-import { skipToken } from "@reduxjs/toolkit/query";
-import type { ZodObject } from "zod";
-import { buildGenerate } from "../service/WorkflowService";
-import type { TypeImageEnum } from "../enum/TypeImageEnum";
-import { mapImagePayloadToFile } from "../mapper/ImageMapper";
-import type { JobGenerateOutType } from "../types/WorkflowType";
+import { useEffect, useEffectEvent, useState } from 'react';
+import { useJobsEvents } from './useJobsEvents';
+import {
+    useCreateGenerateMutation,
+    useGetGenerateJobQuery,
+} from '../redux/features/generate/GenerateApi';
+import { skipToken } from '@reduxjs/toolkit/query';
+import type { ZodObject } from 'zod';
+import { buildGenerate } from '../service/WorkflowService';
+import type { TypeImageEnum } from '../enum/TypeImageEnum';
+import { mapImagePayloadToFile } from '../mapper/ImageMapper';
+import type { JobGenerateOutType } from '../types/WorkflowType';
 
 type useGenerateFormPropsType = {
     keyJobId: string | null;
-    getValues: () => Record<string, unknown>; 
-    ignored: string[]; 
-    validationSchemaForSafeParse: ZodObject; 
-    shape: ZodObject; 
+    getValues: () => Record<string, unknown>;
+    ignored: string[];
+    validationSchemaForSafeParse: ZodObject;
+    shape: ZodObject;
     basePrompt: string;
     typeImage: TypeImageEnum;
     onResult: (fields: Record<string, unknown>, image: File) => void;
-}
+};
 
 const toFillRefMap: Map<string, { current: string[] }> = new Map();
 
-export function useGenerateForm({keyJobId,shape,validationSchemaForSafeParse, onResult, getValues, ignored, basePrompt, typeImage} : useGenerateFormPropsType) {
-    const [ createGenerate, { data: jobAcceptedData, reset: resetGenerate }] = useCreateGenerateMutation({fixedCacheKey: keyJobId ? keyJobId : undefined});
+export function useGenerateForm({
+    keyJobId,
+    shape,
+    validationSchemaForSafeParse,
+    onResult,
+    getValues,
+    ignored,
+    basePrompt,
+    typeImage,
+}: useGenerateFormPropsType) {
+    const [createGenerate, { data: jobAcceptedData, reset: resetGenerate }] =
+        useCreateGenerateMutation({ fixedCacheKey: keyJobId ? keyJobId : undefined });
     const jobId = jobAcceptedData ? jobAcceptedData.job_id : null;
-    const {isLocked, isDone} = useJobsEvents(jobId);
+    const { isLocked, isDone } = useJobsEvents(jobId);
     const [validationError, setValidationError] = useState<string | null>(null);
 
     const toFillRef = (keyJobId && toFillRefMap.get(keyJobId)) || { current: [] as string[] };
-    keyJobId && toFillRefMap.set(keyJobId, toFillRef);
+    if (keyJobId) toFillRefMap.set(keyJobId, toFillRef);
 
     const { data: jobOutData, error: jobOutError } = useGetGenerateJobQuery(
         isDone && jobId ? jobId : skipToken,
@@ -59,9 +72,15 @@ export function useGenerateForm({keyJobId,shape,validationSchemaForSafeParse, on
         if (jobOutData) applyResult(jobOutData);
     }, [jobOutData]);
 
-    function onGenerateSubmit(prompt : string) {
+    function onGenerateSubmit(prompt: string) {
         const values = getValues();
-        const generatePreparation = buildGenerate(values, ignored, validationSchemaForSafeParse, shape, basePrompt);
+        const generatePreparation = buildGenerate(
+            values,
+            ignored,
+            validationSchemaForSafeParse,
+            shape,
+            basePrompt,
+        );
         if (!generatePreparation.image && generatePreparation.toFill.length === 0) {
             return;
         }
@@ -70,9 +89,9 @@ export function useGenerateForm({keyJobId,shape,validationSchemaForSafeParse, on
         toFillRef.current = generatePreparation.toFill;
         createGenerate({
             prompt: prompt + generatePreparation.prompt,
-            schema: generatePreparation.schema, 
+            schema: generatePreparation.schema,
             typeImage,
-            image: generatePreparation.image
+            image: generatePreparation.image,
         });
     }
 

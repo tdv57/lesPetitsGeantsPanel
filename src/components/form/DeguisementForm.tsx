@@ -20,7 +20,10 @@ import TextAreaField from './fields/TextAreaField';
 import NumberField from './fields/NumberField';
 import SelectField from './fields/SelectField';
 import InputField from './fields/InputField';
-import { CUSTOM_BRAND, NewArticleFormValidationBase } from '../validation/form/ArticleFormValidationBase';
+import {
+    CUSTOM_BRAND,
+    NewArticleFormValidationBase,
+} from '../validation/form/ArticleFormValidationBase';
 import { useMemo } from 'react';
 import MediaField from './fields/MediaField';
 import type { ImageSelect } from '../../types/ImageType';
@@ -45,40 +48,44 @@ const genreCollection = createListCollection({
     items: [...Object.values(GenreEnumValue).map((m) => ({ label: m, value: m }))],
 });
 
-function getDefaultValues( getDraft: () => Record<string, unknown> ,deguisement?: ImageSelect) {
+function getDefaultValues(getDraft: () => Record<string, unknown>, deguisement?: ImageSelect) {
     if (!deguisement) {
         const start = {
-            idArt: undefined,
+            idArt: null as unknown as undefined,
             description: '',
-            age: undefined,
-            typeAge: undefined,
-            genre: undefined,
-            theme: undefined,
-            marque: undefined,
-            marquePersonnalise: undefined,
-            image: undefined,
+            age: null as unknown as undefined,
+            typeAge: null as unknown as undefined,
+            genre: null as unknown as undefined,
+            theme: null as unknown as undefined,
+            marque: null as unknown as undefined,
+            marquePersonnalise: null as unknown as undefined,
+            image: null as unknown as undefined,
             typeImage: TypeImageEnumValue.DEGUISEMENT,
         };
         return {
             ...start,
-            ...getDraft()
+            ...getDraft(),
         };
     }
 
     const isCustomBrand = deguisement.marque?.startsWith(CUSTOM_BRAND);
 
     return {
-        idArt: deguisement.idArt ? deguisement.idArt : undefined,
+        idArt: deguisement.idArt ? deguisement.idArt : (null as unknown as undefined),
         description: deguisement.description ?? '',
-        age: deguisement.age ? parseInt(deguisement.age) : undefined,
-        typeAge: deguisement.typeAge,
-        genre: deguisement.genre,
-        theme: deguisement.theme,
-        marque: isCustomBrand ? CUSTOM_BRAND : deguisement.marque,
+        age: deguisement.age ? parseInt(deguisement.age) : (null as unknown as undefined),
+        typeAge: deguisement.typeAge ? deguisement.typeAge : (null as unknown as undefined),
+        genre: deguisement.genre ? deguisement.genre : (null as unknown as undefined),
+        theme: deguisement.theme ? deguisement.theme : (null as unknown as undefined),
+        marque: isCustomBrand
+            ? CUSTOM_BRAND
+            : deguisement.marque
+              ? deguisement.marque
+              : (null as unknown as undefined),
         marquePersonnalise: isCustomBrand
             ? deguisement.marque?.slice(CUSTOM_BRAND.length)
-            : undefined,
-        image: undefined,
+            : (null as unknown as undefined),
+        image: null as unknown as undefined,
         typeImage: TypeImageEnumValue.DEGUISEMENT,
     };
 }
@@ -87,7 +94,11 @@ export function DeguisementForm({ deguisement, onSuccess }: DeguisementFormProps
     const [addDeguisement] = useAddImageMutation();
     const [updateDeguisement] = useUpdateImageMutation();
     const draftKey = deguisement ? null : `deguisement-${TypeImageEnumValue.DEGUISEMENT}`;
-    const {getDraft, useSaveDraft, reset: resetAll} = useFormDraft<UpdateDeguisementFormValidationType>(draftKey);
+    const {
+        getDraft,
+        useSaveDraft,
+        reset: resetAll,
+    } = useFormDraft<UpdateDeguisementFormValidationType>(draftKey);
     const emptyDefaultValues = getDefaultValues(() => ({}), deguisement);
     const { data: marques = [] } = useGetImageByTypeQuery(TypeImageEnumValue.MARQUE);
     const marqueCollection = useMemo(
@@ -124,38 +135,48 @@ export function DeguisementForm({ deguisement, onSuccess }: DeguisementFormProps
     useSaveDraft(watch);
 
     const shape = z.object({
-        ...NewArticleFormValidationBase, 
+        ...NewArticleFormValidationBase,
         genre: z.enum(GenreEnumValue, { error: 'Un déguisement doit avoir un genre' }),
-        theme: z.enum(ThemeEnumValue, { error: 'Un déguisement doit avoir un thème' }),        
-        marque: marques.length > 0
-        ? z.enum(marques.map((m) => m.marque) as [string, ...string[]])
-        : NewArticleFormValidationBase.marque},
-    ); 
+        theme: z.enum(ThemeEnumValue, { error: 'Un déguisement doit avoir un thème' }),
+        marque:
+            marques.length > 0
+                ? z.enum(marques.map((m) => m.marque) as [string, ...string[]])
+                : NewArticleFormValidationBase.marque,
+    });
     const onResult = (fields: Record<string, unknown>, image: File) => {
         for (const [key, value] of Object.entries(fields)) {
             setValue(key as never, value as never, { shouldValidate: true, shouldDirty: true });
         }
         setValue('image', image, { shouldValidate: true });
-    }
+    };
     const basePrompt = "Pour l'article les valeurs suivantes sont déjà connues: ";
-    const validationSchemaForSafeParse = NewDeguisementFormValidationSchema
+    const validationSchemaForSafeParse = NewDeguisementFormValidationSchema;
     const ignored = ['id', 'idArt', 'typeImage', 'image', 'marquePersonnalise'];
-    const { jobOutData, jobErrorMessage, isLocked, resetGenerate, onGenerateSubmit: _onGenerateSubmit } = useGenerateForm({
+    const {
+        jobOutData,
+        jobErrorMessage,
+        isLocked,
+        resetGenerate,
+        onGenerateSubmit: _onGenerateSubmit,
+    } = useGenerateForm({
         keyJobId: draftKey,
         shape,
         basePrompt,
-        validationSchemaForSafeParse, 
+        validationSchemaForSafeParse,
         onResult,
         getValues,
         ignored,
-        typeImage: TypeImageEnumValue.DEGUISEMENT
-    })
+        typeImage: TypeImageEnumValue.DEGUISEMENT,
+    });
 
     const handleReset = () => {
-        resetAll(() => {reset(emptyDefaultValues); resetGenerate();});
-    }
+        resetAll(() => {
+            reset(emptyDefaultValues);
+            resetGenerate();
+        });
+    };
 
-    function onGenerateSubmit(prompt : string) {
+    function onGenerateSubmit(prompt: string) {
         _onGenerateSubmit(prompt);
     }
 
@@ -187,7 +208,6 @@ export function DeguisementForm({ deguisement, onSuccess }: DeguisementFormProps
         }
         onSuccess?.();
     }
-
 
     const marqueSelected = watch('marque');
     const isCustom = marqueSelected === CUSTOM_BRAND;
@@ -225,7 +245,13 @@ export function DeguisementForm({ deguisement, onSuccess }: DeguisementFormProps
                         collection={themeCollection}
                         locked={isLocked}
                     />
-                    <NumberField error={errors.age} control={control} name={'age'} label={'âge'}  locked={isLocked} />
+                    <NumberField
+                        error={errors.age}
+                        control={control}
+                        name={'age'}
+                        label={'âge'}
+                        locked={isLocked}
+                    />
                     <SelectField
                         error={errors.typeAge}
                         control={control}
@@ -259,7 +285,7 @@ export function DeguisementForm({ deguisement, onSuccess }: DeguisementFormProps
                         control={control}
                         locked={isLocked}
                     />
-                    {jobOutData ?                         
+                    {jobOutData ? (
                         <Image
                             src={`data:${jobOutData.image.mime_type};base64,${jobOutData.image.data}`}
                             alt="Image traitée"
@@ -269,22 +295,36 @@ export function DeguisementForm({ deguisement, onSuccess }: DeguisementFormProps
                             borderRadius="lg"
                             boxShadow="md"
                             bg={COLORS.backgroundCard}
-                        /> : 
+                        />
+                    ) : (
                         <></>
-                    }
-                    <Button disabled={isLocked} type="submit" >{deguisement ? "Modifier l'image" : "Créer l'image"}</Button>
-                    <Button type="button" variant="outline" disabled={isLocked} onClick={() => handleReset()}>
+                    )}
+                    <Button disabled={isLocked} type="submit">
+                        {deguisement ? "Modifier l'image" : "Créer l'image"}
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        disabled={isLocked}
+                        onClick={() => handleReset()}
+                    >
                         Réinitialiser
                     </Button>
-                    <GenerateAccordion draftKey={draftKey} locked={isLocked} onSubmit={onGenerateSubmit} typeImage={TypeImageEnumValue.DEGUISEMENT} />
-                    { jobErrorMessage ? 
-                        <ErrorMessage 
-                            title={"Erreur lors de la génération de donnée"} 
+                    <GenerateAccordion
+                        draftKey={`IA-${draftKey}`}
+                        locked={isLocked}
+                        onSubmit={onGenerateSubmit}
+                        typeImage={TypeImageEnumValue.DEGUISEMENT}
+                    />
+                    {jobErrorMessage ? (
+                        <ErrorMessage
+                            title={'Erreur lors de la génération de donnée'}
                             description={jobErrorMessage}
                             onClose={() => {}}
-                        /> 
-                        :
-                        <></>}
+                        />
+                    ) : (
+                        <></>
+                    )}
                 </VStack>
             </form>
         </>

@@ -15,9 +15,7 @@ export function JobsEventsListener() {
             dispatch(
                 TraitementApi.util.invalidateTags([{ type: 'traitement', id: jobEvent.job_id }]),
             );
-            dispatch(
-                GenerateApi.util.invalidateTags([{ type: 'generate', id: jobEvent.job_id }]),
-            );
+            dispatch(GenerateApi.util.invalidateTags([{ type: 'generate', id: jobEvent.job_id }]));
         });
     }, [dispatch]);
     return <></>;

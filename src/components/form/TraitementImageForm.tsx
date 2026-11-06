@@ -26,7 +26,6 @@ export function TraitementImageForm({ onSuccess, onError }: ImageTraitementFormP
 
     const { isLocked, isRunning, isSending, isDone } = useJobsEvents(jobId);
 
-
     const { data: jobOutData, error: jobOutError } = useGetTraitementJobsQuery(
         isDone && jobId ? jobId : skipToken,
     );

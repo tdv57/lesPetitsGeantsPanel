@@ -30,10 +30,10 @@ type MarqueFormPropsType = {
 function getDefaultValues(getDraft: () => Record<string, unknown>, marque?: ImageSelect) {
     if (!marque) {
         const start = {
-            idFou: undefined,
+            idFou: null as unknown as undefined,
             marque: '',
-            isEditeur: undefined,
-            image: undefined,
+            isEditeur: null as unknown as undefined,
+            image: null as unknown as undefined,
             typeImage: TypeImageEnumValue.MARQUE,
         };
         return {
@@ -44,13 +44,13 @@ function getDefaultValues(getDraft: () => Record<string, unknown>, marque?: Imag
 
     return {
         id: marque.id,
-        idFou: marque.idFou ? marque.idFou : undefined,
+        idFou: marque.idFou ? marque.idFou : (null as unknown as undefined),
         marque: marque.marque,
         isEditeur:
             marque.isEditeur === null || marque.isEditeur === undefined
-                ? undefined
+                ? (null as unknown as undefined)
                 : (String(marque.isEditeur) as 'true' | 'false'),
-        image: undefined,
+        image: null as unknown as undefined,
         typeImage: TypeImageEnumValue.MARQUE,
     };
 }
@@ -59,9 +59,12 @@ export function MarqueForm({ onSuccess, marque }: MarqueFormPropsType) {
     const [addMarque] = useAddImageMutation();
     const [updateMarque] = useUpdateImageMutation();
     const draftKey = marque ? null : `marque-${TypeImageEnumValue.MARQUE}`;
-    const {getDraft, useSaveDraft, reset: resetAll} = useFormDraft<UpdateMarqueFormValidationType>(draftKey);
+    const {
+        getDraft,
+        useSaveDraft,
+        reset: resetAll,
+    } = useFormDraft<UpdateMarqueFormValidationType>(draftKey);
     const emptyDefaultValues = getDefaultValues(() => ({}), marque);
-    console.log('render MarqueForm')
     const {
         control,
         handleSubmit,
@@ -80,36 +83,42 @@ export function MarqueForm({ onSuccess, marque }: MarqueFormPropsType) {
     useSaveDraft(watch);
 
     const shape = z.object({
-        ...MarqueFormValidationBase, 
-    }); 
+        ...MarqueFormValidationBase,
+    });
     const onResult = (fields: Record<string, unknown>, image: File) => {
         for (const [key, value] of Object.entries(fields)) {
             setValue(key as never, value as never, { shouldValidate: true, shouldDirty: true });
         }
         setValue('image', image, { shouldValidate: true });
-    }
-    const basePrompt = "Pour la marque les valeurs suivantes sont déjà connues: ";
-    const validationSchemaForSafeParse = NewMarqueFormValidationSchema
+    };
+    const basePrompt = 'Pour la marque les valeurs suivantes sont déjà connues: ';
+    const validationSchemaForSafeParse = NewMarqueFormValidationSchema;
     const ignored = ['id', 'idFou', 'typeImage', 'image'];
-    const { jobOutData, jobErrorMessage, isLocked, onGenerateSubmit: _onGenerateSubmit, resetGenerate } = useGenerateForm({
+    const {
+        jobOutData,
+        jobErrorMessage,
+        isLocked,
+        onGenerateSubmit: _onGenerateSubmit,
+        resetGenerate,
+    } = useGenerateForm({
         keyJobId: draftKey,
         shape,
         basePrompt,
-        validationSchemaForSafeParse, 
+        validationSchemaForSafeParse,
         onResult,
         getValues,
         ignored,
-        typeImage: TypeImageEnumValue.MARQUE
-    })
+        typeImage: TypeImageEnumValue.MARQUE,
+    });
 
     const handleReset = () => {
-                console.log(getValues());
+        resetAll(() => {
+            reset(emptyDefaultValues);
+            resetGenerate();
+        });
+    };
 
-        resetAll(() => {reset(emptyDefaultValues); resetGenerate()});
-        console.log(getValues());
-    }
-
-    function onGenerateSubmit(prompt : string) {
+    function onGenerateSubmit(prompt: string) {
         _onGenerateSubmit(prompt);
     }
 
@@ -179,7 +188,7 @@ export function MarqueForm({ onSuccess, marque }: MarqueFormPropsType) {
                         name="image"
                         locked={isLocked}
                     />
-                    {jobOutData ?                         
+                    {jobOutData ? (
                         <Image
                             src={`data:${jobOutData.image.mime_type};base64,${jobOutData.image.data}`}
                             alt="Image traitée"
@@ -189,22 +198,36 @@ export function MarqueForm({ onSuccess, marque }: MarqueFormPropsType) {
                             borderRadius="lg"
                             boxShadow="md"
                             bg={COLORS.backgroundCard}
-                        /> : 
+                        />
+                    ) : (
                         <></>
-                    }
-                    <Button disabled={isLocked} type="submit">{marque ? "Modifier l'image" : "Créer l'image"}</Button>
-                    <Button type="button" variant="outline" disabled={isLocked} onClick={() => handleReset()}>
+                    )}
+                    <Button disabled={isLocked} type="submit">
+                        {marque ? "Modifier l'image" : "Créer l'image"}
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        disabled={isLocked}
+                        onClick={() => handleReset()}
+                    >
                         Réinitialiser
                     </Button>
-                    <GenerateAccordion draftKey={draftKey} locked={isLocked} onSubmit={onGenerateSubmit} typeImage={TypeImageEnumValue.MARQUE} />
-                    { jobErrorMessage ? 
-                        <ErrorMessage 
-                            title={"Erreur lors de la génération de donnée"} 
+                    <GenerateAccordion
+                        draftKey={`IA-${draftKey}`}
+                        locked={isLocked}
+                        onSubmit={onGenerateSubmit}
+                        typeImage={TypeImageEnumValue.MARQUE}
+                    />
+                    {jobErrorMessage ? (
+                        <ErrorMessage
+                            title={'Erreur lors de la génération de donnée'}
                             description={jobErrorMessage}
                             onClose={() => {}}
-                        /> 
-                        :
-                        <></>}
+                        />
+                    ) : (
+                        <></>
+                    )}
                 </VStack>
             </form>
         </>
