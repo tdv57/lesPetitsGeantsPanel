@@ -33,7 +33,7 @@ export class WorkflowClient {
 
     public async getToken(): Promise<string> {
         if(!this.isTokenValid()){
-            this.loginPromise = this.login().finally(() => {
+            this.loginPromise ??= this.login().finally(() => {
                 this.loginPromise = null;
             })
             await this.loginPromise;
