@@ -5,6 +5,7 @@ import {
     JobGenerateOutSchema,
     JobImagePayloadOutSchema,
 } from '../schema/WorkflowSchema';
+import { supabase } from '../service/SupabaseService';
 import type {
     JobAcceptedType,
     JobGenerateOutType,
@@ -20,14 +21,66 @@ export class WorkflowClient {
         return (WorkflowClient.instance ??= new WorkflowClient());
     }
 
-    public logout() {}
+    private static readonly EXPIRY_MARGIN_MS = 60_000;
+
+    private token: string | null = null;
+    private expiresAt = 0;
+    private loginPromise: Promise<void> | null = null;
+
+    private isTokenValid(): boolean {
+        return this.token != null && Date.now() < this.expiresAt - WorkflowClient.EXPIRY_MARGIN_MS;
+    }
+
+    public async getToken(): Promise<string> {
+        if(!this.isTokenValid()){
+            this.loginPromise = this.login().finally(() => {
+                this.loginPromise = null;
+            })
+            await this.loginPromise;
+        }
+        return this.token!;
+    }
+    
+    private async login(): Promise<void> {
+        const {
+            data: { user }
+        } = await supabase.auth.getUser();
+        const password = user?.app_metadata.workflow_password;
+        if (!password) throw new Error("Workflow password absent");
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({token: password}),
+        });
+        if (!res.ok) throw new Error(`Echec de l'authentification au workflow`);
+        const { jwt } = await res.json();
+        if(!jwt) throw new Error(`Echec de l'authentification au workflow le jwt est absent`);
+        this.token = jwt;
+        this.expiresAt = WorkflowClient.readExp(jwt);
+    }
+
+    public logout(): void {
+        this.token = null;
+        this.expiresAt = 0;
+    }
+
+    private static readExp(jwt: string): number {
+        const base64 = jwt.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(base64)).exp * 1000;
+    }
 
     public static BACK_URL = '/api';
 
-    private async request(path: string, init = {}): Promise<Response> {
+    private async request(path: string, init: RequestInit = {}, retry=true): Promise<Response> {
+        const token = await this.getToken();
         const res = await fetch(`${WorkflowClient.BACK_URL}${path}`, {
             ...init,
+            headers: { ...init.headers, Authorization: `Bearer ${token}` },
         });
+        if (res.status === 401 && retry) {
+            this.logout();
+            return this.request(path, init, false);
+        }
         return res;
     }
 
