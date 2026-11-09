@@ -1,11 +1,13 @@
 import { useLocation, Outlet } from 'react-router-dom';
 import VideosDuMoment from '../components/hero/VideosDuMoment';
 import ArticleDeLaSaison from '../components/hero/ArticleDeLaSaison';
+import { TraitementImage } from '../components/hero/TraitementImage';
 
 export function Layout() {
     const location = useLocation();
-    const keepAlivePaths =
-        location.pathname === '/videos-du-moment' || location.pathname === '/article-de-la-saison';
+    const keepAlivePaths = ['/videos-du-moment', '/article-de-la-saison', '/traitement'].includes(
+        location.pathname,
+    );
 
     return (
         <>
@@ -18,6 +20,13 @@ export function Layout() {
                 }}
             >
                 <ArticleDeLaSaison />
+            </div>
+            <div
+                style={{
+                    display: location.pathname === '/traitement' ? 'block' : 'none',
+                }}
+            >
+                <TraitementImage />
             </div>
 
             {!keepAlivePaths && <Outlet />}

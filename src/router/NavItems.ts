@@ -3,4 +3,5 @@ export const navItems = [
     { to: '/article-de-la-saison', label: 'Article de la saison' },
     { to: '/images', label: 'Gérer les images' },
     { to: '/actualites', label: 'Gérer les actualités' },
+    { to: '/traitement', label: "Traitement d'image" },
 ];

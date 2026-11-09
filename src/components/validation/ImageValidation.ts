@@ -9,3 +9,9 @@ export const imageValidation = z
     .refine((file) => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type), {
         message: 'Le fichier doit être au format png, jpeg ou webp',
     });
+
+export const ImageValidationSchema = z.object({
+    image: imageValidation,
+});
+
+export type ImageValidationType = z.infer<typeof ImageValidationSchema>;

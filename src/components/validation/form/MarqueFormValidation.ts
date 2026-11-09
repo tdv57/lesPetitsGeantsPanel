@@ -2,34 +2,28 @@ import { z } from 'zod';
 import { TypeImageEnumValue } from '../../../enum/TypeImageEnum';
 import { imageValidation } from '../ImageValidation';
 
-export const NewMarqueFormValidationSchema = z.object({
+export const MarqueFormValidationBase = {
     typeImage: z.literal(TypeImageEnumValue.MARQUE),
     marque: z.string().trim().min(1, 'Le nom de la marque ne peut pas être vide'),
     idFou: z.int({ error: "L'identifiant de fournisseur est obligatoire" }),
-    isEditeur: z.enum(['true', 'false'], {
-        error: 'Il faut indiquer si la marque est un éditeur ou non',
-    }),
+    isEditeur: z
+        .enum(['true', 'false'])
+        .nullable()
+        .pipe(
+            z.enum(['true', 'false'], {
+                error: 'Il faut indiquer si la marque est un éditeur ou non',
+            }),
+        ),
     image: imageValidation,
+};
+export const NewMarqueFormValidationSchema = z.object({
+    ...MarqueFormValidationBase,
 });
 
 export const UpdateMarqueFormValidationSchema = z.object({
+    ...MarqueFormValidationBase,
     id: z.int({ error: "L'identifiant est obligatoire" }),
-    typeImage: z.literal(TypeImageEnumValue.MARQUE),
-    marque: z.string().trim().min(1, 'Le nom de la marque ne peut pas être vide'),
-    idFou: z.int({ error: "L'identifiant de fournisseur est obligatoire" }),
-    isEditeur: z.enum(['true', 'false'], {
-        message: 'Il faut indiquer si la marque est un éditeur ou non',
-    }),
-    image: z
-        .instanceof(File, { message: 'Une image est requise' })
-        .refine((file) => file.size > 0, { message: 'Le fichier ne peut pas être vide' })
-        .refine((file) => file.size < 5 * 1024 * 1024, {
-            message: 'Le fichier doit faire moins de 5 Mo',
-        })
-        .refine((file) => ['image/png', 'image/jpeg', 'image/webp'].includes(file.type), {
-            message: 'Le fichier doit être au format png, jpeg ou webp',
-        })
-        .optional(),
+    image: imageValidation.optional(),
 });
 
 export type UpdateMarqueFormValidationType = z.infer<typeof NewMarqueFormValidationSchema>;

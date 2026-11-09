@@ -60,7 +60,7 @@ export default function AnnonceForm({
     setChargementStatut,
 }: AnnonceFormPropsType) {
     const [submitMessageState, setSubmitMessageState] = useState(submitMessage);
-    const [isLocked, setIsLocked] = useState(true);
+    const [isLocked, setIsLocked] = useState(false);
     const compressionProgress = useCompressionProgress();
     const [addAnnonce] = useAddAnnonceMutation();
     const [updateAnnonce] = useUpdateAnnonceMutation();
