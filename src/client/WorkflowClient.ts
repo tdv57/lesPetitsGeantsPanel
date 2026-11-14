@@ -28,33 +28,33 @@ export class WorkflowClient {
     private loginPromise: Promise<void> | null = null;
 
     private isTokenValid(): boolean {
-        return this.token != null && Date.now() < this.expiresAt - WorkflowClient.EXPIRY_MARGIN_MS;
+        return this.token !== null && Date.now() < this.expiresAt - WorkflowClient.EXPIRY_MARGIN_MS;
     }
 
     public async getToken(): Promise<string> {
-        if(!this.isTokenValid()){
+        if (!this.isTokenValid()) {
             this.loginPromise ??= this.login().finally(() => {
                 this.loginPromise = null;
-            })
+            });
             await this.loginPromise;
         }
         return this.token!;
     }
-    
+
     private async login(): Promise<void> {
         const {
-            data: { user }
+            data: { user },
         } = await supabase.auth.getUser();
         const password = user?.app_metadata.workflow_password;
-        if (!password) throw new Error("Workflow password absent");
+        if (!password) throw new Error('Workflow password absent');
         const res = await fetch('/api/auth/login', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({token: password}),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: password }),
         });
         if (!res.ok) throw new Error(`Echec de l'authentification au workflow`);
         const { jwt } = await res.json();
-        if(!jwt) throw new Error(`Echec de l'authentification au workflow le jwt est absent`);
+        if (!jwt) throw new Error(`Echec de l'authentification au workflow le jwt est absent`);
         this.token = jwt;
         this.expiresAt = WorkflowClient.readExp(jwt);
     }
@@ -71,7 +71,7 @@ export class WorkflowClient {
 
     public static BACK_URL = '/api';
 
-    private async request(path: string, init: RequestInit = {}, retry=true): Promise<Response> {
+    private async request(path: string, init: RequestInit = {}, retry = true): Promise<Response> {
         const token = await this.getToken();
         const res = await fetch(`${WorkflowClient.BACK_URL}${path}`, {
             ...init,

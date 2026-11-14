@@ -23,7 +23,7 @@ class EventsJobs {
         if (this.ctrl) return;
         const ctrl = (this.ctrl = new AbortController());
         const client = WorkflowClient.getInstance();
-        let token :string;
+        let token: string;
         try {
             token = await client.getToken();
         } catch (e) {
@@ -37,7 +37,8 @@ class EventsJobs {
             openWhenHidden: true,
             headers: { Authorization: `Bearer ${token}` },
             async onopen(res) {
-                if (res.ok && res.headers.get('content-type')?.startsWith('text/event-stream')) return;
+                if (res.ok && res.headers.get('content-type')?.startsWith('text/event-stream'))
+                    return;
                 if (res.status === 401) client.logout();
                 throw new Error(`SSE ${res.status}`);
             },
