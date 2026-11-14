@@ -58,7 +58,7 @@ function getDefaultValues(getDraft: () => Record<string, unknown>, deguisement?:
             genre: null as unknown as undefined,
             theme: null as unknown as undefined,
             marque: null as unknown as undefined,
-            marquePersonnalise: null as unknown as undefined,
+            marquePersonnalise: '',
             image: null as unknown as undefined,
             typeImage: TypeImageEnumValue.DEGUISEMENT,
         };
@@ -84,7 +84,7 @@ function getDefaultValues(getDraft: () => Record<string, unknown>, deguisement?:
               : (null as unknown as undefined),
         marquePersonnalise: isCustomBrand
             ? deguisement.marque?.slice(CUSTOM_BRAND.length)
-            : (null as unknown as undefined),
+            : (''),
         image: null as unknown as undefined,
         typeImage: TypeImageEnumValue.DEGUISEMENT,
     };

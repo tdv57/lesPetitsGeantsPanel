@@ -55,7 +55,7 @@ function getDefaultValues(
             marque: null as unknown as undefined,
             image: null as unknown as undefined,
             idArt: null as unknown as undefined,
-            marquePersonnalise: null as unknown as undefined,
+            marquePersonnalise: '' as unknown as undefined,
         };
         return {
             ...start,
@@ -80,7 +80,7 @@ function getDefaultValues(
               : (null as unknown as undefined),
         marquePersonnalise: isCustomBrand
             ? article.marque?.slice(CUSTOM_BRAND.length)
-            : (null as unknown as undefined),
+            : '',
         image: null as unknown as undefined,
         typeImage: typeArticle,
     };
@@ -167,11 +167,14 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
         typeImage: typeArticle,
     });
 
+        console.log(isLocked);
+
     function onGenerateSubmit(prompt: string) {
         _onGenerateSubmit(prompt);
     }
 
     function onSubmit(data: UpdateArticleFormValidationType) {
+        console.log("submit");
         if (article) {
             const { age, marque, marquePersonnalise, ...rest } = data;
             updateArticle({
@@ -205,7 +208,7 @@ export default function ArticleForm({ typeArticle, article, onSuccess }: Article
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit, (errs) => console.log(errs))}>
                 <VStack gap={4} alignItems="center" justifyItems="center">
                     <NumberField
                         error={errors.idArt}
